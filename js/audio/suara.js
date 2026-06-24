@@ -182,12 +182,12 @@ async function submitSpeakPhase() {
     gameState.coins += 1;
     saveGameState();
 
-    showNotification("Pelafalan tersimpan! +10 XP. Sekarang, mari menulis!");
+    showNotification("Hebat!"); // Kalimat ini sudah 100% ada di file MP3 (0010_HEBAT_.mp3)
     playSuccessSFX();
 
     setTimeout(() => {
         loadWriteChallenge();
-    }, 1000);
+    }, 1500); // Jeda diturunkan karena durasi "Hebat!" singkat
 }
 
 // --- SUBMIT LEMBAR MEMBACA (PART 2) ---
@@ -207,11 +207,11 @@ async function submitReadPhase() {
     if (theme) {
         gameState.xp += theme.xp;
         gameState.coins += theme.coins;
-        showNotification(`Selamat! Misi ${theme.name} selesai! Hadiah: +${theme.xp} XP & +${theme.coins} Koin!`);
+        showNotification("Selamat! Misi selesai! Hadiah XP dan koin disimpan."); // MP3: 0018_SELAMAT__MISI_SELESAI__HADIAH_XP_DAN_KOIN_DISIMPAN_.mp3
     } else {
         gameState.xp += 50;
         gameState.coins += 10;
-        showNotification("Hebat! Lembar Membaca selesai! +50 XP disimpan.");
+        showNotification("Kamu berhasil!"); // MP3: 0014_KAMU_BERHASIL_.mp3
     }
     saveGameState();
     playSuccessSFX();
@@ -221,7 +221,7 @@ async function submitReadPhase() {
         return;
     }
 
-    setTimeout(() => { openTreasureChest(); }, 1500);
+    setTimeout(() => { openTreasureChest(); }, 4500); // Naikkan dari 1500ms ke 4500ms agar audio 'Selamat! Misi selesai!' selesai diucapkan
 }
 
 // --- SUBMIT FASE KATA GAMBAR ---
@@ -242,11 +242,11 @@ async function submitPicturePhase() {
     if (theme) {
         gameState.xp += theme.xp;
         gameState.coins += theme.coins;
-        showNotification(`Selamat! Seluruh Misi ${theme.name} selesai! Hadiah: +${theme.xp} XP & +${theme.coins} Koin!`);
+        showNotification("Selamat! Misi selesai! Hadiah XP dan koin disimpan."); // MP3: 0018_SELAMAT__MISI_SELESAI__HADIAH_XP_DAN_KOIN_DISIMPAN_.mp3
     } else {
         gameState.xp += 50;
         gameState.coins += 10;
-        showNotification("Hebat! Kata Gambar selesai! +50 XP disimpan.");
+        showNotification("Kamu berhasil!"); // MP3: 0014_KAMU_BERHASIL_.mp3
     }
 
     // Set status fase pictures selesai untuk tingkat ini
@@ -262,7 +262,7 @@ async function submitPicturePhase() {
         return;
     }
 
-    setTimeout(() => { openTreasureChest(); }, 1500);
+    setTimeout(() => { openTreasureChest(); }, 4500); // Naikkan dari 1500ms ke 4500ms agar audio 'Selamat! Misi selesai!' selesai diucapkan
 }
 
 // --- RENDER DAFTAR REKAMAN DI DASHBOARD PARENT ---

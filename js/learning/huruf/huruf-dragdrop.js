@@ -89,9 +89,13 @@ function loadDragMatchChallenge() {
 
                             const theme = LEVEL_THEMES[range];
                             if (theme) {
-                                showNotification(`Selamat! Misi Pasang ${theme.name} selesai! Hadiah: +20 XP & +5 Koin!`);
+                                gameState.xp += theme.xp;
+                                gameState.coins += theme.coins;
+                                showNotification("Selamat! Misi selesai! Hadiah XP dan koin disimpan."); // MP3: 0018
                             } else {
-                                showNotification('Hebat! Pasangkan Huruf selesai!');
+                                gameState.xp += 20;
+                                gameState.coins += 5;
+                                showNotification("Kamu berhasil!"); // MP3: 0014
                             }
 
                             // Set status fase drag-match selesai untuk tingkat ini
@@ -99,8 +103,6 @@ function loadDragMatchChallenge() {
                             if (!gameState.phaseStatus[range]) gameState.phaseStatus[range] = {};
                             gameState.phaseStatus[range]['drag-match'] = true;
 
-                            gameState.xp += 20;
-                            gameState.coins += 5;
                             saveGameState();
                             spawnConfetti();
 

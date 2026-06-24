@@ -377,14 +377,14 @@ function loadLetterChallenge() {
                         }
 
                         playSuccessSFX();
-                        showNotification("Hebat! Jawaban Benar! +10 XP");
+                        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!");
                         gameState.xp += 10;
                         saveGameState();
 
-                        setTimeout(() => { transitionToSpeakPhase(); }, 800);
+                        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Naik ke 4000ms agar audio feedback "Hebat! Jawaban benar..." tidak terpotong saat transisi layar
                     } else {
                         playErrorSFX();
-                        showNotification("Tarik huruf yang tepat ya! Kamu pasti bisa!");
+                        showNotification("Tarik huruf yang tepat ya! Kamu pasti bisa!"); // Kalimat ini sesuai di MP3 (0025_TARIK_HURUF_YANG_TEPAT_YA__KAMU_PASTI_BISA_.mp3)
                         dragEl.style.transition = 'left 0.4s ease, top 0.4s ease';
                         dragEl.style.left = `${pt.left}%`;
                         dragEl.style.top = `${pt.top}%`;
@@ -499,12 +499,11 @@ function loadDragMatchChallenge() {
                             if (theme) {
                                 gameState.xp += theme.xp;
                                 gameState.coins += theme.coins;
-                                showNotification(`Selamat! Misi ${theme.name} selesai! Hadiah: +${theme.xp} XP & +${theme.coins} Koin!`);
                             } else {
                                 gameState.xp += 50;
                                 gameState.coins += 10;
-                                showNotification("Hebat! Pasangkan Huruf selesai! +50 XP disimpan.");
                             }
+                            showNotification("Selamat! Misi selesai! Hadiah XP dan koin disimpan."); // Kalimat ini ada di MP3 (0018_SELAMAT__MISI_SELESAI__HADIAH_XP_DAN_KOIN_DISIMPAN_.mp3)
 
                             saveGameState();
                             spawnConfetti();
@@ -515,7 +514,7 @@ function loadDragMatchChallenge() {
                                 setTimeout(() => mascot.classList.remove('jump'), 600);
                             }
 
-                            setTimeout(() => { openTreasureChest(); }, 1500);
+                             setTimeout(() => { openTreasureChest(); }, 4500); // Naikkan dari 1500ms ke 4500ms agar audio 'Selamat! Misi selesai!' selesai diucapkan
                         }, 500);
                     }
                 } else {
@@ -547,15 +546,15 @@ function handleOptionClick(selectedLetter, cardElement) {
         }
 
         playSuccessSFX();
-        showNotification("Hebat! Jawaban Benar! +10 XP");
+        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!");
         gameState.xp += 10;
         saveGameState();
 
-        setTimeout(() => { transitionToSpeakPhase(); }, 1000);
+        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Naik ke 4000ms agar audio tidak tumpang tindih
     } else {
         cardElement.classList.add('wrong');
         playErrorSFX();
-        showNotification("Coba lagi ya, kamu pasti bisa!");
+        showNotification("Coba lagi ya."); // Kalimat ini ada di MP3 (0019_COBA_LAGI_YA_.mp3)
         setTimeout(() => { cardElement.classList.remove('wrong'); }, 800);
     }
 }
@@ -583,7 +582,7 @@ function transitionToSpeakPhase() {
     document.getElementById('icon-mic').classList.remove('hidden');
     document.getElementById('icon-stop').classList.add('hidden');
 
-    setTimeout(() => { playLetterSound(gameState.currentTargetLetter); }, 300);
+    setTimeout(() => { playLetterSound(gameState.currentTargetLetter); }, 4500); // Naik dari 3800ms ke 4500ms agar TTS penjelas feedback sebelumnya selesai tanpa terpotong
 }
 
 // --- MODAL PREVIEW MISI ---

@@ -331,7 +331,7 @@ function completeWriteChallenge() {
 
     const bgVisualEl = document.getElementById('write-bg-visual');
     if (range === 'vowels') {
-        showNotification("Hebat! Retakan Telur Dino Pulih! 🥚✨");
+        showNotification("Hebat!"); // MP3: 0010_HEBAT_.mp3
         bgVisualEl.innerHTML = `
             <div style="position: absolute; top: 10px; left: 10px;">
                 <svg viewBox="0 0 100 120" width="70" height="85" style="opacity: 0.95; filter: drop-shadow(0 4px 10px rgba(129, 199, 132, 0.5)); transform: scale(1.05); transition: transform 0.5s;">
@@ -341,7 +341,7 @@ function completeWriteChallenge() {
             </div>
         `;
     } else if (range === 'n-s') {
-        showNotification("Luar Biasa! Tanaman buah Dino tumbuh mekar! 🌸");
+        showNotification("Luar biasa!"); // MP3: 0012_LUAR_BIASA_.mp3
         bgVisualEl.innerHTML = `
             <div style="position: absolute; top: 10px; left: 10px;">
                 <svg viewBox="0 0 100 100" width="80" height="80" style="opacity: 0.95;">
@@ -351,7 +351,7 @@ function completeWriteChallenge() {
             </div>
         `;
     } else {
-        showNotification("Bagus! Pintu Ajaib Terbuka! 🚪✨");
+        showNotification("Bagus sekali!"); // MP3: 0011_BAGUS_SEKALI_.mp3
         bgVisualEl.innerHTML = `
             <div style="position: absolute; top: 10px; left: 10px;">
                 <svg viewBox="0 0 100 100" width="80" height="80" style="opacity: 0.95; filter: drop-shadow(0 4px 10px rgba(129, 199, 132, 0.5));">
@@ -379,24 +379,19 @@ function completeWriteChallenge() {
 
     saveGameState();
 
+    // Jeda 2 detik agar suara feedback selesai, lalu cek apakah masih ada huruf berikutnya
     setTimeout(() => {
         const letters = LEVEL_GROUPS[gameState.currentLevelRange];
         if (gameState.currentLetterIndex < letters.length - 1) {
+            // Masih ada huruf berikutnya — lanjut ke huruf berikutnya
             gameState.currentLetterIndex++;
             loadLetterChallenge();
         } else {
-            // Level CALIS selesai!
-            const theme = LEVEL_THEMES[gameState.currentLevelRange];
-            if (theme) {
-                showNotification(`Selamat! CALIS ${theme.name} selesai! Hadiah: +15 XP & +2 Koin!`);
-            } else {
-                showNotification(`Selamat! Misi CALIS ${gameState.currentLevelRange} selesai!`);
-            }
-            // Langsung kembali ke Map lalu tampilkan preview modal misi tersebut (agar tombol drag-match bisa dimainkan)
-            changeScreen('map');
+            // Semua huruf di level ini sudah selesai — tampilkan notifikasi misi selesai lalu kembali ke map
+            showNotification("Selamat! Misi selesai! Hadiah XP dan koin disimpan."); // MP3: 0018_SELAMAT__MISI_SELESAI__HADIAH_XP_DAN_KOIN_DISIMPAN_.mp3
             setTimeout(() => {
-                openMissionPreview(gameState.currentLevelRange);
-            }, 500);
+                changeScreen('map');
+            }, 4500); // Naikkan dari 3500ms ke 4500ms agar audio "Selamat! Misi selesai!" selesai diucapkan dan tidak terpotong
         }
     }, 2000);
 }

@@ -111,14 +111,14 @@ function loadLetterChallenge() {
                         }
 
                         playSuccessSFX();
-                        showNotification('Hebat! Jawaban Benar! +10 XP');
+                        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!"); // MP3: 0017
                         gameState.xp += 10;
                         saveGameState();
 
-                        setTimeout(() => { transitionToSpeakPhase(); }, 800);
+                        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Jeda 4s agar audio selesai sebelum transisi
                     } else {
                         playErrorSFX();
-                        showNotification('Tarik huruf yang tepat ya! Kamu pasti bisa!');
+                        showNotification("Tarik huruf yang tepat ya! Kamu pasti bisa!"); // MP3: 0025
                         bounceBack(dragEl, pt.left, pt.top);
                         setTimeout(() => {
                             dragEl.style.animation = 'hidden-letter-float 3s ease-in-out infinite';
@@ -151,15 +151,15 @@ function handleOptionClick(selectedLetter, cardElement) {
         }
 
         playSuccessSFX();
-        showNotification('Hebat! Jawaban Benar! +10 XP');
+        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!"); // MP3: 0017
         gameState.xp += 10;
         saveGameState();
 
-        setTimeout(() => { transitionToSpeakPhase(); }, 1000);
+        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Jeda 4s agar audio selesai sebelum transisi
     } else {
         cardElement.classList.add('wrong');
         playErrorSFX();
-        showNotification('Coba lagi ya, kamu pasti bisa!');
+        showNotification("Coba lagi ya."); // MP3: 0019
         setTimeout(() => { cardElement.classList.remove('wrong'); }, 800);
     }
 }

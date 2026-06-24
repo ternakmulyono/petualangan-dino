@@ -5,7 +5,21 @@
 
 // --- NAVIGASI UTAMA ---
 function initNavEvents() {
-    document.getElementById('btn-start-adventure').addEventListener('click', () => changeScreen('map'));
+    // Mainkan suara sambutan awal "Selamat datang di Hutan Huruf." (MP3: 0001) saat game dimuat pertama kali
+    setTimeout(() => {
+        playLetterSound("Selamat datang di Hutan Huruf.");
+    }, 1000);
+
+    document.getElementById('btn-start-adventure').addEventListener('click', () => {
+        changeScreen('map');
+        // Mainkan instruksi jilid 1: Dino kehilangan telur emasnya. Ayo bantu Dino menemukan petunjuk baru. (MP3: 0002 & 0003)
+        setTimeout(() => {
+            playLetterSound("Dino kehilangan telur emasnya.");
+            setTimeout(() => {
+                playLetterSound("Ayo bantu Dino menemukan petunjuk baru.");
+            }, 3000);
+        }, 800);
+    });
     document.getElementById('btn-back-nest').addEventListener('click', () => changeScreen('nest'));
 
     document.getElementById('btn-next-map').addEventListener('click', () => {
@@ -24,7 +38,7 @@ function initNavEvents() {
     document.querySelectorAll('.map-node').forEach(node => {
         node.addEventListener('click', () => {
             if (node.classList.contains('locked')) {
-                showNotification('Area Terkunci! Selesaikan misi sebelumnya.');
+                showNotification('Area terkunci! Selesaikan misi sebelumnya.'); // MP3: 0035
                 playErrorSFX();
                 return;
             }
@@ -137,10 +151,10 @@ function initShopEvents() {
                 if (document.getElementById('shop-xp-count')) {
                     document.getElementById('shop-xp-count').textContent = gameState.xp;
                 }
-                showNotification('Berhasil menukar 100 XP menjadi 10 Koin! 🪙');
+                showNotification('Berhasil menukar seratus XP menjadi sepuluh koin!'); // MP3: 0038
                 playSuccessSFX();
             } else {
-                showNotification('XP tidak cukup! Butuh minimal 100 XP. ❌');
+                showNotification('XP tidak cukup! Butuh minimal seratus XP.'); // MP3: 0039
                 playErrorSFX();
             }
         });
