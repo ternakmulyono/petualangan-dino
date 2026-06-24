@@ -20,10 +20,6 @@ const header = {
 
 // --- GANTI LAYAR ---
 function changeScreen(screenName) {
-    // Hentikan suara pelafalan yang sedang berputar jika tidak dalam proteksi transisi
-    if (typeof stopLetterSound === 'function' && !window.preventStopOnScreenChange) {
-        stopLetterSound();
-    }
 
     Object.keys(screens).forEach(key => {
         screens[key].classList.remove('active');

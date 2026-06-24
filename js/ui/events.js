@@ -22,7 +22,10 @@ function initNavEvents() {
             }, 3000);
         }, 800);
     });
-    document.getElementById('btn-back-nest').addEventListener('click', () => changeScreen('nest'));
+    document.getElementById('btn-back-nest').addEventListener('click', () => {
+        if (typeof stopLetterSound === 'function') stopLetterSound();
+        changeScreen('nest');
+    });
 
     document.getElementById('btn-next-map').addEventListener('click', () => {
         window.preventStopOnScreenChange = true;

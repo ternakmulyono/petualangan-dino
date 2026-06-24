@@ -49,11 +49,22 @@ loadAudioMetadata();
 // Global flag to prevent screen change from cutting off long narrations
 window.preventStopOnScreenChange = false;
 
-// --- HENTIKAN SUARA / TTS YANG SEDANG BERJALAN ---
+// --- ANTRIAN AUDIO (SEQUENTIAL PLAYBACK QUEUE) ---
+let audioQueue = [];
+let isQueueProcessing = false;
+
+// --- HENTIKAN SUARA / TTS YANG SEDANG BERJALAN & KOSONGKAN ANTRIAN ---
 function stopLetterSound() {
     if (window.preventStopOnScreenChange) {
-        return; // Don't stop the audio if we are in a protected transition (e.g. going to map, etc.)
+        return; // Mencegah pemutusan audio jika sedang berada dalam transisi layar yang dilindungi
     }
+    
+    // Kosongkan antrean
+    audioQueue = [];
+    isQueueProcessing = false;
+    isTTSPlaying = false;
+    currentTTSLoop = false;
+
     if (currentTTSAudio) {
         currentTTSAudio.pause();
         currentTTSAudio.currentTime = 0;
@@ -62,8 +73,6 @@ function stopLetterSound() {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
     }
-    isTTSPlaying = false;
-    currentTTSLoop = false;
 
     // Sembunyikan semua tombol stop di UI jika ada
     const stopBtn1 = document.getElementById('btn-picture-tts-stop');
@@ -73,17 +82,37 @@ function stopLetterSound() {
     if (stopBtn2) stopBtn2.classList.add('hidden');
 }
 
-// --- MAINKAN SUARA HURUF (AUDIO ASLI + FALLBACK TTS) ---
+// --- MAINKAN SUARA HURUF / NARASI (ANTREAN / QUEUED PLAYBACK) ---
 function playLetterSound(letter, loop = false) {
-    // Selalu hentikan audio sebelumnya terlebih dahulu
-    stopLetterSound();
+    // Masukkan audio baru ke dalam antrean
+    audioQueue.push({ letter, loop });
+    
+    // Jika tidak ada audio yang sedang berputar, mulai proses antrean
+    if (!isQueueProcessing) {
+        processNextInQueue();
+    }
+}
 
-    // Menghilangkan tanda baca di ujung & spasi berlebih untuk mempermudah pencarian metadata kalimat utuh, tapi jangan hilangkan spasi antar kata!
+// --- PROSES ANTRIAN AUDIO BERIKUTNYA ---
+function processNextInQueue() {
+    if (audioQueue.length === 0) {
+        isQueueProcessing = false;
+        isTTSPlaying = false;
+        return;
+    }
+
+    isQueueProcessing = true;
+    isTTSPlaying = true;
+    
+    const currentItem = audioQueue[0];
+    const letter = currentItem.letter;
+    const loop = currentItem.loop;
+
+    // Menghilangkan tanda baca & spasi berlebih untuk pencarian di metadata
     const cleanLetter = letter.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ").trim().toUpperCase();
     currentTTSLoop = loop;
-    isTTSPlaying = true;
 
-    // Tampilkan tombol stop yang relevan dengan layar aktif
+    // Tampilkan tombol stop yang relevan
     const pictureView = document.getElementById('game-picture-view');
     const readView = document.getElementById('game-read-view');
 
@@ -96,6 +125,14 @@ function playLetterSound(letter, loop = false) {
         if (stopBtn2) stopBtn2.classList.remove('hidden');
     }
 
+    // Callback ketika audio selesai diputar
+    const onAudioEnded = () => {
+        if (!loop) {
+            audioQueue.shift(); // Hapus item yang sudah selesai
+            processNextInQueue(); // Lanjutkan ke antrean berikutnya
+        }
+    };
+
     // 1. Cek jika ada suara asli (Recorded Voice) di metadata
     if (audioMetadata[cleanLetter]) {
         const url = `audio/${audioMetadata[cleanLetter]}`;
@@ -103,27 +140,24 @@ function playLetterSound(letter, loop = false) {
         audio.loop = loop;
         currentTTSAudio = audio;
 
-        audio.addEventListener('ended', () => {
-            if (!loop) stopLetterSound();
-        });
+        audio.addEventListener('ended', onAudioEnded);
 
         audio.play().catch(e => {
-            console.warn("Failed to play custom audio file, falling back to TTS", e);
-            playLetterSoundFallback(letter, loop);
+            console.warn("Gagal memutar audio kustom, beralih ke Fallback TTS", e);
+            playLetterSoundFallbackWithCallback(letter, loop, onAudioEnded);
         });
         return;
     }
 
-    // 2. Fallback jika tidak ada suara asli
-    playLetterSoundFallback(letter, loop);
+    // 2. Beralih ke fallback
+    playLetterSoundFallbackWithCallback(letter, loop, onAudioEnded);
 }
 
-// --- FALLBACK TTS (ONLINE + OFFLINE) ---
-function playLetterSoundFallback(letter, loop = false) {
+// --- FALLBACK TTS DENGAN CALLBACK ---
+function playLetterSoundFallbackWithCallback(letter, loop, callback) {
     const cleanLetter = letter.replace(/-/g, '');
     const text = PHONETICS[cleanLetter.toUpperCase()] || cleanLetter;
 
-    // Gunakan Google Translate TTS (Online) untuk suara alami Bahasa Indonesia
     if (navigator.onLine) {
         const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=gtx&q=${encodeURIComponent(text)}`;
         const audio = new Audio(url);
@@ -134,13 +168,16 @@ function playLetterSoundFallback(letter, loop = false) {
         const triggerFallback = () => {
             if (!fallbackTriggered) {
                 fallbackTriggered = true;
-                playOfflineTTS(cleanLetter, loop);
+                playOfflineTTSWithCallback(cleanLetter, loop, callback);
             }
         };
 
         audio.addEventListener('error', triggerFallback);
         audio.addEventListener('ended', () => {
-            if (!loop) stopLetterSound();
+            if (!loop) {
+                currentTTSAudio = null;
+                callback();
+            }
         });
 
         audio.play().catch(e => {
@@ -148,12 +185,12 @@ function playLetterSoundFallback(letter, loop = false) {
             triggerFallback();
         });
     } else {
-        playOfflineTTS(cleanLetter, loop);
+        playOfflineTTSWithCallback(cleanLetter, loop, callback);
     }
 }
 
-// --- TTS OFFLINE (SpeechSynthesis API) ---
-function playOfflineTTS(letter, loop = false) {
+// --- TTS OFFLINE DENGAN CALLBACK ---
+function playOfflineTTSWithCallback(letter, loop, callback) {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
 
@@ -167,7 +204,6 @@ function playOfflineTTS(letter, loop = false) {
         const voices = window.speechSynthesis.getVoices();
         const idVoices = voices.filter(v => v.lang.includes('id') || v.lang.includes('ID'));
         if (idVoices.length > 0) {
-            // Prioritaskan suara perempuan (nama mengandung female, perempuan, wanita, zira, google)
             let selectedVoice = idVoices.find(v => 
                 v.name.toLowerCase().includes('female') || 
                 v.name.toLowerCase().includes('perempuan') || 
@@ -175,34 +211,30 @@ function playOfflineTTS(letter, loop = false) {
                 v.name.toLowerCase().includes('zira') ||
                 v.name.toLowerCase().includes('google')
             );
-            
-            // Hindari suara pria jika tidak ada suara perempuan khusus
             if (!selectedVoice) {
                 selectedVoice = idVoices.find(v => 
                     !v.name.toLowerCase().includes('male') && 
                     !v.name.toLowerCase().includes('pria')
                 );
             }
-            
-            // Fallback suara Indonesia pertama
             if (!selectedVoice) {
                 selectedVoice = idVoices[0];
             }
-            
             utterance.voice = selectedVoice;
         }
 
         utterance.onend = () => {
             if (loop && isTTSPlaying) {
-                playOfflineTTS(letter, loop);
+                playOfflineTTSWithCallback(letter, loop, callback);
             } else {
-                stopLetterSound();
+                callback();
             }
         };
 
         window.speechSynthesis.speak(utterance);
     } else {
         showNotification("Browser tidak mendukung suara.");
+        callback();
     }
 }
 
