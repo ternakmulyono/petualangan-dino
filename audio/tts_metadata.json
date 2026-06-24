@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "text": "Selamat datang di Hutan Huruf.",
+    "filename": "0001_SELAMAT_DATANG_DI_HUTAN_HURUF_.mp3"
+  },
+  {
+    "id": 2,
+    "text": "Dino kehilangan telur emasnya.",
+    "filename": "0002_DINO_KEHILANGAN_TELUR_EMASNYA_.mp3"
+  },
+  {
+    "id": 3,
+    "text": "Ayo bantu Dino menemukan petunjuk baru.",
+    "filename": "0003_AYO_BANTU_DINO_MENEMUKAN_PETUNJUK_BARU_.mp3"
+  },
+  {
+    "id": 4,
+    "text": "Petualangan dimulai.",
+    "filename": "0004_PETUALANGAN_DIMULAI_.mp3"
+  },
+  {
+    "id": 5,
+    "text": "Pilih huruf yang benar.",
+    "filename": "0005_PILIH_HURUF_YANG_BENAR_.mp3"
+  },
+  {
+    "id": 6,
+    "text": "Dengarkan lalu pilih jawabannya.",
+    "filename": "0006_DENGARKAN_LALU_PILIH_JAWABANNYA_.mp3"
+  },
+  {
+    "id": 7,
+    "text": "Ikuti garis untuk menulis huruf.",
+    "filename": "0007_IKUTI_GARIS_UNTUK_MENULIS_HURUF_.mp3"
+  },
+  {
+    "id": 8,
+    "text": "Sentuh huruf yang diminta.",
+    "filename": "0008_SENTUH_HURUF_YANG_DIMINTA_.mp3"
+  },
+  {
+    "id": 9,
+    "text": "Susun huruf hingga menjadi kata.",
+    "filename": "0009_SUSUN_HURUF_HINGGA_MENJADI_KATA_.mp3"
+  },
+  {
+    "id": 10,
+    "text": "Hebat!",
+    "filename": "0010_HEBAT_.mp3"
+  },
+  {
+    "id": 11,
+    "text": "Bagus sekali!",
+    "filename": "0011_BAGUS_SEKALI_.mp3"
+  },
+  {
+    "id": 12,
+    "text": "Luar biasa!",
+    "filename": "0012_LUAR_BIASA_.mp3"
+  },
+  {
+    "id": 13,
+    "text": "Pintar!",
+    "filename": "0013_PINTAR_.mp3"
+  },
+  {
+    "id": 14,
+    "text": "Kamu berhasil!",
+    "filename": "0014_KAMU_BERHASIL_.mp3"
+  },
+  {
+    "id": 15,
+    "text": "Dino senang sekali!",
+    "filename": "0015_DINO_SENANG_SEKALI_.mp3"
+  },
+  {
+    "id": 16,
+    "text": "Teruskan petualanganmu!",
+    "filename": "0016_TERUSKAN_PETUALANGANMU_.mp3"
+  },
+  {
+    "id": 17,
+    "text": "Hebat! Jawaban benar, kamu mendapat sepuluh XP!",
+    "filename": "0017_HEBAT__JAWABAN_BENAR__KAMU_MENDAPAT_SEPULUH_XP_.mp3"
+  },
+  {
+    "id": 18,
+    "text": "Selamat! Misi selesai! Hadiah XP dan koin disimpan.",
+    "filename": "0018_SELAMAT__MISI_SELESAI__HADIAH_XP_DAN_KOIN_DISIMPAN_.mp3"
+  },
+  {
+    "id": 19,
+    "text": "Coba lagi ya.",
+    "filename": "0019_COBA_LAGI_YA_.mp3"
+  },
+  {
+    "id": 20,
+    "text": "Hampir benar.",
+    "filename": "0020_HAMPIR_BENAR_.mp3"
+  },
+  {
+    "id": 21,
+    "text": "Jangan menyerah.",
+    "filename": "0021_JANGAN_MENYERAH_.mp3"
+  },
+  {
+    "id": 22,
+    "text": "Ayo coba sekali lagi.",
+    "filename": "0022_AYO_COBA_SEKALI_LAGI_.mp3"
+  },
+  {
+    "id": 23,
+    "text": "Kamu pasti bisa.",
+    "filename": "0023_KAMU_PASTI_BISA_.mp3"
+  },
+  {
+    "id": 24,
+    "text": "Dino masih membutuhkan bantuanmu.",
+    "filename": "0024_DINO_MASIH_MEMBUTUHKAN_BANTUANMU_.mp3"
+  },
+  {
+    "id": 25,
+    "text": "Tarik huruf yang tepat ya! Kamu pasti bisa!",
+    "filename": "0025_TARIK_HURUF_YANG_TEPAT_YA__KAMU_PASTI_BISA_.mp3"
+  },
+  {
+    "id": 26,
+    "text": "Halo teman!",
+    "filename": "0026_HALO_TEMAN_.mp3"
+  },
+  {
+    "id": 27,
+    "text": "Aku butuh bantuanmu.",
+    "filename": "0027_AKU_BUTUH_BANTUANMU_.mp3"
+  },
+  {
+    "id": 28,
+    "text": "Ayo kita menjelajah bersama.",
+    "filename": "0028_AYO_KITA_MENJELAJAH_BERSAMA_.mp3"
+  },
+  {
+    "id": 29,
+    "text": "Aku bangga padamu.",
+    "filename": "0029_AKU_BANGGA_PADAMU_.mp3"
+  },
+  {
+    "id": 30,
+    "text": "Wah, kita berhasil!",
+    "filename": "0030_WAH__KITA_BERHASIL_.mp3"
+  },
+  {
+    "id": 31,
+    "text": "Ayo cari petunjuk berikutnya.",
+    "filename": "0031_AYO_CARI_PETUNJUK_BERIKUTNYA_.mp3"
+  },
+  {
+    "id": 32,
+    "text": "Kamu mendapatkan bintang.",
+    "filename": "0032_KAMU_MENDAPATKAN_BINTANG_.mp3"
+  },
+  {
+    "id": 33,
+    "text": "Koin berhasil dikumpulkan.",
+    "filename": "0033_KOIN_BERHASIL_DIKUMPULKAN_.mp3"
+  }
+]
