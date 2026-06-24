@@ -958,7 +958,7 @@ body {
     border-radius: var(--border-radius-lg);
     box-shadow: 0 8px 0 var(--earth-dark);
     padding: 16px;
-    min-height: 90%;
+    height: auto;
     display: flex;
     flex-direction: column;
 }
@@ -1061,7 +1061,7 @@ body {
 }
 
 .letter-badge {
-    aspect-ratio: 1.05;
+    padding: 8px 4px;
     background: var(--gray-light);
     border: 2px solid var(--gray);
     border-radius: var(--border-radius-sm);
