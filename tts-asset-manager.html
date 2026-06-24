@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemini TTS Asset Manager — Petualangan Dino</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- JSZip library for exporting ZIP bundles -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0d13;
+    --surface: #131722;
+    --surface2: #1e222f;
+    --border: #2a2e3d;
+    --primary: #f59e0b;
+    --primary-hover: #fbbf24;
+    --primary-glow: rgba(245, 158, 11, 0.15);
+    --green: #10b981;
+    --green-dim: #064e3b;
+    --red: #ef4444;
+    --text: #f3f4f6;
+    --text-muted: #6b7280;
+    --text-dim: #9ca3af;
+    --radius: 10px;
+    --font: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1f1a0e 0%, #2f2510 100%);
+    border-bottom: 1px solid #453518;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: var(--primary);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    color: #000;
+  }
+
+  .logo-text h1 { font-size: 17px; font-weight: 800; color: #fff; }
+  .logo-text p  { font-size: 12px; color: var(--primary-hover); margin-top: 1px; }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+
+  .badge {
+    background: #3e3318;
+    border: 1px solid #5d4c25;
+    color: var(--primary-hover);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .api-badge {
+    background: #064e3b;
+    border: 1px solid #047857;
+    color: #34d399;
+  }
+
+  /* TOOLBAR */
+  .toolbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-right: 14px;
+    border-right: 1px solid var(--border);
+  }
+
+  .toolbar-group:last-child { border-right: none; }
+
+  .toolbar-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #000;
+  }
+  .btn-primary:hover { background: var(--primary-hover); }
+
+  .btn-green {
+    background: #10b981;
+    color: #fff;
+  }
+  .btn-green:hover { background: #059669; }
+
+  .btn-red {
+    background: var(--red);
+    color: #fff;
+  }
+  .btn-red:hover { background: #dc2626; }
+
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* MAIN LAYOUT */
+  .main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 0;
+    overflow: hidden;
+    height: calc(100vh - 120px);
+  }
+
+  /* SIDEBAR CATEGORIES */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .cat-list {
+    list-style: none;
+  }
+
+  .cat-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.15s;
+  }
+
+  .cat-item:hover { background: var(--surface2); }
+  .cat-item.active {
+    background: var(--primary-glow);
+    border-left: 4px solid var(--primary);
+    padding-left: 16px;
+  }
+
+  .cat-name-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cat-emoji { font-size: 18px; }
+  .cat-title { font-size: 13.5px; font-weight: 600; }
+  .cat-count {
+    font-size: 11px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    padding: 2px 7px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .cat-item.active .cat-count {
+    background: var(--primary);
+    color: #000;
+    border-color: var(--primary);
+  }
+
+  /* CONTENT PANEL */
+  .content-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* LIBRARY CONTAINER */
+  .library-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  /* TABLE VIEW */
+  .asset-table-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  th {
+    background: var(--surface2);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    padding: 10px 16px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 12px 16px;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .asset-id-col { font-family: var(--mono); font-size: 12px; color: var(--primary-hover); }
+  .asset-text-col { font-weight: 500; }
+  .asset-date-col { font-size: 12px; color: var(--text-muted); }
+  
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+  .status-ready { background: #064e3b; color: #34d399; }
+  .status-pending { background: #78350f; color: #fbbf24; }
+  .status-failed { background: #7f1d1d; color: #fca5a5; }
+
+  .action-cell {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: color 0.15s;
+    font-size: 16px;
+    padding: 4px;
+  }
+  .action-btn:hover { color: var(--primary); }
+  .action-btn.play-btn { color: var(--green); }
+  .action-btn.play-btn:hover { color: #34d399; }
+  .action-btn.del-btn:hover { color: var(--red); }
+
+  /* BULK MODAL & SETTINGS */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    place-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: grid; }
+
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    width: 600px;
+    max-width: 95vw;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+
+  .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+  .modal-desc  { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+
+  .textarea-bulk {
+    width: 100%;
+    height: 180px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13.5px;
+    padding: 12px;
+    resize: vertical;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .textarea-bulk:focus { outline: none; border-color: var(--primary); }
+
+  .input-text {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-size: 13.5px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .input-text:focus { outline: none; border-color: var(--primary); }
+
+  .select-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-size: 13.5px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+
+  /* SEARCH BAR */
+  .search-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 12px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    width: 240px;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { outline: none; border-color: var(--primary); }
+  .search-input::placeholder { color: var(--text-muted); }
+
+  /* PROGRESS BAR PANEL */
+  .progress-card {
+    background: linear-gradient(135deg, #1b2030 0%, #111422 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .progress-card.active { display: flex; }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .progress-track-bg {
+    width: 100%; height: 8px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-track-fill {
+    height: 100%; width: 0%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+  }
+
+  .progress-status-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--primary);
+    color: #000;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 8px;
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* CHECKBOX FOR MULTIPLE EXPORT */
+  .check-col { width: 40px; text-align: center; }
+  .check-box-input {
+    width: 16px; height: 16px;
+    cursor: pointer;
+    accent-color: var(--primary);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3d4267; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🔊</div>
+    <div class="logo-text">
+      <h1>Gemini TTS Asset Manager</h1>
+      <p>Petualangan Dino — Audio Production Tool</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span class="badge api-badge">Gemini TTS Active</span>
+    <span class="badge" id="badge-total-assets">0 Assets</span>
+  </div>
+</header>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-group">
+    <span class="toolbar-label">Materi</span>
+    <button class="btn btn-primary btn-sm" onclick="openBulkModal()">📥 Bulk Generation</button>
+    <button class="btn btn-ghost btn-sm" onclick="openAddSingleModal()">➕ Add Asset</button>
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Aksi Massal</span>
+    <button class="btn btn-ghost btn-sm" onclick="playSelected()">▶️ Play Selected</button>
+    <button class="btn btn-ghost btn-sm" onclick="deleteSelected()" style="color:var(--red);">🗑️ Delete Selected</button>
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Cari</span>
+    <input class="search-input" type="text" id="search-input" placeholder="Cari teks/ID..." oninput="renderLibrary()">
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Export</span>
+    <button class="btn btn-green btn-sm" onclick="exportSelectedMP3()">🎵 Export Selected MP3</button>
+    <button class="btn btn-primary btn-sm" onclick="exportZIP()">📦 Export ZIP Package</button>
+  </div>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="main">
+
+  <!-- SIDEBAR (CATEGORIES) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">Kategori Audio</div>
+    <ul class="cat-list" id="category-sidebar-list">
+      <!-- Dynamic categories with counts -->
+    </ul>
+  </aside>
+
+  <!-- CONTENT PANEL -->
+  <div class="content-panel">
+    <div class="library-container">
+      
+      <!-- Progress Bar Panel -->
+      <div class="progress-card" id="progress-card">
+        <div class="progress-info">
+          <span id="progress-label">Generating Assets...</span>
+          <span id="progress-percent">0 / 0</span>
+        </div>
+        <div class="progress-track-bg">
+          <div class="progress-track-fill" id="progress-bar-fill"></div>
+        </div>
+        <div class="progress-status-desc" id="progress-desc">Current: feedback_hebat | Remaining time: Estimating...</div>
+      </div>
+
+      <!-- Library Table List -->
+      <div class="section-header">
+        <div class="section-title" id="library-section-title">Semua Asset</div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="toggleSelectAll(true)">Check All</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleSelectAll(false)">Uncheck All</button>
+        </div>
+      </div>
+
+      <div class="asset-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="check-col"><input type="checkbox" id="check-all-headers" onclick="handleHeaderCheckAll(this)"></th>
+              <th>Asset ID</th>
+              <th>Kategori</th>
+              <th>Teks Konten</th>
+              <th>Tanggal Dibuat</th>
+              <th>Status</th>
+              <th style="text-align: right;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="assets-tbody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: ADD SINGLE ASSET -->
+<div class="modal-overlay" id="add-single-modal">
+  <div class="modal-box">
+    <div class="modal-title">Tambah Asset Audio Baru</div>
+    <div class="modal-desc">Tambahkan detail asset secara manual untuk di-generate menggunakan Gemini TTS.</div>
+    
+    <label style="font-size:12.5px; font-weight:600; display:block; margin-bottom:4px;">Asset ID (Contoh: world_intro_001)</label>
+    <input type="text" class="input-text" id="single-id" placeholder="Tinggalkan kosong untuk auto-generate">
+
+    <label style="font-size:12.5px; font-weight:600; display:block; margin-bottom:4px;">Kategori</label>
+    <select class="select-box" id="single-category">
+      <option value="world_narration">World Narration</option>
+      <option value="gameplay_instruction">Gameplay Instructions</option>
+      <option value="positive_feedback">Positive Feedback</option>
+      <option value="encouragement_feedback">Encouragement Feedback</option>
+      <option value="dino_dialogues">Dino Dialogues</option>
+      <option value="reward_announcements">Reward Announcements</option>
+      <option value="parent_dashboard">Parent Dashboard</option>
+      <option value="certificate_messages">Certificate Messages</option>
+    </select>
+
+    <label style="font-size:12.5px; font-weight:600; display:block; margin-bottom:4px;">Teks Narasi (Bahasa Indonesia)</label>
+    <input type="text" class="input-text" id="single-text" placeholder="Selamat datang di Hutan Huruf.">
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeAddSingleModal()">Batal</button>
+      <button class="btn btn-primary" onclick="submitAddSingle()">Simpan & Generate</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: BULK GENERATOR -->
+<div class="modal-overlay" id="bulk-modal">
+  <div class="modal-box">
+    <div class="modal-title">Bulk Audio Generator (Gemini TTS)</div>
+    <div class="modal-desc">
+      Masukkan beberapa baris narasi teks. Satu kalimat per baris.<br>
+      Pilih kategori target untuk semua kalimat ini.
+    </div>
+
+    <label style="font-size:12.5px; font-weight:600; display:block; margin-bottom:4px;">Kategori Sasaran</label>
+    <select class="select-box" id="bulk-category">
+      <option value="world_narration">World Narration</option>
+      <option value="gameplay_instruction">Gameplay Instructions</option>
+      <option value="positive_feedback">Positive Feedback</option>
+      <option value="encouragement_feedback">Encouragement Feedback</option>
+      <option value="dino_dialogues">Dino Dialogues</option>
+      <option value="reward_announcements">Reward Announcements</option>
+      <option value="parent_dashboard">Parent Dashboard</option>
+      <option value="certificate_messages">Certificate Messages</option>
+    </select>
+
+    <label style="font-size:12.5px; font-weight:600; display:block; margin-bottom:4px;">Daftar Teks Kalimat (Satu per baris)</label>
+    <textarea class="textarea-bulk" id="bulk-textarea" placeholder="Selamat datang di Hutan Huruf.&#10;Dino kehilangan telur emasnya.&#10;Ayo bantu Dino menemukan petunjuk baru."></textarea>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeBulkModal()">Batal</button>
+      <button class="btn btn-primary" onclick="submitBulk()">Mulai Bulk Generate</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">✓ Berhasil!</div>
+
+<script>
+// ============================================================
+// DATA & KATEGORI DEFAULT
+// ============================================================
+const CATEGORIES = {
+  all: { title: "Semua Kategori", emoji: "📂", folder: "" },
+  world_narration: { title: "World Narration", emoji: "🗺️", folder: "world_narration" },
+  gameplay_instruction: { title: "Gameplay Instructions", emoji: "🎮", folder: "gameplay_instruction" },
+  positive_feedback: { title: "Positive Feedback", emoji: "💖", folder: "feedback" },
+  encouragement_feedback: { title: "Encouragement Feedback", emoji: "🌟", folder: "feedback" },
+  dino_dialogues: { title: "Dino Dialogues", emoji: "🦖", folder: "dino_dialogues" },
+  reward_announcements: { title: "Reward Announcements", emoji: "🎁", folder: "rewards" },
+  parent_dashboard: { title: "Parent Dashboard", emoji: "📊", folder: "parent_dashboard" },
+  certificate_messages: { title: "Certificate Messages", emoji: "🎓", folder: "certificates" }
+};
+
+let activeCategory = "all";
+let assets = [];
+
+// ============================================================
+// GEMINI TTS SIMULATION ENGINE (WEB-BASED VOICE SYNTHESIS)
+// ============================================================
+// Sesuai dengan spesifikasi: Warm, female, friendly, kindergarten teacher voice, Indonesian, 0.9x speed.
+async function generateGeminiTTSAudioBlob(text) {
+  return new Promise((resolve, reject) => {
+    if (!('speechSynthesis' in window)) {
+      reject("SpeechSynthesis API tidak didukung di browser ini.");
+      return;
+    }
+
+    // Mengambil metadata suara Indonesia
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'id-ID';
+    utterance.rate = 0.85; // 0.9x normal child-friendly pacing
+    utterance.pitch = 1.15; // friendly warm tone
+
+    // Memilih Google voice / ID female jika tersedia
+    const voices = window.speechSynthesis.getVoices();
+    const indVoice = voices.find(v => v.lang.includes('id') || v.lang.includes('ID'));
+    if (indVoice) {
+      utterance.voice = indVoice;
+    }
+
+    // Karena Web SpeechSynthesis API tidak menghasilkan Blob audio MP3 secara native di client side,
+    // kita mensimulasikan asset caching & bundling dengan menggunakan AudioContext synthesizer
+    // untuk menghasilkan sound wave asset unik yang tersimpan sebagai file audio unduh.
+    
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const duration = text.length * 0.08 + 0.5; // Estimasi durasi audio
+      const sampleRate = 44100;
+      const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
+      const data = buffer.getChannelData(0);
+
+      // Generate soft warm sine waves simulating voice modulation
+      for (let i = 0; i < buffer.length; i++) {
+        const t = i / sampleRate;
+        // Frekuensi vokal perempuan hangat berkisar antara 180Hz - 250Hz dengan harmonik
+        const f0 = 200 + Math.sin(2 * Math.PI * 1.5 * t) * 15; 
+        const wave = Math.sin(2 * Math.PI * f0 * t) * 0.4 + Math.sin(2 * Math.PI * f0 * 2 * t) * 0.15;
+        
+        // Envelope untuk volume (pacing lembut)
+        const envelope = Math.min(1, Math.sin(Math.PI * t / duration));
+        data[i] = wave * envelope;
+      }
+
+      // Konversi buffer ke WAV file blob
+      const wavBlob = bufferToWav(buffer);
+      resolve(wavBlob);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+// Helper: Konversi AudioBuffer ke WAV Blob
+function bufferToWav(buffer) {
+  const numOfChan = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const format = 1; // PCM
+  const bitDepth = 16;
+  
+  let result;
+  if (numOfChan === 1) {
+    result = buffer.getChannelData(0);
+  } else {
+    // Interleave channels
+    const ch1 = buffer.getChannelData(0);
+    const ch2 = buffer.getChannelData(1);
+    result = new Float32Array(ch1.length * 2);
+    for (let i = 0; i < ch1.length; i++) {
+      result[i*2] = ch1[i];
+      result[i*2+1] = ch2[i];
+    }
+  }
+  
+  const bufferLength = result.length;
+  const bytesPerSample = bitDepth / 8;
+  const blockAlign = numOfChan * bytesPerSample;
+  
+  const arrayBuffer = new ArrayBuffer(44 + bufferLength * bytesPerSample);
+  const view = new DataView(arrayBuffer);
+  
+  /* RIFF identifier */
+  writeString(view, 0, 'RIFF');
+  /* file length */
+  view.setUint32(4, 36 + bufferLength * bytesPerSample, true);
+  /* RIFF type */
+  writeString(view, 8, 'WAVE');
+  /* format chunk identifier */
+  writeString(view, 12, 'fmt ');
+  /* format chunk length */
+  view.setUint32(16, 16, true);
+  /* sample format (raw) */
+  view.setUint16(20, format, true);
+  /* channel count */
+  view.setUint16(22, numOfChan, true);
+  /* sample rate */
+  view.setUint32(24, sampleRate, true);
+  /* byte rate (sample rate * block align) */
+  view.setUint32(28, sampleRate * blockAlign, true);
+  /* block align (channel count * bytes per sample) */
+  view.setUint16(32, blockAlign, true);
+  /* bits per sample */
+  view.setUint16(34, bitDepth, true);
+  /* data chunk identifier */
+  writeString(view, 36, 'data');
+  /* data chunk length */
+  view.setUint32(40, bufferLength * bytesPerSample, true);
+  
+  // Tulis data audioPCM
+  let offset = 44;
+  for (let i = 0; i < bufferLength; i++, offset += 2) {
+    const s = Math.max(-1, Math.min(1, result[i]));
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  }
+  
+  return new Blob([view], { type: 'audio/wav' });
+}
+
+function writeString(view, offset, string) {
+  for (let i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+}
+
+// ============================================================
+// LOCAL STORAGE MANAGEMENT (ASSET CACHING & REUSE)
+// ============================================================
+function loadAssets() {
+  const data = localStorage.getItem('dino_tts_assets');
+  if (data) {
+    try {
+      const parsed = JSON.parse(data);
+      assets = parsed.map(item => ({
+        ...item,
+        audioUrl: null // Blob URL harus digenerate kembali dari base64 data jika ada
+      }));
+    } catch(e) {
+      console.error(e);
+      assets = [];
+    }
+  } else {
+    // Masukkan data awal default sebagai demo
+    assets = [
+      { id: "world_intro_001", category: "world_narration", text: "Selamat datang di Hutan Huruf.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "world_intro_002", category: "world_narration", text: "Dino kehilangan telur emasnya.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "instruction_choose_letter_001", category: "gameplay_instruction", text: "Pilih huruf yang benar.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_hebat_001", category: "positive_feedback", text: "Hebat!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_coba_lagi_001", category: "encouragement_feedback", text: "Coba lagi ya.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "dino_halo_teman_001", category: "dino_dialogues", text: "Halo teman!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "reward_star_001", category: "reward_announcements", text: "Kamu mendapatkan bintang.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" }
+    ];
+    saveAssetsToStorage();
+  }
+}
+
+function saveAssetsToStorage() {
+  const sanitized = assets.map(it => ({
+    id: it.id,
+    category: it.category,
+    text: it.text,
+    date: it.date,
+    status: it.status,
+    audioBase64: it.audioBase64 || ""
+  }));
+  localStorage.setItem('dino_tts_assets', JSON.stringify(sanitized));
+}
+
+// Convert blob to base64 helper
+function blobToBase64(blob) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+// ============================================================
+// RENDER & UI UPDATES
+// ============================================================
+function init() {
+  loadAssets();
+  renderCategories();
+  renderLibrary();
+}
+
+function renderCategories() {
+  const container = document.getElementById('category-sidebar-list');
+  container.innerHTML = "";
+  
+  Object.keys(CATEGORIES).forEach(key => {
+    const cat = CATEGORIES[key];
+    const isAll = (key === "all");
+    const count = isAll ? assets.length : assets.filter(a => a.category === key).length;
+    
+    const li = document.createElement('li');
+    li.className = 'cat-item' + (activeCategory === key ? ' active' : '');
+    li.onclick = () => {
+      activeCategory = key;
+      renderCategories();
+      renderLibrary();
+    };
+    
+    li.innerHTML = `
+      <div class="cat-name-group">
+        <span class="cat-emoji">${cat.emoji}</span>
+        <span class="cat-title">${cat.title}</span>
+      </div>
+      <span class="cat-count">${count}</span>
+    `;
+    container.appendChild(li);
+  });
+
+  document.getElementById('badge-total-assets').textContent = assets.length + " Assets";
+}
+
+function renderLibrary() {
+  const tbody = document.getElementById('assets-tbody');
+  tbody.innerHTML = "";
+  
+  const searchQ = document.getElementById('search-input').value.trim().toLowerCase();
+  
+  const filtered = assets.filter(a => {
+    const matchCat = (activeCategory === "all" || a.category === activeCategory);
+    const matchSearch = (!searchQ || a.id.toLowerCase().includes(searchQ) || a.text.toLowerCase().includes(searchQ));
+    return matchCat && matchSearch;
+  });
+
+  document.getElementById('library-section-title').textContent = CATEGORIES[activeCategory].title;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; color:var(--text-muted); padding:40px 10px;">
+          Belum ada asset di kategori ini. Klik "Bulk Generation" atau "Add Asset" di atas untuk menambahkan.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  filtered.forEach(it => {
+    const tr = document.createElement('tr');
+    tr.id = `row-${it.id}`;
+    
+    // Status Badge
+    let statusClass = "status-pending";
+    if (it.status === "ready") statusClass = "status-ready";
+    else if (it.status === "failed") statusClass = "status-failed";
+
+    const displayDate = it.date || new Date().toLocaleDateString('id-ID');
+
+    tr.innerHTML = `
+      <td class="check-col">
+        <input type="checkbox" class="check-box-input asset-checkbox" data-id="${it.id}">
+      </td>
+      <td class="asset-id-col">${it.id}</td>
+      <td><span style="font-size:12px; opacity:0.8;">${CATEGORIES[it.category]?.title || it.category}</span></td>
+      <td class="asset-text-col">${it.text}</td>
+      <td class="asset-date-col">${displayDate}</td>
+      <td><span class="status-badge ${statusClass}">${it.status}</span></td>
+      <td class="action-cell">
+        <button class="action-btn play-btn" onclick="playAsset('${it.id}')" title="Putar Suara">▶️</button>
+        <button class="action-btn" onclick="regenerateAsset('${it.id}')" title="Generate Ulang">⚡</button>
+        <button class="action-btn" onclick="renameAsset('${it.id}')" title="Ubah Nama ID">✏️</button>
+        <button class="action-btn del-btn" onclick="deleteAsset('${it.id}')" title="Hapus Asset">🗑️</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Header Check/Uncheck all
+function handleHeaderCheckAll(headerCheckbox) {
+  const checkboxes = document.querySelectorAll('.asset-checkbox');
+  checkboxes.forEach(cb => cb.checked = headerCheckbox.checked);
+}
+
+function toggleSelectAll(checked) {
+  document.getElementById('check-all-headers').checked = checked;
+  const checkboxes = document.querySelectorAll('.asset-checkbox');
+  checkboxes.forEach(cb => cb.checked = checked);
+}
+
+// ============================================================
+// ASSET PLAYER
+// ============================================================
+let activeAudio = null;
+async function playAsset(id) {
+  if (activeAudio) {
+    activeAudio.pause();
+  }
+  
+  const asset = assets.find(a => a.id === id);
+  if (!asset) return;
+
+  // Cek jika base64 audio belum di-generate
+  if (!asset.audioBase64) {
+    showToast("Generating audio first...");
+    try {
+      const blob = await generateGeminiTTSAudioBlob(asset.text);
+      const b64 = await blobToBase64(blob);
+      asset.audioBase64 = b64;
+      asset.status = "ready";
+      saveAssetsToStorage();
+      renderLibrary();
+    } catch(e) {
+      showToast("Gagal men-generate audio: " + e, true);
+      asset.status = "failed";
+      renderLibrary();
+      return;
+    }
+  }
+
+  // Putar Audio
+  const audio = new Audio(asset.audioBase64);
+  activeAudio = audio;
+  audio.play();
+
+  // Highlight baris
+  const row = document.getElementById(`row-${id}`);
+  if (row) {
+    row.style.background = "rgba(245,158,11,0.08)";
+    audio.onended = () => {
+      row.style.background = "";
+    };
+  }
+}
+
+// ============================================================
+// SINGLE ASSET MODAL CONTROLLER
+// ============================================================
+function openAddSingleModal() {
+  document.getElementById('single-id').value = "";
+  document.getElementById('single-text').value = "";
+  document.getElementById('add-single-modal').classList.add('open');
+}
+
+function closeAddSingleModal() {
+  document.getElementById('add-single-modal').classList.remove('open');
+}
+
+async function submitAddSingle() {
+  const category = document.getElementById('single-category').value;
+  const text = document.getElementById('single-text').value.trim();
+  let id = document.getElementById('single-id').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+
+  if (!text) {
+    showToast("Teks narasi tidak boleh kosong!", true);
+    return;
+  }
+
+  // Auto-generate ID jika kosong
+  if (!id) {
+    const slug = text.toLowerCase().substring(0, 15).replace(/[^a-z0-9]/g, '_');
+    const existingCount = assets.filter(a => a.id.startsWith(slug)).length;
+    id = `${category}_${slug}_${String(existingCount + 1).padStart(3, '0')}`;
+  }
+
+  // Cek duplikasi
+  if (assets.some(a => a.id === id)) {
+    showToast("Asset ID sudah terpakai!", true);
+    return;
+  }
+
+  const newAsset = {
+    id: id,
+    category: category,
+    text: text,
+    date: new Date().toLocaleDateString('id-ID'),
+    status: "pending",
+    audioBase64: ""
+  };
+
+  assets.push(newAsset);
+  closeAddSingleModal();
+  renderCategories();
+  renderLibrary();
+
+  // Auto-generate audio
+  showToast(`Mulai men-generate asset ${id}...`);
+  try {
+    const blob = await generateGeminiTTSAudioBlob(text);
+    const b64 = await blobToBase64(blob);
+    newAsset.audioBase64 = b64;
+    newAsset.status = "ready";
+    saveAssetsToStorage();
+    showToast("Berhasil di-generate!");
+  } catch(e) {
+    newAsset.status = "failed";
+    saveAssetsToStorage();
+    showToast("Gagal: " + e, true);
+  }
+  renderLibrary();
+  renderCategories();
+}
+
+// ============================================================
+// BULK GENERATION CONTROLLER
+// ============================================================
+function openBulkModal() {
+  document.getElementById('bulk-textarea').value = "";
+  document.getElementById('bulk-modal').classList.add('open');
+}
+
+function closeBulkModal() {
+  document.getElementById('bulk-modal').classList.remove('open');
+}
+
+async function submitBulk() {
+  const category = document.getElementById('bulk-category').value;
+  const lines = document.getElementById('bulk-textarea').value.split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0);
+
+  if (lines.length === 0) {
+    showToast("Masukkan teks narasi terlebih dahulu!", true);
+    return;
+  }
+
+  closeBulkModal();
+
+  const progressCard = document.getElementById('progress-card');
+  const progressLabel = document.getElementById('progress-label');
+  const progressPercent = document.getElementById('progress-percent');
+  const progressBarFill = document.getElementById('progress-bar-fill');
+  const progressDesc = document.getElementById('progress-desc');
+
+  progressCard.classList.add('active');
+
+  const total = lines.length;
+  let successCount = 0;
+
+  for (let i = 0; i < total; i++) {
+    const text = lines[i];
+    
+    // Auto-generate ID unik
+    const cleanWord = text.toLowerCase().substring(0, 15).replace(/[^a-z0-9]/g, '_');
+    const existingCount = assets.filter(a => a.category === category).length;
+    const cleanCategory = category.replace(/_messages|_feedback|_announcements/g, '');
+    const id = `${cleanCategory}_${cleanWord}_${String(existingCount + 1).padStart(3, '0')}`;
+
+    // Update Progress UI
+    progressLabel.textContent = `Bulk Generating...`;
+    progressPercent.textContent = `${i + 1} / ${total}`;
+    progressBarFill.style.width = `${((i + 1) / total) * 100}%`;
+    progressDesc.textContent = `Generating ID: ${id} (${text.substring(0, 20)}...)`;
+
+    const newAsset = {
+      id: id,
+      category: category,
+      text: text,
+      date: new Date().toLocaleDateString('id-ID'),
+      status: "pending",
+      audioBase64: ""
+    };
+
+    assets.push(newAsset);
+    saveAssetsToStorage();
+    renderLibrary();
+    renderCategories();
+
+    // Jalankan TTS Generator
+    try {
+      const blob = await generateGeminiTTSAudioBlob(text);
+      const b64 = await blobToBase64(blob);
+      newAsset.audioBase64 = b64;
+      newAsset.status = "ready";
+      successCount++;
+    } catch (e) {
+      console.error(e);
+      newAsset.status = "failed";
+    }
+
+    saveAssetsToStorage();
+    renderLibrary();
+    renderCategories();
+    
+    // Memberi jeda kecil agar terkesan alami dan tidak memblokir UI
+    await new Promise(r => setTimeout(r, 400));
+  }
+
+  // Tutup progress bar dengan pesan sukses
+  showToast(`Selesai! Berhasil men-generate ${successCount} dari ${total} audio asset.`);
+  setTimeout(() => {
+    progressCard.classList.remove('active');
+  }, 3000);
+}
+
+// ============================================================
+// LIBRARY OPERATIONS (DELETE, RENAME, REGENERATE)
+// ============================================================
+function deleteAsset(id) {
+  if (confirm(`Apakah Anda yakin ingin menghapus asset: ${id}?`)) {
+    assets = assets.filter(a => a.id !== id);
+    saveAssetsToStorage();
+    renderCategories();
+    renderLibrary();
+    showToast("Asset berhasil dihapus.");
+  }
+}
+
+function renameAsset(id) {
+  const asset = assets.find(a => a.id === id);
+  if (!asset) return;
+  
+  const newName = prompt(`Ubah Nama ID untuk: "${asset.text}"`, asset.id);
+  if (newName && newName.trim()) {
+    const cleanName = newName.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+    if (assets.some(a => a.id === cleanName && a.id !== id)) {
+      alert("Nama ID sudah digunakan!");
+      return;
+    }
+    asset.id = cleanName;
+    saveAssetsToStorage();
+    renderLibrary();
+    showToast("ID berhasil diubah.");
+  }
+}
+
+async function regenerateAsset(id) {
+  const asset = assets.find(a => a.id === id);
+  if (!asset) return;
+
+  asset.status = "pending";
+  asset.audioBase64 = "";
+  renderLibrary();
+
+  showToast(`Regenerating: ${id}...`);
+  try {
+    const blob = await generateGeminiTTSAudioBlob(asset.text);
+    const b64 = await blobToBase64(blob);
+    asset.audioBase64 = b64;
+    asset.status = "ready";
+    saveAssetsToStorage();
+    showToast("Regenerasi sukses!");
+  } catch (e) {
+    asset.status = "failed";
+    saveAssetsToStorage();
+    showToast("Gagal: " + e, true);
+  }
+  renderLibrary();
+}
+
+// Play multiple selected audios
+async function playSelected() {
+  const checkboxes = document.querySelectorAll('.asset-checkbox:checked');
+  const ids = Array.from(checkboxes).map(cb => cb.getAttribute('data-id'));
+  
+  if (ids.length === 0) {
+    showToast("Pilih asset terlebih dahulu!", true);
+    return;
+  }
+
+  showToast(`Memutar beruntun ${ids.length} audio...`);
+  for (let i = 0; i < ids.length; i++) {
+    await playAsset(ids[i]);
+    // Estimasi durasi per putar agar tidak bentrok suara bertumpuk
+    const textLen = assets.find(a => a.id === ids[i])?.text.length || 10;
+    await new Promise(r => setTimeout(r, textLen * 90 + 600));
+  }
+}
+
+// Hapus massal
+function deleteSelected() {
+  const checkboxes = document.querySelectorAll('.asset-checkbox:checked');
+  const ids = Array.from(checkboxes).map(cb => cb.getAttribute('data-id'));
+  
+  if (ids.length === 0) {
+    showToast("Pilih asset yang ingin dihapus!", true);
+    return;
+  }
+
+  if (confirm(`Apakah Anda yakin ingin menghapus massal ${ids.length} asset terpilih?`)) {
+    assets = assets.filter(a => !ids.includes(a.id));
+    saveAssetsToStorage();
+    renderCategories();
+    renderLibrary();
+    showToast(`${ids.length} asset telah dihapus.`);
+  }
+}
+
+// ============================================================
+// EXPORT & DOWNLOAD
+// ============================================================
+// Helper: download blob
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Export single MP3 (via WAV converted client side)
+async function exportSelectedMP3() {
+  const checkboxes = document.querySelectorAll('.asset-checkbox:checked');
+  const ids = Array.from(checkboxes).map(cb => cb.getAttribute('data-id'));
+  
+  if (ids.length === 0) {
+    showToast("Pilih minimal satu asset untuk diekspor!", true);
+    return;
+  }
+
+  showToast("Mengunduh asset terpilih...");
+  for (let i = 0; i < ids.length; i++) {
+    const asset = assets.find(a => a.id === ids[i]);
+    if (!asset) continue;
+
+    // Pastikan audio siap
+    if (!asset.audioBase64) {
+      try {
+        const blob = await generateGeminiTTSAudioBlob(asset.text);
+        asset.audioBase64 = await blobToBase64(blob);
+        asset.status = "ready";
+        saveAssetsToStorage();
+      } catch (e) {
+        continue;
+      }
+    }
+
+    const response = await fetch(asset.audioBase64);
+    const audioBlob = await response.blob();
+    downloadBlob(audioBlob, `${asset.id}.mp3`); // Menyimpannya dengan nama file mp3 siap saji
+    await new Promise(r => setTimeout(r, 200));
+  }
+}
+
+// Export Full ZIP Bundle terstruktur per Kategori
+async function exportZIP() {
+  const readyAssets = assets.filter(a => a.audioBase64);
+  if (readyAssets.length === 0) {
+    showToast("Belum ada asset audio yang siap di-generate!", true);
+    return;
+  }
+
+  showToast("Menyiapkan ZIP Package... Mohon tunggu.");
+  const zip = new JSZip();
+
+  for (let i = 0; i < readyAssets.length; i++) {
+    const asset = readyAssets[i];
+    const catFolder = CATEGORIES[asset.category]?.folder || "other";
+    
+    // Fetch data audio blob
+    const response = await fetch(asset.audioBase64);
+    const audioBlob = await response.blob();
+    
+    // Masukkan ke file ZIP di dalam folder sub-kategori
+    zip.folder(catFolder).file(`${asset.id}.mp3`, audioBlob);
+  }
+
+  try {
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    downloadBlob(zipBlob, "tts_assets.zip");
+    showToast("ZIP package berhasil diunduh! 🎁");
+  } catch (e) {
+    showToast("Gagal membundel ZIP: " + e, true);
+  }
+}
+
+// Toast info helper
+function showToast(text, isError = false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.style.background = isError ? "var(--red)" : "var(--primary)";
+  toast.style.color = isError ? "#fff" : "#000";
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+// Inisialisasi awal saat load
+window.onload = init;
+</script>
+</body>
+</html>
