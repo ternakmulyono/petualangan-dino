@@ -26,6 +26,13 @@ function initNavEvents() {
         document.getElementById('map-page-1').classList.add('hidden');
         document.getElementById('map-page-2').classList.remove('hidden');
         document.getElementById('screen-map').scrollTop = 0;
+        // Mainkan petunjuk jilid 2: Latihan hari ini selesai. Target harian berhasil dicapai. (Atau gunakan MP3 40 & 39)
+        setTimeout(() => {
+            playLetterSound("Latihan hari ini selesai.");
+            setTimeout(() => {
+                playLetterSound("Target harian berhasil dicapai.");
+            }, 3000);
+        }, 500);
     });
 
     document.getElementById('btn-prev-map').addEventListener('click', () => {

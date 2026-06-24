@@ -20,7 +20,8 @@ async function loadAudioMetadata() {
             const data = await response.json();
             data.forEach(item => {
                 if (item.text && item.filename) {
-                    audioMetadata[item.text.trim().toUpperCase()] = item.filename;
+                    const normalizedText = item.text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ").trim().toUpperCase();
+                    audioMetadata[normalizedText] = item.filename;
                 }
             });
         }
@@ -31,7 +32,8 @@ async function loadAudioMetadata() {
             const dataTts = await responseTts.json();
             dataTts.forEach(item => {
                 if (item.text && item.filename) {
-                    audioMetadata[item.text.trim().toUpperCase()] = item.filename;
+                    const normalizedText = item.text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ").trim().toUpperCase();
+                    audioMetadata[normalizedText] = item.filename;
                 }
             });
         }
@@ -70,7 +72,8 @@ function playLetterSound(letter, loop = false) {
     // Selalu hentikan audio sebelumnya terlebih dahulu
     stopLetterSound();
 
-    const cleanLetter = letter.replace(/-/g, '').trim().toUpperCase();
+    // Menghilangkan tanda baca di ujung & spasi berlebih untuk mempermudah pencarian metadata kalimat utuh, tapi jangan hilangkan spasi antar kata!
+    const cleanLetter = letter.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ").trim().toUpperCase();
     currentTTSLoop = loop;
     isTTSPlaying = true;
 

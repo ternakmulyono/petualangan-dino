@@ -164,9 +164,11 @@ function startLevel(range, mode) {
                 };
             }
 
-            // Pilih suku kata pertama secara default saat masuk halaman
+            // Pilih suku kata pertama secara default saat masuk halaman (Beri jeda agar tidak tabrakan dengan suara instruksi)
             if (syllables.length > 0 && typeof selectReadWriteItem === 'function') {
-                selectReadWriteItem(syllables[0]);
+                setTimeout(() => {
+                    selectReadWriteItem(syllables[0]);
+                }, 3000);
             }
         }, 100);
 
@@ -179,6 +181,11 @@ function startLevel(range, mode) {
         recordBtn.className = "mic-button";
         document.getElementById('icon-mic-read').classList.remove('hidden');
         document.getElementById('icon-stop-read').classList.add('hidden');
+
+        // Mainkan petunjuk membaca: Ikuti garis untuk menulis huruf. (Atau setara MP3: 0007)
+        setTimeout(() => {
+            playLetterSound("Ikuti garis untuk menulis huruf.");
+        }, 300);
 
         return;
     }
@@ -196,6 +203,10 @@ function startLevel(range, mode) {
         changeScreen('game');
         document.getElementById('game-drag-match-view').classList.remove('hidden');
         loadDragMatchChallenge();
+        // Berikan perintah suara untuk anak: Sentuh huruf yang diminta. (MP3: 0008)
+        setTimeout(() => {
+            playLetterSound("Sentuh huruf yang diminta.");
+        }, 300);
         return;
     }
 
@@ -240,6 +251,10 @@ function startLevel(range, mode) {
         document.getElementById('icon-mic-picture').classList.remove('hidden');
         document.getElementById('icon-stop-picture').classList.add('hidden');
 
+        // Berikan perintah suara untuk anak: Dengarkan lalu pilih jawabannya. (MP3: 0006)
+        setTimeout(() => {
+            playLetterSound("Dengarkan lalu pilih jawabannya.");
+        }, 300);
         return;
     }
 
@@ -267,6 +282,10 @@ function startLevel(range, mode) {
 
     changeScreen('game');
     loadLetterChallenge();
+    // Berikan perintah suara untuk anak: Pilih huruf yang benar. (MP3: 0005)
+    setTimeout(() => {
+        playLetterSound("Pilih huruf yang benar.");
+    }, 300);
 }
 
 // --- LOAD FASE MATCHING (DRAG HURUF KE KERANJANG) ---
@@ -408,7 +427,8 @@ function loadLetterChallenge() {
         );
     });
 
-    setTimeout(() => { playLetterSound(letter); }, 400);
+    // Beri jeda 3000ms agar instruksi "Pilih huruf yang benar" selesai diucapkan terlebih dahulu
+    setTimeout(() => { playLetterSound(letter); }, 3000);
 }
 
 // --- LOAD MODE PASANGKAN HURUF (BESAR-KECIL) ---
