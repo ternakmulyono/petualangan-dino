@@ -170,23 +170,11 @@ function updateMapScreen() {
 }
 
 // --- NOTIFIKASI TOAST ---
-let notifTimeout = null;
 function showNotification(text) {
-    const notif = document.getElementById('game-notification');
-    notif.querySelector('.notification-text').textContent = text;
-    notif.classList.remove('hidden');
-    notif.classList.add('show');
-
     // Mainkan suara narasi notifikasi (Voice Feedback) menggunakan Google TTS Fallback
     if (typeof playLetterSoundFallback === 'function') {
         // Hilangkan emoji agar tidak ikut dilafalkan aneh oleh TTS
         const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, "");
         playLetterSoundFallback(cleanText);
     }
-
-    if (notifTimeout) clearTimeout(notifTimeout);
-    notifTimeout = setTimeout(() => {
-        notif.classList.remove('show');
-        setTimeout(() => notif.classList.add('hidden'), 300);
-    }, 2800);
 }
