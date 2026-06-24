@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curriculum Exporter â€” Calistung Jilid 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2d3148;
+    --primary: #6366f1;
+    --primary-hover: #818cf8;
+    --green: #22c55e;
+    --green-dim: #166534;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --radius: 10px;
+    --font: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* â”€â”€ HEADER â”€â”€ */
+  header {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    border-bottom: 1px solid #3730a3;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: var(--primary);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+  }
+
+  .logo-text h1 { font-size: 17px; font-weight: 800; color: #fff; }
+  .logo-text p  { font-size: 12px; color: #a5b4fc; margin-top: 1px; }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+
+  .badge {
+    background: #312e81;
+    border: 1px solid #4338ca;
+    color: #a5b4fc;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* â”€â”€ TOOLBAR â”€â”€ */
+  .toolbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-group {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding-right: 14px;
+    border-right: 1px solid var(--border);
+  }
+
+  .toolbar-group:last-child { border-right: none; }
+
+  .toolbar-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--primary-hover); }
+
+  .btn-green {
+    background: #16a34a;
+    color: #fff;
+  }
+  .btn-green:hover { background: #15803d; }
+
+  .btn-amber {
+    background: #d97706;
+    color: #fff;
+  }
+  .btn-amber:hover { background: #b45309; }
+
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* â”€â”€ MAIN LAYOUT â”€â”€ */
+  .main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 0;
+    overflow: hidden;
+    height: calc(100vh - 120px);
+  }
+
+  /* â”€â”€ EDITOR PANEL â”€â”€ */
+  .editor-panel {
+    overflow-y: auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-chip .val {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .stat-chip .lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* â”€â”€ SECTION â”€â”€ */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .section-header:hover { background: #252941; }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .section-type-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .type-huruf      { background: #1e3a5f; color: #60a5fa; }
+  .type-suku_kata  { background: #1a3a2a; color: #4ade80; }
+  .type-kata       { background: #3b2a1a; color: #fb923c; }
+  .type-kalimat    { background: #2a1a3b; color: #c084fc; }
+
+  .section-count {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .section-chevron {
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .section.collapsed .section-chevron { transform: rotate(-90deg); }
+  .section.collapsed .section-body { display: none; }
+
+  .section-body { padding: 12px 16px; }
+
+  /* â”€â”€ ITEMS GRID â”€â”€ */
+  .items-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .item-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+
+  .item-chip:hover { border-color: var(--primary); color: var(--primary-hover); }
+
+  .item-chip .del-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1;
+  }
+  .item-chip:hover .del-btn { display: inline; }
+
+  /* â”€â”€ ADD ITEM â”€â”€ */
+  .add-item-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .input-text {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    width: 140px;
+    text-transform: uppercase;
+    transition: border-color 0.15s;
+  }
+  .input-text:focus { outline: none; border-color: var(--primary); }
+  .input-text::placeholder { color: var(--text-muted); text-transform: none; }
+
+  /* â”€â”€ IMPORT MODAL â”€â”€ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    place-items: center;
+    z-index: 1000;
+  }
+  .modal-overlay.open { display: grid; }
+
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    width: 500px;
+    max-width: 95vw;
+  }
+
+  .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+  .modal-desc  { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+
+  .textarea-import {
+    width: 100%;
+    height: 200px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 12px;
+    resize: vertical;
+    line-height: 1.8;
+  }
+  .textarea-import:focus { outline: none; border-color: var(--primary); }
+
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+
+  .type-select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 12px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .type-select:focus { outline: none; border-color: var(--primary); }
+
+  /* â”€â”€ PREVIEW PANEL â”€â”€ */
+  .preview-panel {
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: #0a0c12;
+  }
+
+  .preview-header {
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .preview-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .preview-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .preview-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .preview-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: var(--font);
+  }
+  .preview-tab.active { color: var(--primary-hover); border-bottom-color: var(--primary); }
+  .preview-tab:hover:not(.active) { color: var(--text-dim); }
+
+  .preview-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 2;
+    color: #a5f3fc;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .preview-content.json-view { color: #86efac; line-height: 1.6; }
+
+  .preview-footer {
+    padding: 12px 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+
+  /* â”€â”€ TAHAP FILTER â”€â”€ */
+  .tahap-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+  .tahap-btn:hover { border-color: var(--primary); color: var(--text); }
+  .tahap-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .tahap-btn.t1.active { background: #2563eb; border-color: #1d4ed8; }
+  .tahap-btn.t2.active { background: #16a34a; border-color: #15803d; }
+
+  .tahap-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 4px;
+  }
+  .tahap-1 { background: #1e3a8a; color: #93c5fd; }
+  .tahap-2 { background: #14532d; color: #86efac; }
+
+  /* â”€â”€ SEARCH â”€â”€ */
+  .search-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 12px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    width: 200px;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { outline: none; border-color: var(--primary); }
+  .search-input::placeholder { color: var(--text-muted); }
+
+  /* â”€â”€ TOAST â”€â”€ */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #16a34a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 8px;
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* â”€â”€ SCROLLBAR â”€â”€ */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3d4267; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">ðŸ“š</div>
+    <div class="logo-text">
+      <h1>Curriculum Exporter</h1>
+      <p>Calistung Audio Factory â€” Jilid 1</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span class="badge" id="badge-count">0 item</span>
+    <span class="badge" id="badge-jilid">Jilid 1</span>
+  </div>
+</header>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-group">
+    <span class="toolbar-label">Tambah</span>
+    <button class="btn btn-ghost btn-sm" onclick="openImport()">ðŸ“¥ Import Bulk</button>
+    <button class="btn btn-ghost btn-sm" onclick="addSection()">ï¼‹ Kelompok Baru</button>
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Tahap</span>
+    <button class="tahap-btn active" id="filter-all" onclick="setTahapFilter('all')">Semua</button>
+    <button class="tahap-btn t1" id="filter-1" onclick="setTahapFilter('1')">Tahap 1 â€” Huruf</button>
+    <button class="tahap-btn t2" id="filter-2" onclick="setTahapFilter('2')">Tahap 2 â€” Suku Kata & Kata</button>
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Cari</span>
+    <input class="search-input" type="text" id="search-input" placeholder="Cari item..." oninput="renderAll()">
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Export</span>
+    <button class="btn btn-amber" onclick="exportTXT()">ðŸ’¾ Semua TXT</button>
+    <button class="btn btn-green" onclick="exportJSON()">ðŸ“¦ Semua JSON</button>
+    <button class="btn btn-primary" onclick="exportTahap()">âš¡ Export Tahap Aktif</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- EDITOR PANEL -->
+  <div class="editor-panel" id="editor-panel">
+    <div class="stats-bar" id="stats-bar"></div>
+    <div id="sections-container"></div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+    <div class="preview-header">
+      <div class="preview-title">
+        <div class="preview-dot"></div>
+        Live Preview
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="copyPreview()">ðŸ“‹ Copy</button>
+    </div>
+    <div class="preview-tabs">
+      <button class="preview-tab active" id="tab-txt" onclick="switchTab('txt')">TXT (Audio Factory)</button>
+      <button class="preview-tab" id="tab-json" onclick="switchTab('json')">JSON (App Data)</button>
+    </div>
+    <div class="preview-content" id="preview-content"></div>
+    <div style="padding:8px 16px;background:var(--surface2);border-top:1px solid var(--border);font-size:11px;color:var(--text-muted);" id="preview-info">Semua item</div>
+    <div class="preview-footer">
+      <button class="btn btn-amber btn-sm" style="flex:1" onclick="exportTXT()" id="btn-export-txt">ðŸ’¾ Export TXT</button>
+      <button class="btn btn-green btn-sm" style="flex:1" onclick="exportJSON()" id="btn-export-json">ðŸ“¦ Export JSON</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="modal-overlay" id="import-modal">
+  <div class="modal-box">
+    <div class="modal-title">ðŸ“¥ Import Bulk</div>
+    <div class="modal-desc">
+      Paste daftar materi. Satu item per baris. Baris kosong diabaikan.<br>
+      Pilih kelompok tujuan dan tipe item.
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <select class="type-select" id="import-type">
+        <option value="huruf">Huruf</option>
+        <option value="suku_kata" selected>Suku Kata</option>
+        <option value="kata">Kata</option>
+        <option value="kalimat">Kalimat</option>
+      </select>
+      <select class="type-select" id="import-section">
+        <option value="new">ï¼‹ Kelompok Baru</option>
+      </select>
+    </div>
+    <textarea class="textarea-import" id="import-textarea" placeholder="A&#10;I&#10;U&#10;E&#10;O"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeImport()">Batal</button>
+      <button class="btn btn-primary" onclick="doImport()">Import â†’</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">âœ“ Berhasil!</div>
+
+<script>
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// DATA â€” Kurikulum Jilid 1
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+let activeTahapFilter = 'all';
+
+let sections = [
+  {
+    id: 's1', title: 'Huruf Vokal', collapsed: false, tahap: '1',
+    items: [
+      { id: 1, text: 'A', type: 'huruf' },
+      { id: 2, text: 'I', type: 'huruf' },
+      { id: 3, text: 'U', type: 'huruf' },
+      { id: 4, text: 'E', type: 'huruf' },
+      { id: 5, text: 'O', type: 'huruf' },
+    ]
+  },
+  {
+    id: 's2', title: 'Huruf Konsonan Bâ€“G', collapsed: false, tahap: '1',
+    items: [
+      { id: 6, text: 'B', type: 'huruf' },
+      { id: 7, text: 'C', type: 'huruf' },
+      { id: 8, text: 'D', type: 'huruf' },
+      { id: 9, text: 'F', type: 'huruf' },
+      { id: 10, text: 'G', type: 'huruf' },
+    ]
+  },
+  {
+    id: 's3', title: 'Huruf Konsonan Hâ€“M', collapsed: false, tahap: '1',
+    items: [
+      { id: 11, text: 'H', type: 'huruf' },
+      { id: 12, text: 'J', type: 'huruf' },
+      { id: 13, text: 'K', type: 'huruf' },
+      { id: 14, text: 'L', type: 'huruf' },
+      { id: 15, text: 'M', type: 'huruf' },
+    ]
+  },
+  {
+    id: 's4', title: 'Huruf Konsonan Nâ€“S', collapsed: false, tahap: '1',
+    items: [
+      { id: 16, text: 'N', type: 'huruf' },
+      { id: 17, text: 'P', type: 'huruf' },
+      { id: 18, text: 'Q', type: 'huruf' },
+      { id: 19, text: 'R', type: 'huruf' },
+      { id: 20, text: 'S', type: 'huruf' },
+    ]
+  },
+  {
+    id: 's5', title: 'Huruf Konsonan Tâ€“Z', collapsed: false, tahap: '1',
+    items: [
+      { id: 21, text: 'T', type: 'huruf' },
+      { id: 22, text: 'V', type: 'huruf' },
+      { id: 23, text: 'W', type: 'huruf' },
+      { id: 24, text: 'X', type: 'huruf' },
+      { id: 25, text: 'Y', type: 'huruf' },
+      { id: 26, text: 'Z', type: 'huruf' },
+    ]
+  },
+  {
+    id: 's6', title: 'Suku Kata Vokal Ganda (A)', collapsed: true,
+    tahap: '2', items: ['AA','AI','AU','AE','AO','A-BA','A-DA','A-PI','A-KI','A-KU','A-BU','A-DE','A-LE','A-LO','A-DO'].map((t,i) => ({ id: 100+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's7', title: 'Suku Kata Vokal Ganda (I)', collapsed: true,
+    tahap: '2', items: ['IA','II','IU','IE','IO','I-PA','I-MA','I-RI','I-KI','I-MU','I-PU','I-KE','I-DE','I-TO','I-NO'].map((t,i) => ({ id: 200+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's8', title: 'Suku Kata Vokal Ganda (U)', collapsed: true,
+    tahap: '2', items: ['UA','UI','UU','UE','UO','U-PA','U-MA','U-RI','U-KI','U-MU','U-PU','U-KE','U-DE','U-TO','U-NO'].map((t,i) => ({ id: 300+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's9', title: 'Suku Kata Vokal Ganda (E)', collapsed: true,
+    tahap: '2', items: ['EA','EI','EU','EE','EO','E-CA','E-LA','E-KI','E-RI','E-MU','E-PU','E-KE','E-DE','E-TO','E-NO'].map((t,i) => ({ id: 400+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's10', title: 'Suku Kata Vokal Ganda (O)', collapsed: true,
+    tahap: '2', items: ['OA','OI','OU','OE','OO','O-PA','O-MA','O-RI','O-KI','O-MU','O-PU','O-KE','O-DE','O-TO','O-NO'].map((t,i) => ({ id: 500+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's11', title: 'Suku Kata BAâ€“BO', collapsed: true, tahap: '2', items: ['BA','BI','BU','BE','BO','BA-BA','BA-BI','BA-BU','BI-BI','BI-BA','BI-BU','BU-BU','BU-BA','BU-BI','BE-BE','BE-BA','BE-BO','BO-BO','BO-BA','BO-BI'].map((t,i) => ({ id: 600+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's12', title: 'Suku Kata CAâ€“CO', collapsed: true, tahap: '2', items: ['CA','CI','CU','CE','CO','CA-CA','CA-CI','CA-CU','CI-CI','CI-CA','CI-CU','CU-CU','CU-CA','CU-CI','CE-CE','CE-CA','CE-CO','CO-CO','CO-CA','CO-CI'].map((t,i) => ({ id: 700+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's13', title: 'Suku Kata DAâ€“DO', collapsed: true, tahap: '2', items: ['DA','DI','DU','DE','DO','DA-DA','DA-DI','DA-DU','DI-DI','DI-DA','DI-DU','DU-DU','DU-DA','DU-DI','DE-DE','DE-DA','DE-DO','DO-DO','DO-DA','DO-DI'].map((t,i) => ({ id: 800+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's14', title: 'Suku Kata GAâ€“GO', collapsed: true, tahap: '2', items: ['GA','GI','GU','GE','GO','GA-GA','GA-GI','GA-GU','GI-GI','GI-GA','GI-GU','GU-GU','GU-GA','GU-GI','GE-GE','GE-GA','GE-GO','GO-GO','GO-GA','GO-GI'].map((t,i) => ({ id: 900+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's15', title: 'Suku Kata HAâ€“HO', collapsed: true, tahap: '2', items: ['HA','HI','HU','HE','HO','HA-HA','HA-HI','HA-HU','HI-HI','HI-HA','HI-HU','HU-HU','HU-HA','HU-HI','HE-HE','HE-HA','HE-HO','HO-HO','HO-HA','HO-HI'].map((t,i) => ({ id: 1000+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's16', title: 'Suku Kata JAâ€“JO', collapsed: true, tahap: '2', items: ['JA','JI','JU','JE','JO','JA-JA','JA-JI','JA-JU','JI-JI','JI-JA','JI-JU','JU-JU','JU-JA','JU-JI','JE-JE','JE-JA','JE-JO','JO-JO','JO-JA','JO-JI'].map((t,i) => ({ id: 1100+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's17', title: 'Suku Kata KAâ€“KO', collapsed: true, tahap: '2', items: ['KA','KI','KU','KE','KO','KA-KA','KA-KI','KA-KU','KI-KI','KI-KA','KI-KU','KU-KU','KU-KA','KU-KI','KE-KE','KE-KA','KE-KO','KO-KO','KO-KA','KO-KI'].map((t,i) => ({ id: 1200+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's18', title: 'Suku Kata LAâ€“LO', collapsed: true, tahap: '2', items: ['LA','LI','LU','LE','LO','LA-LA','LA-LI','LA-LU','LI-LI','LI-LA','LI-LU','LU-LU','LU-LA','LU-LI','LE-LE','LE-LA','LE-LO','LO-LO','LO-LA','LO-LI'].map((t,i) => ({ id: 1300+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's19', title: 'Suku Kata MAâ€“MO', collapsed: true, tahap: '2', items: ['MA','MI','MU','ME','MO','MA-MA','MA-MI','MA-MU','MI-MI','MI-MA','MI-MU','MU-MU','MU-LA','MU-MI','ME-ME','ME-MA','ME-MO','MO-MO','MO-MA','MO-MI'].map((t,i) => ({ id: 1400+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's20', title: 'Suku Kata NAâ€“NO', collapsed: true, tahap: '2', items: ['NA','NI','NU','NE','NO','NA-NA','NA-NI','NA-NU','NI-NI','NI-NA','NI-NU','NU-NU','NU-NA','NU-NI','NE-NE','NE-NA','NE-NO','NO-NO','NO-NA','NO-NI'].map((t,i) => ({ id: 1500+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's21', title: 'Suku Kata PAâ€“PO', collapsed: true, tahap: '2', items: ['PA','PI','PU','PE','PO','PA-PA','PA-PI','PA-PU','PI-PI','PI-PA','PI-PU','PU-PU','PU-PA','PU-PI','PE-PE','PE-PA','PE-PO','PO-PO','PO-PA','PO-PI'].map((t,i) => ({ id: 1600+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's22', title: 'Suku Kata RAâ€“RO', collapsed: true, tahap: '2', items: ['RA','RI','RU','RE','RO','RA-RA','RA-RI','RA-RU','RI-RI','RI-RA','RI-RU','RU-RU','RU-RA','RU-RI','RE-RE','RE-RA','RE-RO','RO-RO','RO-RA','RO-RI'].map((t,i) => ({ id: 1700+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's23', title: 'Suku Kata SAâ€“SO', collapsed: true, tahap: '2', items: ['SA','SI','SU','SE','SO','SA-SA','SA-SI','SA-SU','SI-SI','SI-SA','SI-SU','SU-SU','SU-SA','SU-SI','SE-SE','SE-SA','SE-SO','SO-SO','SO-SA','SO-SI'].map((t,i) => ({ id: 1800+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's24', title: 'Suku Kata TAâ€“TO', collapsed: true, tahap: '2', items: ['TA','TI','TU','TE','TO','TA-TA','TA-TI','TA-TU','TI-TI','TI-TA','TI-TU','TU-TU','TU-TA','TU-TI','TE-TE','TE-TA','TE-TO','TO-TO','TO-TA','TO-TI'].map((t,i) => ({ id: 1900+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's25', title: 'Suku Kata YAâ€“YO', collapsed: true, tahap: '2', items: ['YA','YI','YU','YE','YO','YA-YA','YA-YI','YA-YU','YI-YI','YI-YA','YI-YU','YU-YU','YU-YA','YU-YI','YE-YE','YE-YA','YE-YO','YO-YO','YO-YA','YO-YI'].map((t,i) => ({ id: 2000+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's26', title: 'Suku Kata ZAâ€“ZO', collapsed: true, tahap: '2', items: ['ZA','ZI','ZU','ZE','ZO','ZA-ZA','ZA-ZI','ZA-ZU','ZI-ZI','ZI-ZA','ZI-ZU','ZU-ZU','ZU-ZA','ZU-ZI','ZE-ZE','ZE-ZA','ZE-ZO','ZO-ZO','ZO-ZA','ZO-ZI'].map((t,i) => ({ id: 2100+i, text: t, type: 'suku_kata' }))
+  },
+  {
+    id: 's27', title: 'Kata Sederhana (dari Gambar)', collapsed: true, tahap: '2', items: [
+      'API','IKAN','ULAT','EKOR','OLI',
+      'BOLA','CABE','DASI','FERI','GAJAH',
+      'HIU','JARI','KUPU','LILIN','MEJA',
+      'NANAS','PENA','ROTI','SAPU','TOPI',
+      'VAS','WORTEL','XILOFON','YOYO','ZEBRA'
+    ].map((t,i) => ({ id: 2200+i, text: t, type: 'kata' }))
+  },
+];
+
+let nextId = 3000;
+let currentTab = 'txt';
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// RENDER
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function renderAll() {
+  renderStats();
+  renderSections();
+  renderPreview();
+  updateBadge();
+}
+
+function updateBadge() {
+  const total = sections.reduce((s, sec) => s + sec.items.length, 0);
+  document.getElementById('badge-count').textContent = total + ' item';
+}
+
+function renderStats() {
+  const all = sections.flatMap(s => s.items);
+  const counts = {huruf:0, suku_kata:0, kata:0, kalimat:0};
+  all.forEach(it => counts[it.type] = (counts[it.type]||0) + 1);
+  document.getElementById('stats-bar').innerHTML = [
+    ['Total', all.length, '#6366f1'],
+    ['Huruf', counts.huruf, '#60a5fa'],
+    ['Suku Kata', counts.suku_kata, '#4ade80'],
+    ['Kata', counts.kata, '#fb923c'],
+    ['Kalimat', counts.kalimat, '#c084fc'],
+  ].map(([l,v,c]) => `
+    <div class="stat-chip">
+      <span class="val" style="color:${c}">${v}</span>
+      <span class="lbl">${l}</span>
+    </div>
+  `).join('');
+}
+
+function renderSections() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const container = document.getElementById('sections-container');
+  container.innerHTML = '';
+  sections.forEach(sec => {
+    // Filter by tahap
+    if (activeTahapFilter !== 'all' && sec.tahap !== activeTahapFilter) return;
+
+    const filteredItems = q
+      ? sec.items.filter(it => it.text.toLowerCase().includes(q))
+      : sec.items;
+    if (q && filteredItems.length === 0) return;
+
+    const div = document.createElement('div');
+    div.className = 'section' + (sec.collapsed && !q ? ' collapsed' : '');
+    div.innerHTML = `
+      <div class="section-header" onclick="toggleSection('${sec.id}')">
+        <div class="section-title">
+          <svg width="14" class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          ${sec.title}
+          <span class="tahap-badge tahap-${sec.tahap || '1'}">Tahap ${sec.tahap || '1'}</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="section-count">${filteredItems.length} item</span>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();deleteSection('${sec.id}')" style="color:var(--red);padding:4px 8px;">âœ•</button>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="items-grid" id="grid-${sec.id}">
+          ${filteredItems.map(it => `
+            <div class="item-chip" title="${it.type}">
+              <span>${it.text}</span>
+              <button class="del-btn" onclick="deleteItem('${sec.id}',${it.id})" title="Hapus">âœ•</button>
+            </div>
+          `).join('')}
+        </div>
+        <div class="add-item-row">
+          <input class="input-text" id="add-input-${sec.id}" placeholder="Ketik..." maxlength="30"
+            onkeydown="if(event.key==='Enter')addItem('${sec.id}')">
+          <select class="type-select" id="add-type-${sec.id}">
+            <option value="huruf">huruf</option>
+            <option value="suku_kata" selected>suku_kata</option>
+            <option value="kata">kata</option>
+            <option value="kalimat">kalimat</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="addItem('${sec.id}')">ï¼‹ Tambah</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function getFilteredSections() {
+  if (activeTahapFilter === 'all') return sections;
+  return sections.filter(s => s.tahap === activeTahapFilter);
+}
+
+function renderPreview() {
+  const content = document.getElementById('preview-content');
+  const info = document.getElementById('preview-info');
+  const filtered = getFilteredSections();
+  const totalItems = filtered.reduce((s, sec) => s + sec.items.length, 0);
+  const label = activeTahapFilter === 'all' ? 'Semua tahap' : `Tahap ${activeTahapFilter}`;
+  info.textContent = `${label} — ${totalItems} item akan di-export`;
+
+  if (currentTab === 'txt') {
+    content.className = 'preview-content';
+    content.textContent = buildTXT();
+  } else {
+    content.className = 'preview-content json-view';
+    content.textContent = buildJSONString();
+  }
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// BUILD DATA
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function buildTXT() {
+  return getFilteredSections()
+    .map(sec => sec.items.map(it => it.text).join('\n'))
+    .filter(block => block.trim())
+    .join('\n\n');
+}
+
+function buildJSON() {
+  let globalId = 1;
+  return getFilteredSections().flatMap(sec =>
+    sec.items.map(it => ({
+      id: globalId++,
+      text: it.text,
+      type: it.type,
+      group: sec.title,
+      tahap: sec.tahap || '1'
+    }))
+  );
+}
+
+function buildJSONString() {
+  return JSON.stringify(buildJSON(), null, 2);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ACTIONS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function toggleSection(id) {
+  const sec = sections.find(s => s.id === id);
+  if (sec) sec.collapsed = !sec.collapsed;
+  renderSections();
+}
+
+function deleteSection(id) {
+  if (!confirm('Hapus kelompok ini?')) return;
+  sections = sections.filter(s => s.id !== id);
+  renderAll();
+}
+
+function addItem(sectionId) {
+  const input = document.getElementById('add-input-' + sectionId);
+  const typeEl = document.getElementById('add-type-' + sectionId);
+  const text = input.value.trim().toUpperCase();
+  if (!text) return;
+  const sec = sections.find(s => s.id === sectionId);
+  if (!sec) return;
+  if (sec.items.some(it => it.text === text)) {
+    showToast('âš  Item sudah ada!', '#d97706');
+    return;
+  }
+  sec.items.push({ id: nextId++, text, type: typeEl.value });
+  input.value = '';
+  input.focus();
+  renderAll();
+  showToast('âœ“ ' + text + ' ditambahkan');
+}
+
+function deleteItem(sectionId, itemId) {
+  const sec = sections.find(s => s.id === sectionId);
+  if (!sec) return;
+  sec.items = sec.items.filter(it => it.id !== itemId);
+  renderAll();
+}
+
+function addSection() {
+  const title = prompt('Nama kelompok baru:');
+  if (!title) return;
+  sections.push({ id: 's' + Date.now(), title, collapsed: false, items: [] });
+  renderAll();
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// IMPORT
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function openImport() {
+  // Populate section select
+  const sel = document.getElementById('import-section');
+  sel.innerHTML = '<option value="new">ï¼‹ Kelompok Baru</option>' +
+    sections.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
+  document.getElementById('import-modal').classList.add('open');
+  document.getElementById('import-textarea').focus();
+}
+
+function closeImport() {
+  document.getElementById('import-modal').classList.remove('open');
+  document.getElementById('import-textarea').value = '';
+}
+
+function doImport() {
+  const raw = document.getElementById('import-textarea').value;
+  const type = document.getElementById('import-type').value;
+  const sectionId = document.getElementById('import-section').value;
+
+  const items = raw.split('\n')
+    .map(l => l.trim().toUpperCase())
+    .filter(l => l.length > 0)
+    .map(text => ({ id: nextId++, text, type }));
+
+  if (items.length === 0) { closeImport(); return; }
+
+  if (sectionId === 'new') {
+    const title = prompt('Nama kelompok baru:', type.replace('_', ' ').toUpperCase());
+    if (!title) return;
+    sections.push({ id: 's' + Date.now(), title, collapsed: false, items });
+  } else {
+    const sec = sections.find(s => s.id === sectionId);
+    if (sec) sec.items.push(...items);
+  }
+
+  closeImport();
+  renderAll();
+  showToast('âœ“ ' + items.length + ' item diimport');
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// TABS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  renderPreview();
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// EXPORT
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function downloadFile(content, filename, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function getExportSuffix() {
+  if (activeTahapFilter === 'all') return 'jilid1';
+  return `jilid1-tahap${activeTahapFilter}`;
+}
+
+function exportTXT() {
+  downloadFile(buildTXT(), getExportSuffix() + '.txt', 'text/plain;charset=utf-8');
+  showToast('✓ ' + getExportSuffix() + '.txt diunduh');
+}
+
+function exportJSON() {
+  downloadFile(buildJSONString(), getExportSuffix() + '.json', 'application/json');
+  showToast('✓ ' + getExportSuffix() + '.json diunduh');
+}
+
+function exportTahap() {
+  exportTXT();
+  setTimeout(exportJSON, 500);
+}
+
+function setTahapFilter(tahap) {
+  activeTahapFilter = tahap;
+  document.querySelectorAll('.tahap-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(tahap === 'all' ? 'filter-all' : 'filter-' + tahap);
+  if (btn) btn.classList.add('active');
+
+  // Update label tombol export
+  const suffix = getExportSuffix();
+  document.getElementById('btn-export-txt').textContent = '💾 ' + suffix + '.txt';
+  document.getElementById('btn-export-json').textContent = '📦 ' + suffix + '.json';
+
+  renderAll();
+}
+
+function copyPreview() {
+  const text = currentTab === 'txt' ? buildTXT() : buildJSONString();
+  navigator.clipboard.writeText(text).then(() => showToast('âœ“ Copied!'));
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// TOAST
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+let toastTimer;
+function showToast(msg, bg = '#16a34a') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = bg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// INIT
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+renderAll();
+</script>
+</body>
+</html>
+

@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Dino Adventure Reading</title>
+    <!-- Google Fonts for Kids-friendly UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Edu+AU+VIC+WA+NT+Dots:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Floating Header -->
+        <header id="game-header">
+            <button id="btn-back-nest" class="btn-icon header-btn hidden" title="Ke Sarang Dino">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
+            <div class="header-stats-container" style="display: flex; gap: 8px; flex-grow: 1; justify-content: center; margin: 0 10px; max-width: 300px;">
+                <div class="xp-display">
+                    <div class="xp-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="#FFD700" d="M12 2L1 21h22L12 2zm0 4l7.53 13H4.47L12 6zm-1 8h2v2h-2zm0-4h2v2h-2z"/>
+                        </svg>
+                    </div>
+                    <div class="xp-bar-container">
+                        <div id="xp-bar-fill" style="width: 0%;"></div>
+                    </div>
+                    <span id="xp-text">0 XP</span>
+                </div>
+                <div class="coin-display" id="coin-display">
+                    <span class="coin-icon">🪙</span>
+                    <span id="coin-text">0</span>
+                </div>
+            </div>
+            <button id="btn-parent-gate" class="header-btn" title="Dashboard Orang Tua">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                </svg>
+                <span>Orang Tua</span>
+            </button>
+        </header>
+
+        <main id="screen-manager">
+            <!-- SCREEN 1: DINO NEST / SARANG DINO -->
+            <section id="screen-nest" class="screen active">
+                <div class="nest-background-decor"></div>
+                <h1 class="game-title">Petualangan Dino</h1>
+                <p class="game-subtitle">Dino kehilangan telur emasnya! Bantu Dino menjelajahi hutan huruf untuk menemukannya! 🥚✨</p>
+
+                <div class="nest-area">
+                    <div id="dino-avatar-container" class="egg-state">
+                        <!-- Will display Egg or hatched Dino via JS -->
+                        <div id="egg-element" class="egg wiggling">
+                            <div class="egg-spots"></div>
+                        </div>
+                        <div id="dino-element" class="dino hidden">
+                            <!-- SVG Dino code will go here dynamically -->
+                        </div>
+                    </div>
+                    <div class="nest-base"></div>
+                </div>
+
+                <div class="dino-status-card">
+                    <h3 id="dino-name">Telur Misterius</h3>
+                    <p id="dino-status-text">Kuasai seluruh huruf & bunyi (sampai za-zo) untuk menetaskan telur ini!</p>
+                </div>
+
+                <!-- Shelf for badges given by parents -->
+                <div id="nest-parent-badges" class="parent-badges-shelf hidden" style="background: rgba(255,255,255,0.8); border: 2.5px solid var(--earth-brown); border-radius: var(--border-radius-sm); padding: 8px 12px; margin-top: 10px; width: 100%; max-width: 320px; text-align: center; box-shadow: inset 0 0 5px rgba(0,0,0,0.05);">
+                    <span style="font-size: 11px; font-weight: 700; color: var(--earth-brown); display: block; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase;">Lencana dari Ibu & Ayah 🏆</span>
+                    <div id="nest-badges-container" style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                        <!-- Badges icons go here -->
+                    </div>
+                </div>
+
+                <div class="nest-actions" style="display: flex; gap: 10px; width: 100%; max-width: 320px; justify-content: center; margin-top: 10px;">
+                    <button id="btn-start-adventure" class="btn-primary pulse" style="flex: 2; margin: 0;">
+                        <span>Mulai Petualangan!</span>
+                        <svg viewBox="0 0 24 24" width="24" height="24" class="btn-arrow">
+                            <path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                        </svg>
+                    </button>
+                    <button id="btn-open-shop" class="btn-secondary hidden" style="flex: 1; border-color: var(--accent); color: var(--accent-dark); display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; font-size: 14px; padding: 10px;">
+                        <span>🛒 Toko Dino</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SCREEN 2: MAP / PETA HUTAN HURUF -->
+            <section id="screen-map" class="screen hidden">
+                <div class="map-container">
+                    <h2 class="section-title">Peta Petualangan Dino</h2>
+                    <p class="section-subtitle">Dino kehilangan telur emasnya! Bantu Dino menjelajahi hutan huruf untuk menemukannya! 🥚✨</p>
+
+                    <div id="map-page-1" class="map-path">
+                        <div class="map-section-header">Bagian 1: Pengenalan Huruf</div>
+                        
+                        <!-- Node 1: vowels -->
+                        <button class="map-node active" data-range="vowels">
+                            <span class="node-badge">1</span>
+                            <span class="node-label">🌱 Hutan Vokal a, i, u, e, o</span>
+                        </button>
+                        
+                        <!-- Node 2: b-g -->
+                        <button class="map-node locked" data-range="b-g">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🦖 Lembah Huruf b, c, d, f, g</span>
+                        </button>
+
+                        <!-- Node 3: h-m -->
+                        <button class="map-node locked" data-range="h-m">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🦋 Gua Huruf h, j, k, l, m</span>
+                        </button>
+
+                        <!-- Node 4: n-s -->
+                        <button class="map-node locked" data-range="n-s">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌋 Bukit Huruf n, p, q, r, s</span>
+                        </button>
+
+                        <!-- Node 5: t-z -->
+                        <button class="map-node locked" data-range="t-z">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🏜️ Gurun Huruf t, v, w, x, y, z</span>
+                        </button>
+
+                        <!-- Next Map Button -->
+                        <button id="btn-next-map" class="btn-primary hidden pulse" style="margin-top: 15px; width: 82%;">
+                            <span>Lanjut ke Bagian 2</span>
+                            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                        </button>
+                    </div>
+
+                    <div id="map-page-2" class="map-path hidden">
+                        <!-- Back Map Button -->
+                        <button id="btn-prev-map" class="btn-secondary" style="margin-bottom: 15px; width: 82%;">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="transform: rotate(180deg); margin-right: 6px;"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                            <span>Kembali ke Bagian 1</span>
+                        </button>
+
+                        <div class="map-section-header" id="header-part2">Bagian 2: Suku Kata & Membaca</div>
+
+                        <!-- Node 1: a-group -->
+                        <button class="map-node locked" data-range="a-group">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌱 Lembah Vokal Ganda a</span>
+                        </button>
+
+                        <!-- Node 2: ba-bo -->
+                        <button class="map-node locked" data-range="ba-bo">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌳 Lembah Membaca ba - bo</span>
+                        </button>
+
+                        <!-- Node 3: ca-co -->
+                        <button class="map-node locked" data-range="ca-co">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌻 Kebun Membaca ca - co</span>
+                        </button>
+
+                        <!-- Node 4: da-do -->
+                        <button class="map-node locked" data-range="da-do">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🪵 Jembatan Membaca da - do</span>
+                        </button>
+
+                        <!-- Node 5: e-group -->
+                        <button class="map-node locked" data-range="e-group">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌿 Hutan Vokal Ganda e</span>
+                        </button>
+
+                        <!-- Node 6: ga-go -->
+                        <button class="map-node locked" data-range="ga-go">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">⛰️ Tebing Membaca ga - go</span>
+                        </button>
+
+                        <!-- Node 7: ha-ho -->
+                        <button class="map-node locked" data-range="ha-ho">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌊 Danau Membaca ha - ho</span>
+                        </button>
+
+                        <!-- Node 8: i-group -->
+                        <button class="map-node locked" data-range="i-group">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">💧 Oasis Vokal Ganda i</span>
+                        </button>
+
+                        <!-- Node 9: ja-jo -->
+                        <button class="map-node locked" data-range="ja-jo">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🏰 Kuil Membaca ja - jo</span>
+                        </button>
+
+                        <!-- Node 10: ka-ko -->
+                        <button class="map-node locked" data-range="ka-ko">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌴 Hutan Kelapa Membaca ka - ko</span>
+                        </button>
+
+                        <!-- Node 11: la-lo -->
+                        <button class="map-node locked" data-range="la-lo">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🕯️ Gua Kristal Membaca la - lo</span>
+                        </button>
+
+                        <!-- Node 12: ma-mo -->
+                        <button class="map-node locked" data-range="ma-mo">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🍯 Lembah Madu Membaca ma - mo</span>
+                        </button>
+
+                        <!-- Node 13: na-no -->
+                        <button class="map-node locked" data-range="na-no">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌧️ Awan Membaca na - no</span>
+                        </button>
+
+                        <!-- Node 14: o-group -->
+                        <button class="map-node locked" data-range="o-group">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🍂 Bukit Vokal Ganda o</span>
+                        </button>
+
+                        <!-- Node 15: pa-po -->
+                        <button class="map-node locked" data-range="pa-po">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🐚 Pantai Membaca pa - po</span>
+                        </button>
+
+                        <!-- Node 16: ra-ro -->
+                        <button class="map-node locked" data-range="ra-ro">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🦖 Lembah Dino Membaca ra - ro</span>
+                        </button>
+
+                        <!-- Node 17: sa-so -->
+                        <button class="map-node locked" data-range="sa-so">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🌾 Padang Rumput Membaca sa - so</span>
+                        </button>
+
+                        <!-- Node 18: ta-to -->
+                        <button class="map-node locked" data-range="ta-to">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🍁 Bukit Oranye Membaca ta - to</span>
+                        </button>
+
+                        <!-- Node 19: u-group -->
+                        <button class="map-node locked" data-range="u-group">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">☁️ Awan Vokal Ganda u</span>
+                        </button>
+
+                        <!-- Node 20: ya-yo -->
+                        <button class="map-node locked" data-range="ya-yo">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">🔮 Bukit Bintang Membaca ya - yo</span>
+                        </button>
+
+                        <!-- Node 21: za-zo -->
+                        <button class="map-node locked" data-range="za-zo">
+                            <span class="node-badge">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            <span class="node-label">👑 Puncak Ajaib Membaca za - zo (Finis)</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 3: GAMEPLAY CHANNENGE / LAYAR TANTANGAN -->
+            <section id="screen-game" class="screen hidden">
+                <div class="game-layout">
+                    <!-- Top Info inside Game -->
+                    <div class="game-progress-wrapper">
+                        <span id="game-level-title">Misi: Huruf A - E</span>
+                        <div class="game-step-dots" id="game-step-dots">
+                            <!-- Filled dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Dino Mascot Area -->
+                    <div class="game-mascot-container">
+                        <div id="game-mascot-dino" class="mascot-dino">
+                            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                                <!-- Tail -->
+                                <path d="M70 60 C80 55, 85 45, 83 40 C80 40, 75 48, 68 53" fill="#4CAF50" stroke="#2E7D32" stroke-width="2" />
+                                <!-- Feet -->
+                                <rect x="35" y="70" width="8" height="12" rx="4" fill="#388E3C" stroke="#2E7D32" stroke-width="2" />
+                                <rect x="55" y="70" width="8" height="12" rx="4" fill="#388E3C" stroke="#2E7D32" stroke-width="2" />
+                                <!-- Body -->
+                                <ellipse cx="50" cy="62" rx="20" ry="15" fill="#4CAF50" stroke="#2E7D32" stroke-width="2" />
+                                <!-- Collar Frill -->
+                                <path d="M28 35 C24 20, 52 20, 48 35 Z" fill="#FFC107" stroke="#F57C00" stroke-width="2" />
+                                <!-- Head -->
+                                <circle cx="34" cy="44" r="13" fill="#4CAF50" stroke="#2E7D32" stroke-width="2" />
+                                <!-- Horns -->
+                                <path d="M28 34 L22 26 L27 30 Z" fill="#FFF9C4" stroke="#FBC02D" stroke-width="1.5" />
+                                <path d="M20 40 L14 40 L18 42 Z" fill="#FFF9C4" stroke="#FBC02D" stroke-width="1.5" />
+                                <!-- Snout / Smile -->
+                                <path d="M22 45 C22 41, 28 41, 29 45 C29 48, 22 49, 22 45 Z" fill="#388E3C" stroke="#2E7D32" stroke-width="1.5" />
+                                <path d="M24 46 Q27 48 28 46" fill="none" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round" />
+                                <!-- Eye -->
+                                <g class="dino-eye-group">
+                                    <circle cx="33" cy="40" r="4" fill="#1B5E20" />
+                                    <circle cx="32" cy="38" r="1.5" fill="#FFF" />
+                                </g>
+                                <!-- Rosy Cheek -->
+                                <circle class="mascot-cheek" cx="28" cy="45" r="2" fill="#FF8A80" opacity="0.8" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Main Challenge Box -->
+                    <div class="challenge-box" id="challenge-box">
+                        <!-- STEP 1: Matching Mode (Forest Search & Drag) -->
+                        <div id="game-match-view" class="game-phase-view">
+                            <h3 class="phase-instruction">Dengar suara hurufnya, lalu cari dan masukkan ke keranjang Dino! 🧺</h3>
+                            
+                            <!-- Sound trigger and Target Bubble Row -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px; gap: 10px;">
+                                <button id="btn-sound-trigger" class="btn-primary" style="margin: 0; padding: 10px 16px; font-size: 14px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: #81C784; border-color: #2E7D32; box-shadow: 0 4px 0 #2E7D32; width: auto;">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                    </svg>
+                                    <span>Putar Suara</span>
+                                </button>
+                                
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 15px; font-weight: 700; color: var(--earth-brown);">Cari Huruf:</span>
+                                    <div class="match-target-card" style="width: 60px; height: 60px; margin: 0; animation: none; cursor: default; box-shadow: 0 4px 0 var(--earth-dark); display: flex; align-items: center; justify-content: center;">
+                                        <span id="match-target-letter" style="font-size: 32px; font-weight: 800; color: var(--accent-dark); line-height: 1;">?</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Forest Playground -->
+                            <div id="forest-playground" class="forest-playground">
+                                <div class="forest-bg-elements">
+                                    <span class="forest-plant plant-tree-1">🌴</span>
+                                    <span class="forest-plant plant-tree-2">🌳</span>
+                                    <span class="forest-plant plant-bush-1">🌿</span>
+                                    <span class="forest-plant plant-bush-2">☘️</span>
+                                    <span class="forest-plant plant-rock-1">🪨</span>
+                                </div>
+                                <div id="forest-draggable-letters" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none;"></div>
+                                <div id="dino-basket-dropzone" class="dino-basket-dropzone">
+                                    <div class="basket-visual">🧺</div>
+                                    <div class="basket-label">Keranjang</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 1B: Pasangkan Huruf (Drag Match Uppercase to Lowercase) -->
+                        <div id="game-drag-match-view" class="game-phase-view hidden">
+                            <h3 class="phase-instruction">Tarik huruf besar di hutan dan pasangkan ke huruf kecil yang cocok di atas! 🧩</h3>
+                            
+                            <!-- Forest Playground for dragging uppercase letters -->
+                            <div id="forest-drag-match-playground" class="forest-playground" style="height: 290px;">
+                                <div class="forest-bg-elements">
+                                    <span class="forest-plant plant-tree-1">🌴</span>
+                                    <span class="forest-plant plant-tree-2">🌳</span>
+                                    <span class="forest-plant plant-bush-1">🌿</span>
+                                    <span class="forest-plant plant-bush-2">☘️</span>
+                                    <span class="forest-plant plant-rock-1">🪨</span>
+                                </div>
+                                
+                                <!-- Drop slots at the top, nested inside the forest -->
+                                <div id="drag-match-slots" class="drag-match-slots" style="position: absolute; top: 12px; left: 0; right: 0; z-index: 5; pointer-events: none;">
+                                    <!-- Lowercase slots rendered dynamically -->
+                                </div>
+                                
+                                <div id="forest-drag-match-letters" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none;"></div>
+                            </div>
+                        </div>
+
+
+                        <!-- STEP 2: Speaking Mode -->
+                        <div id="game-speak-view" class="game-phase-view hidden">
+                            <h3 class="phase-instruction">Ayo bantu Dino tirukan suara huruf ini!</h3>
+                            
+                            <!-- Big Display of Target Letter -->
+                            <div class="big-letter-display" id="target-letter-display">
+                                <span class="letter-main">b</span>
+                                <span class="letter-main" style="color: var(--primary);">B</span>
+                            </div>
+
+                            <!-- Interactive Recording Control -->
+                            <div class="recording-wrapper">
+                                <p id="recording-status">Tekan tombol mikrofon lalu tirukan suara hurufnya.</p>
+                                
+                                <div class="mic-button-container">
+                                    <!-- Visual Wave for mic feedback -->
+                                    <div class="mic-wave" id="mic-wave"></div>
+                                    <button id="btn-record-mic" class="mic-button">
+                                        <svg viewBox="0 0 24 24" width="36" height="36" id="icon-mic">
+                                            <path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                                        </svg>
+                                        <svg viewBox="0 0 24 24" width="36" height="36" id="icon-stop" class="hidden">
+                                            <path fill="currentColor" d="M6 19h12V5H6v14z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="audio-playback-container hidden" id="playback-area">
+                                    <button id="btn-play-recorded" class="btn-secondary">
+                                        <svg viewBox="0 0 24 24" width="20" height="20">
+                                            <path fill="currentColor" d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        <span>Dengar Suaramu</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button id="btn-submit-speak" class="btn-primary hidden">
+                                <span>Simpan & Lanjut!</span>
+                                <svg viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- STEP 2B: Writing Mode (Trace / Assembly) -->
+                        <div id="game-write-view" class="game-phase-view hidden">
+                            <h3 class="phase-instruction" id="write-instruction">Perbaiki simbol ajaib agar pintu terbuka! 🔮</h3>
+                            
+                            <!-- Writing Playground -->
+                            <div id="forest-write-playground" class="forest-playground" style="height: 290px; position: relative;">
+                                <!-- Background visual (cracked egg, portal, garden, etc.) -->
+                                <div id="write-bg-visual" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;">
+                                    <!-- Dynamic SVG / Emojis loaded here -->
+                                </div>
+                                
+                                <div class="forest-bg-elements">
+                                    <span class="forest-plant plant-tree-1">🌴</span>
+                                    <span class="forest-plant plant-tree-2">🌳</span>
+                                    <span class="forest-plant plant-bush-1">🌿</span>
+                                </div>
+                                
+                                <!-- Canvas overlay for drawing / tracing (z-index: 5) -->
+                                <canvas id="write-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; touch-action: none; cursor: crosshair;"></canvas>
+                                
+                                <!-- Bridge Assembly slots container (z-index: 4) -->
+                                <div id="bridge-assembly-slots" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none;">
+                                    <!-- Target components slots rendered here -->
+                                </div>
+                                
+                                <!-- Bridge Assembly wood items container (z-index: 6) -->
+                                <div id="bridge-assembly-wood" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none;">
+                                    <!-- Draggable wood planks rendered here -->
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 12px; gap: 6px;">
+                                <button id="btn-write-sound-trigger" class="btn-primary" style="margin: 0; padding: 10px 6px; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 4px; flex: 1; min-width: 0; background: #81C784; border-color: #2E7D32; box-shadow: 0 4px 0 #2E7D32;">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" style="flex-shrink: 0;">
+                                        <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                    </svg>
+                                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Putar Suara</span>
+                                </button>
+                                
+                                <button id="btn-reset-write" class="btn-secondary" style="margin: 0; padding: 10px 6px; font-size: 13px; flex: 1; min-width: 0; background: #E0E0E0; border-color: #9E9E9E; box-shadow: 0 4px 0 #9E9E9E; color: #424242;">
+                                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hapus Coretan</span>
+                                </button>
+
+                                <button id="btn-submit-write" class="btn-primary" style="margin: 0; padding: 10px 6px; font-size: 13px; flex: 1; min-width: 0; background: #FF9800; border-color: #F57C00; box-shadow: 0 4px 0 #F57C00;">
+                                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Selesai</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- NEW STEP 4: Kata Gambar (for Part 1 Letter Group Reading) -->
+                        <div id="game-picture-view" class="game-phase-view hidden" style="position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px;">
+                                <h3 class="phase-instruction" style="margin: 0; text-align: left;">Bacalah bentuk huruf dan nama gambarnya!</h3>
+                                
+                                <div style="display: flex; gap: 8px;">
+                                    <!-- Speaker Helper Button for Pictures -->
+                                    <button id="btn-picture-tts-helper" class="btn-icon header-btn" title="Dengar Contoh Pengucapan" style="width: 36px; height: 36px; background: #FFF9C4; border-color: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" style="color: var(--accent-dark);">
+                                            <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                        </svg>
+                                    </button>
+                                    <!-- Stop Helper Button for Pictures -->
+                                    <button id="btn-picture-tts-stop" class="btn-icon header-btn hidden" title="Hentikan Pengucapan" style="width: 36px; height: 36px; background: #FFCDD2; border-color: #D32F2F; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" style="color: #D32F2F;">
+                                            <path fill="currentColor" d="M6 6h12v12H6z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="picture-sheet-container" id="picture-sheet-container">
+                                <!-- Picture-word rows will be generated dynamically -->
+                            </div>
+
+                            <div class="recording-wrapper">
+                                <p id="picture-recording-status">Tekan tombol mikrofon lalu rekam suaramu saat membaca.</p>
+                                
+                                <div class="mic-button-container">
+                                    <div class="mic-wave" id="mic-wave-picture"></div>
+                                    <button id="btn-record-picture" class="mic-button">
+                                        <svg viewBox="0 0 24 24" width="36" height="36" id="icon-mic-picture">
+                                            <path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                                        </svg>
+                                        <svg viewBox="0 0 24 24" width="36" height="36" id="icon-stop-picture" class="hidden">
+                                            <path fill="currentColor" d="M6 19h12V5H6v14z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="audio-playback-container hidden" id="playback-area-picture">
+                                    <button id="btn-play-picture" class="btn-secondary">
+                                        <svg viewBox="0 0 24 24" width="20" height="20">
+                                            <path fill="currentColor" d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        <span>Dengar Suaramu</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button id="btn-submit-picture" class="btn-primary hidden">
+                                <span>Simpan & Selesai!</span>
+                                <svg viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- STEP 3: Lembar Membaca (for Part 2 Syllables & Reading) -->
+                        <div id="game-read-view" class="game-phase-view hidden" style="position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px;">
+                                <h3 class="phase-instruction" style="margin: 0; text-align: left;">Ayo baca lembar di bawah ini!</h3>
+                                
+                                <div style="display: flex; gap: 8px;">
+                                    <!-- Speaker Helper Button -->
+                                    <button id="btn-read-tts-helper" class="btn-icon header-btn" title="Dengar Contoh Pengucapan" style="width: 36px; height: 36px; background: #FFF9C4; border-color: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" style="color: var(--accent-dark);">
+                                            <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                        </svg>
+                                    </button>
+                                    <!-- Stop Helper Button -->
+                                    <button id="btn-read-tts-stop" class="btn-icon header-btn hidden" title="Hentikan Pengucapan" style="width: 36px; height: 36px; background: #FFCDD2; border-color: #D32F2F; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" style="color: #D32F2F;">
+                                            <path fill="currentColor" d="M6 6h12v12H6z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="read-sheet-container">
+                                <!-- Syllables Header -->
+                                <div class="read-syllables-header" id="read-sheet-syllables">
+                                    <!-- Dynamic -->
+                                </div>
+                                
+                                <!-- Words list -->
+                                <div class="read-words-grid" id="read-sheet-words">
+                                    <!-- Dynamic rows -->
+                                </div>
+                            </div>
+
+                            <!-- Latihan Menulis di Tahap 2 -->
+                            <div id="read-write-playground-wrapper" style="margin-top: 15px; border-top: 2px dashed #A5D6A7; padding-top: 12px; margin-bottom: 15px;">
+                                <h4 style="margin: 0 0 6px 0; color: #2E7D32; font-size: 14px; text-align: left;">✏️ Latihan Menulis (Ketuk suku kata/kata di atas untuk menulis):</h4>
+                                <div id="read-write-playground" class="forest-playground" style="height: 180px; position: relative; background: #E8F5E9; border-radius: 12px; border: 2px solid #81C784;">
+                                    <canvas id="read-write-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; touch-action: none; cursor: crosshair;"></canvas>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                                    <button id="btn-reset-read-write" class="btn-primary" style="margin: 0; padding: 6px 12px; font-size: 12px; background: #FFA726; border-color: #F57C00; box-shadow: 0 3px 0 #F57C00; flex: 1;">Hapus Coretan</button>
+                                    <button id="btn-sound-read-write" class="btn-primary" style="margin: 0; padding: 6px 12px; font-size: 12px; background: #81C784; border-color: #2E7D32; box-shadow: 0 3px 0 #2E7D32; flex: 1;">Dengar Suara</button>
+                                </div>
+                            </div>
+
+                            <div class="recording-wrapper">
+                                <p id="read-recording-status">Tekan tombol mikrofon lalu rekam suaramu saat membaca.</p>
+                                
+                                <div class="mic-button-container">
+                                    <div class="mic-wave" id="mic-wave-read"></div>
+                                    <button id="btn-record-read" class="mic-button">
+                                        <svg viewBox="0 0 24 24" width="36" height="36" id="icon-mic-read">
+                                            <path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                                        </svg>
+                                        <svg viewBox="0 0 24 24" width="36" height="36" id="icon-stop-read" class="hidden">
+                                            <path fill="currentColor" d="M6 19h12V5H6v14z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="audio-playback-container hidden" id="playback-area-read">
+                                    <button id="btn-play-read" class="btn-secondary">
+                                        <svg viewBox="0 0 24 24" width="20" height="20">
+                                            <path fill="currentColor" d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        <span>Dengar Suaramu</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button id="btn-submit-read" class="btn-primary hidden">
+                                <span>Simpan & Selesai!</span>
+                                <svg viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 4: PARENT DASHBOARD / LAYAR ORANG TUA -->
+            <section id="screen-parent" class="screen hidden">
+                <div class="parent-dashboard-card">
+                    <div class="dashboard-header">
+                        <h2>Dashboard Orang Tua</h2>
+                        <button id="btn-close-parent" class="btn-secondary">
+                            <span>Kembali ke Game</span>
+                        </button>
+                    </div>
+
+                    <div class="dashboard-stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">Total Energi (XP)</span>
+                            <span class="stat-value" id="parent-stat-xp">0 XP</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Dino Kamu</span>
+                            <span class="stat-value" id="parent-stat-dino">Telur</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Materi Dikuasai</span>
+                            <span class="stat-value" id="parent-stat-letters">0 / 0</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-tabs">
+                        <button class="tab-btn active" data-tab="tab-progress">Materi Dikuasai</button>
+                        <button class="tab-btn" data-tab="tab-audio">Rekaman Suara Anak</button>
+                        <button class="tab-btn" data-tab="tab-parent-rewards">Beri Hadiah</button>
+                    </div>
+
+                    <div class="tab-content" id="tab-progress">
+                        <h3>Peta Penguasaan Materi</h3>
+                        <div class="alphabet-grid" id="alphabet-progress-grid">
+                            <!-- A-Z letters generated with tick / lock state -->
+                        </div>
+                    </div>
+
+                    <div class="tab-content hidden" id="tab-audio">
+                        <h3>Rekaman Suara Pelafalan</h3>
+                        <p class="tab-desc">Dengarkan rekaman suara anak saat berlatih mengucapkan huruf.</p>
+                        <div class="recordings-list" id="recordings-list-container">
+                            <p class="no-recordings">Belum ada rekaman suara tersimpan. Mulai misi membaca dulu!</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content hidden" id="tab-parent-rewards">
+                        <h3>Pusat Hadiah Orang Tua</h3>
+                        <p class="tab-desc" style="font-size: 12px; color: var(--earth-brown); margin-bottom: 12px;">Berikan penghargaan langsung kepada anak Anda untuk memotivasi belajarnya!</p>
+                        
+                        <!-- 1. Send Coins Form -->
+                        <div class="reward-section-card" style="background: rgba(255,255,255,0.7); border: 2.5px solid var(--earth-dark); border-radius: var(--border-radius-md); padding: 12px 14px; margin-bottom: 12px; text-align: left;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--primary-dark); font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px;">🪙 Kirim Koin Bonus</h4>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <select id="parent-coins-select" style="padding: 8px 12px; border-radius: var(--border-radius-sm); border: 2px solid var(--earth-dark); font-family: inherit; font-weight: 600; flex-grow: 1; background: #fff;">
+                                    <option value="10">+10 Koin</option>
+                                    <option value="25">+25 Koin (Hebat!)</option>
+                                    <option value="50" selected>+50 Koin (Luar Biasa!)</option>
+                                    <option value="100">+100 Koin (Sempurna!)</option>
+                                </select>
+                                <button id="btn-parent-send-coins" class="btn-primary" style="margin: 0; padding: 10px 16px; font-size: 13px; flex-shrink: 0; width: auto;">Kirim Koin!</button>
+                            </div>
+                        </div>
+
+                        <!-- 2. Award Badges -->
+                        <div class="reward-section-card" style="background: rgba(255,255,255,0.7); border: 2.5px solid var(--earth-dark); border-radius: var(--border-radius-md); padding: 12px 14px; margin-bottom: 12px; text-align: left;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--primary-dark); font-size: 14px; font-weight: 700;">🏆 Berikan Lencana Spesial</h4>
+                            <div id="parent-badges-grid" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Badges dynamic selection generated via JS -->
+                            </div>
+                        </div>
+
+                        <!-- 3. Completion Certificate -->
+                        <div class="reward-section-card" style="background: rgba(255,255,255,0.7); border: 2.5px solid var(--earth-dark); border-radius: var(--border-radius-md); padding: 12px 14px; text-align: left;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--primary-dark); font-size: 14px; font-weight: 700;">🎓 Sertifikat Kelulusan Jilid 1</h4>
+                            <p style="font-size: 11px; color: var(--earth-brown); margin: 0 0 10px 0; line-height: 1.3;" id="certificate-info-text">Sertifikat baru bisa dicetak setelah anak menyelesaikan seluruh level Jilid 1 (telur menetas).</p>
+                            <button id="btn-print-certificate" class="btn-primary" style="margin: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px;" disabled>
+                                <span>🖨️ Cetak Sertifikat Kelulusan</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="danger-zone" style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button id="btn-reset-data" class="btn-danger" style="flex: 1;">Reset Progres</button>
+                        <button id="btn-cheat-hatch" class="btn-secondary" style="flex: 1; border-color: var(--accent); color: var(--accent-dark);">Cheat: Netaskan Telur</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- MODAL 1: PARENT GATE (Kunci Orang Tua) -->
+        <div id="parent-gate-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h3>Khusus Orang Tua</h3>
+                <p>Silakan jawab pertanyaan matematika di bawah ini untuk membuka halaman dashboard:</p>
+                <div class="math-question" id="gate-question">5 + 3 = ?</div>
+                <input type="number" id="gate-answer" placeholder="Jawaban Anda..." pattern="[0-9]*" inputmode="numeric">
+                <div class="modal-actions">
+                    <button id="btn-gate-cancel" class="btn-secondary">Batal</button>
+                    <button id="btn-gate-submit" class="btn-primary">Masuk</button>
+                </div>
+                <p id="gate-error" class="error-text hidden">Jawaban salah! Coba lagi.</p>
+            </div>
+        </div>
+
+        <!-- MODAL 2: EGG HATCHING ANIMATION (Animasi Telur Menetas) -->
+        <div id="hatching-modal" class="modal-overlay hidden">
+            <div class="modal-content hatching-content">
+                <div class="confetti-container" id="hatching-confetti"></div>
+                <h2>Hore! Telur Dino Menetas!</h2>
+                <p>Hebat! Kamu telah menyelesaikan seluruh petualangan Jilid 1. Lihat dinosaurus barumu!</p>
+                
+                <div class="hatching-animation-area">
+                    <div class="crack-egg" id="anim-egg">
+                        <div class="egg-half top"></div>
+                        <div class="egg-half bottom"></div>
+                        <div class="hatched-dino" id="anim-dino"></div>
+                    </div>
+                </div>
+
+                <div class="hatch-success-info">
+                    <h3>Kamu berteman dengan: <strong id="new-dino-name">Bayi Triceratops!</strong></h3>
+                    <p>Sekarang kamu bisa memberinya makan dan mendandaninya dengan XP yang kamu dapatkan!</p>
+                </div>
+
+                <button id="btn-close-hatching" class="btn-primary">
+                    <span>Lanjutkan Petualangan</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL 3: MISSION PREVIEW (Pratinjau Misi) -->
+        <div id="mission-modal" class="modal-overlay hidden">
+            <div class="modal-content mission-content" style="max-width: 340px; border: 5px solid var(--earth-dark); border-radius: var(--border-radius-lg); background: #FFFDE7;">
+                <div class="mission-header" style="text-align: center; border-bottom: 3px dashed var(--earth-brown); padding-bottom: 12px; margin-bottom: 15px;">
+                    <span id="mission-area-emoji" style="font-size: 44px;">🌱</span>
+                    <h2 id="mission-area-title" style="color: var(--primary-dark); font-size: 20px; margin-top: 5px; font-weight: 700;">Hutan Huruf A-E</h2>
+                </div>
+                
+                <div class="mission-story" style="font-style: italic; color: var(--earth-brown); text-align: center; margin-bottom: 18px; font-size: 14px; line-height: 1.4;">
+                    <p id="mission-story-text">"Dino mendeteksi suara daun berbisik di kejauhan. Ayo bantu Dino menelusuri jejak misterius ini!"</p>
+                </div>
+                
+                <div class="mission-targets" style="background: rgba(255,255,255,0.7); border: 2.5px solid var(--gray); border-radius: var(--border-radius-sm); padding: 10px 14px; margin-bottom: 18px;">
+                    <h3 style="color: var(--earth-dark); font-size: 14px; margin-bottom: 6px; font-weight: 700;">🎯 Target Misi:</h3>
+                    <ul id="mission-targets-list" style="margin: 0; padding-left: 20px; font-size: 14px; font-weight: 600; color: var(--earth-dark);">
+                        <li>Temukan huruf a, b, c, d, e</li>
+                    </ul>
+                </div>
+                
+                <div class="mission-rewards" style="text-align: center;">
+                    <h3 style="color: var(--earth-dark); font-size: 14px; font-weight: 700; margin-bottom: 8px;">🎁 Hadiah Misi:</h3>
+                    <div style="display: flex; justify-content: center; gap: 15px;">
+                        <span class="reward-badge" style="background: var(--white); border: 2.5px solid var(--primary-dark); padding: 4px 10px; border-radius: 15px; font-size: 13px; font-weight: 700; color: var(--primary-dark); box-shadow: 0 3px 0 var(--primary-dark);">⭐ <span id="mission-reward-xp">50</span> XP</span>
+                        <span class="reward-badge" style="background: var(--white); border: 2.5px solid var(--primary-dark); padding: 4px 10px; border-radius: 15px; font-size: 13px; font-weight: 700; color: var(--primary-dark); box-shadow: 0 3px 0 var(--primary-dark);">🪙 <span id="mission-reward-coins">10</span> Koin</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 24px; display: flex; gap: 10px;">
+                    <button id="btn-mission-cancel" class="btn-secondary" style="flex: 1; margin: 0; padding: 10px;">Batal</button>
+                    <button id="btn-mission-start" class="btn-primary" style="flex: 1; margin: 0; padding: 10px;">Mulai Misi!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 4: DINO SHOP (Toko Aksesoris Dino) -->
+        <div id="shop-modal" class="modal-overlay hidden">
+            <div class="modal-content shop-content" style="max-width: 360px; border: 5px solid var(--earth-dark); border-radius: var(--border-radius-lg); background: #FFFDE7; max-height: 85vh; display: flex; flex-direction: column;">
+                <div class="shop-header" style="text-align: center; border-bottom: 3px dashed var(--earth-brown); padding-bottom: 12px; margin-bottom: 15px; flex-shrink: 0;">
+                    <h2 style="color: var(--primary-dark); font-size: 20px; font-weight: 700; margin: 0;">🛒 Toko Aksesoris Dino</h2>
+                    <p style="font-size: 13px; color: var(--earth-brown); margin: 3px 0 8px 0;">Kustomisasi dinosaurus dengan koin hasil belajarmu!</p>
+                    
+                    <div style="display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 8px;">
+                        <div class="shop-wallet" style="background: #FFF9C4; border: 2.5px solid var(--primary-dark); padding: 6px 14px; border-radius: var(--border-radius-sm); font-size: 14px; font-weight: 700; color: var(--primary-dark); display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 3px 0 var(--primary-dark);">
+                            <span>Dompet: 🪙 <strong id="shop-coin-count">0</strong></span>
+                        </div>
+                        <div class="shop-wallet" style="background: #E8F5E9; border: 2.5px solid var(--primary-dark); padding: 6px 14px; border-radius: var(--border-radius-sm); font-size: 14px; font-weight: 700; color: var(--primary-dark); display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 3px 0 var(--primary-dark);">
+                            <span>XP: ⭐ <strong id="shop-xp-count">0</strong></span>
+                        </div>
+                    </div>
+                    
+                    <!-- XP Exchange Box -->
+                    <div style="background: #F9FBE7; border: 2px dashed #81C784; border-radius: var(--border-radius-sm); padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                        <span style="font-size: 11px; color: var(--earth-brown); font-weight: 700;">🔁 Tukar 100 XP ➜ 🪙 10 Koin</span>
+                        <button id="btn-exchange-xp" class="btn-primary" style="margin: 0; padding: 6px 12px; font-size: 12px; width: auto; background: #81C784; border-color: #2E7D32; box-shadow: 0 3px 0 #2E7D32;">Tukar Sekarang</button>
+                    </div>
+                </div>
+                
+                <div class="shop-items-grid" id="shop-items-grid" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex-grow: 1; padding-right: 5px; margin-bottom: 15px;">
+                    <!-- Dynamically generated items -->
+                </div>
+
+                <div class="modal-actions" style="flex-shrink: 0;">
+                    <button id="btn-shop-close" class="btn-primary" style="width: 100%; margin: 0; padding: 12px;">Selesai</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 5: CERTIFICATE MODAL (Print Ready) -->
+        <div id="certificate-modal" class="modal-overlay hidden">
+            <div class="modal-content certificate-content" style="max-width: 600px; width: 90%; background: #FFF; border: 15px double #FFB300; border-radius: 10px; padding: 24px; text-align: center; font-family: 'Fredoka', sans-serif; position: relative;">
+                
+                <div style="font-size: 13px; color: var(--gray-dark); margin-bottom: 12px;" class="no-print">
+                    <p style="margin: 0;">Pratinjau Cetak. Klik tombol di bawah untuk mencetak sertifikat di kertas!</p>
+                </div>
+                
+                <div class="print-certificate-body" style="border: 2px solid #FFD54F; padding: 24px 20px; border-radius: 8px; background: #FFFDF0; position: relative; overflow: hidden; text-align: center;">
+                    <div style="font-size: 44px; margin-bottom: 8px;">🎓</div>
+                    <h1 style="font-size: 24px; color: #E65100; font-weight: 700; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Sertifikat Penghargaan</h1>
+                    <p style="font-size: 13px; color: #5D4037; font-weight: 600; margin: 0 0 16px 0;">Diberikan dengan bangga kepada petualang hebat:</p>
+                    
+                    <h2 id="cert-dino-name" style="font-size: 26px; color: #2E7D32; font-weight: 700; border-bottom: 3px dashed #81C784; display: inline-block; padding: 0 15px 5px 15px; margin: 0 0 16px 0;">Nama Dino</h2>
+                    
+                    <p style="font-size: 13px; color: #5D4037; line-height: 1.5; max-width: 440px; margin: 0 auto 16px auto; font-weight: 500;">
+                        Telah berhasil menyelesaikan seluruh petualangan membaca **Jilid 1** (Pengenalan Huruf & Suku Kata Konsonan b-z) di dunia **Dino Adventure Reading**!
+                    </p>
+                    
+                    <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 24px; border-top: 1.5px dashed #BCAAA4; padding-top: 16px;">
+                        <div>
+                            <span style="font-size: 10px; color: #795548; display: block; font-weight: 600;">TANGGAL LULUS</span>
+                            <strong id="cert-date" style="font-size: 12px; color: #5D4037; font-weight: 700;">23 Juni 2026</strong>
+                        </div>
+                        <div style="font-size: 36px; line-height: 1;">🦖</div>
+                        <div>
+                            <span style="font-size: 10px; color: #795548; display: block; font-weight: 600;">TANDA TANGAN</span>
+                            <strong style="font-size: 12px; color: #2E7D32; font-weight: 700; letter-spacing: 0.5px;">Dino Tricera</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions no-print" style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button id="btn-cert-close" class="btn-secondary" style="flex: 1; margin: 0; padding: 10px;">Tutup</button>
+                    <button id="btn-cert-print-action" class="btn-primary" style="flex: 1; margin: 0; background: #E65100; border-color: #BF360C; box-shadow: 0 4px 0 #BF360C; padding: 10px;">Cetak Sekarang!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 6: PARENT GIFT (Hadiah Kejutan Orang Tua) -->
+        <div id="gift-modal" class="modal-overlay hidden">
+            <div class="modal-content gift-content" style="max-width: 320px; border: 5px solid var(--earth-dark); border-radius: var(--border-radius-lg); background: #FFFDE7; text-align: center;">
+                <div style="font-size: 50px; margin-bottom: 10px; animation: wiggle 1.5s infinite;">🎁</div>
+                <h2 style="color: var(--primary-dark); font-size: 20px; font-weight: 700; margin: 0 0 5px 0;">Kejutan Dari Orang Tua!</h2>
+                <p style="font-size: 13px; color: var(--earth-brown); line-height: 1.4; margin-bottom: 15px;">Ibu/Ayah sangat bangga dengan usahamu belajar membaca hari ini!</p>
+                
+                <div id="gift-items-area" style="background: rgba(255,255,255,0.7); border: 2.5px solid var(--gray); border-radius: var(--border-radius-sm); padding: 12px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; justify-content: center; align-items: center;">
+                    <!-- Dynamic rewards description -->
+                </div>
+                
+                <button id="btn-claim-gift" class="btn-primary" style="width: 100%; margin: 0; padding: 12px;">Terima Kasih! ❤️</button>
+            </div>
+        </div>
+
+        <!-- MODAL 7: TREASURE CHEST (Peti Harta Karun) -->
+        <div id="chest-modal" class="modal-overlay hidden">
+            <div class="modal-content chest-content" style="max-width: 320px; border: 5px solid var(--earth-dark); border-radius: var(--border-radius-lg); background: #FFFDE7; text-align: center; position: relative;">
+                <div class="confetti-container" id="chest-confetti"></div>
+                <h2 id="chest-title" style="color: var(--primary-dark); font-size: 20px; font-weight: 700; margin: 0 0 5px 0;">Peti Harta Karun! 🏴‍☠️</h2>
+                <p id="chest-subtitle" style="font-size: 13px; color: var(--earth-brown); line-height: 1.4; margin-bottom: 15px;">Kamu menyelesaikan misi! Klik peti untuk membukanya!</p>
+                
+                <div class="chest-animation-area" style="height: 180px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
+                    <svg class="treasure-chest" id="chest-svg" viewBox="0 0 100 100" width="150" height="150" style="cursor: pointer; transition: transform 0.2s;">
+                        <g id="chest-state-locked">
+                            <!-- Lid -->
+                            <path d="M20 40 C20 20, 80 20, 80 40 Z" fill="#8D6E63" stroke="#5D4037" stroke-width="3" />
+                            <!-- Lid metal bands -->
+                            <path d="M32 24 C36 24, 36 40, 32 40" fill="none" stroke="#455A64" stroke-width="4" />
+                            <path d="M68 24 C64 24, 64 40, 68 40" fill="none" stroke="#455A64" stroke-width="4" />
+                            <!-- Bottom chest body -->
+                            <rect x="20" y="40" width="60" height="36" rx="4" fill="#795548" stroke="#5D4037" stroke-width="3" />
+                            <!-- Bottom metal corners -->
+                            <path d="M20 40 L30 40 L30 76 L20 76 Z" fill="#455A64" opacity="0.3" />
+                            <path d="M80 40 L70 40 L70 76 L80 76 Z" fill="#455A64" opacity="0.3" />
+                            <!-- Metal trim borders -->
+                            <line x1="20" y1="40" x2="80" y2="40" stroke="#5D4037" stroke-width="3" />
+                            <rect x="20" y="40" width="60" height="36" rx="4" fill="none" stroke="#455A64" stroke-width="3" />
+                            <!-- Large lock -->
+                            <rect x="44" y="36" width="12" height="14" rx="2" fill="#FFC107" stroke="#F57C00" stroke-width="2" />
+                            <circle cx="50" cy="42" r="2" fill="#3E2723" />
+                            <line x1="50" y1="44" x2="50" y2="48" stroke="#3E2723" stroke-width="2" />
+                        </g>
+                        <g id="chest-state-opened" class="hidden">
+                            <!-- Lid behind -->
+                            <path d="M20 25 C20 10, 80 10, 80 25 Z" fill="#8D6E63" stroke="#5D4037" stroke-width="3" />
+                            <!-- Gold pile inside chest -->
+                            <ellipse cx="50" cy="42" rx="28" ry="12" fill="#FFD54F" stroke="#FFB300" stroke-width="1.5" />
+                            <circle cx="38" cy="40" r="4" fill="#FFC107" />
+                            <circle cx="44" cy="38" r="5" fill="#FFD54F" />
+                            <circle cx="50" cy="41" r="6" fill="#FFCA28" />
+                            <circle cx="56" cy="39" r="4" fill="#FFD54F" />
+                            <circle cx="62" cy="42" r="5" fill="#FFC107" />
+                            <!-- Sparkles / Gems -->
+                            <polygon points="34,35 36,32 38,35 36,38" fill="#E91E63" />
+                            <polygon points="50,28 52,24 54,28 52,32" fill="#2196F3" />
+                            <polygon points="66,33 68,30 70,33 68,36" fill="#4CAF50" />
+                            <!-- Chest body -->
+                            <rect x="20" y="40" width="60" height="36" rx="4" fill="#795548" stroke="#5D4037" stroke-width="3" />
+                            <rect x="20" y="40" width="60" height="36" rx="4" fill="none" stroke="#455A64" stroke-width="3" />
+                            <!-- Lock hanging open -->
+                            <rect x="44" y="42" width="12" height="10" rx="2" fill="#FFC107" stroke="#F57C00" stroke-width="2" />
+                            <path d="M46 42 C46 36, 54 36, 54 42" fill="none" stroke="#FFB74D" stroke-width="2" />
+                        </g>
+                    </svg>
+                </div>
+                
+                <div id="chest-reward-area" class="hidden" style="background: rgba(255,255,255,0.7); border: 2.5px solid var(--gray); border-radius: var(--border-radius-sm); padding: 12px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; justify-content: center; align-items: center;">
+                    <div style="font-size: 18px; font-weight: 700; color: var(--primary-dark); display: flex; align-items: center; gap: 6px;">
+                        <span>🪙</span> <span id="chest-coins-reward">+0 Koin!</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--earth-brown);">Koin ditambahkan ke dompetmu!</div>
+                </div>
+                
+                <button id="btn-claim-chest" class="btn-primary hidden" style="width: 100%; margin: 0; padding: 12px;">Klaim Hadiah! 🪙</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification system for inline game alerts -->
+    <div id="game-notification" class="notification hidden">
+        <span class="notification-text">Hebat! +10 XP</span>
+    </div>
+
+    <!-- ═══ CORE ═══ -->
+    <script src="js/core/config.js"></script>
+    <script src="js/core/storage.js"></script>
+    <script src="js/core/state.js"></script>
+    <script src="js/core/router.js"></script>
+
+    <!-- ═══ AUDIO ═══ -->
+    <script src="js/audio/tts.js"></script>
+    <script src="js/audio/suara.js"></script>
+
+    <!-- ═══ LEARNING / HURUF (subfolder) ═══ -->
+    <script src="js/learning/huruf/huruf-utils.js"></script>
+    <script src="js/learning/huruf/huruf-matching.js"></script>
+    <script src="js/learning/huruf/huruf-dragdrop.js"></script>
+    <script src="js/learning/huruf/huruf-intro.js"></script>
+    <script src="js/learning/huruf/huruf-router.js"></script>
+
+    <!-- ═══ LEARNING / MENULIS ═══ -->
+    <script src="js/learning/menulis.js"></script>
+
+    <!-- ═══ GAME ═══ -->
+    <script src="js/game/reward.js"></script>
+
+    <!-- ═══ PROGRESS ═══ -->
+    <script src="js/progress/progress.js"></script>
+
+    <!-- ═══ UI ═══ -->
+    <script src="js/ui/dino.js"></script>
+    <script src="js/ui/events.js"></script>
+
+    <!-- ═══ ENTRY POINT ═══ -->
+    <script src="app.js"></script>
+</body>
+</html>
