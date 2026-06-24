@@ -85,6 +85,15 @@ function triggerEggHatching() {
     animArea.classList.remove('hatched');
     animDino.innerHTML = getDinoSvg();
 
+    // Mainkan sound effect sukses & suara narasi pembuka menetas: Selamat! Dino senang sekali! (MP3: 0041 & 0015)
+    playSuccessSFX();
+    setTimeout(() => {
+        playLetterSound("Selamat!");
+        setTimeout(() => {
+            playLetterSound("Dino senang sekali!");
+        }, 2000);
+    }, 500);
+
     setTimeout(() => {
         const egg = document.getElementById('anim-egg');
         egg.classList.add('wiggling');
@@ -99,7 +108,7 @@ function triggerEggHatching() {
                 spawnConfetti();
             }, 800);
         }, 800);
-    }, 500);
+    }, 2500); // Diundur sedikit agar narasi pembuka terdengar
 }
 
 // --- SPAWN CONFETTI ANIMASI ---

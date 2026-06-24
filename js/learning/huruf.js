@@ -377,11 +377,11 @@ function loadLetterChallenge() {
                         }
 
                         playSuccessSFX();
-                        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!");
+                        showNotification("Hebat!");
                         gameState.xp += 10;
                         saveGameState();
 
-                        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Naik ke 4000ms agar audio feedback "Hebat! Jawaban benar..." tidak terpotong saat transisi layar
+                        setTimeout(() => { transitionToSpeakPhase(); }, 1800);
                     } else {
                         playErrorSFX();
                         showNotification("Tarik huruf yang tepat ya! Kamu pasti bisa!"); // Kalimat ini sesuai di MP3 (0025_TARIK_HURUF_YANG_TEPAT_YA__KAMU_PASTI_BISA_.mp3)
@@ -546,11 +546,11 @@ function handleOptionClick(selectedLetter, cardElement) {
         }
 
         playSuccessSFX();
-        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!");
+        showNotification("Hebat!");
         gameState.xp += 10;
         saveGameState();
 
-        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Naik ke 4000ms agar audio tidak tumpang tindih
+        setTimeout(() => { transitionToSpeakPhase(); }, 1800);
     } else {
         cardElement.classList.add('wrong');
         playErrorSFX();
@@ -582,7 +582,7 @@ function transitionToSpeakPhase() {
     document.getElementById('icon-mic').classList.remove('hidden');
     document.getElementById('icon-stop').classList.add('hidden');
 
-    setTimeout(() => { playLetterSound(gameState.currentTargetLetter); }, 4500); // Naik dari 3800ms ke 4500ms agar TTS penjelas feedback sebelumnya selesai tanpa terpotong
+    setTimeout(() => { playLetterSound(gameState.currentTargetLetter); }, 2000); // Jeda dikurangi karena feedback "Hebat!" sekarang sangat singkat
 }
 
 // --- MODAL PREVIEW MISI ---

@@ -199,7 +199,24 @@ function playOfflineTTS(letter, loop = false) {
 
 // --- SOUND EFFECTS ---
 function playBeep(frequency, duration, type = "sine") {
-    // Sound effects ignored for now per user feedback
+    try {
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); // volume ramah anak
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {
+        console.warn("Synth audio error", e);
+    }
 }
 
 function playSuccessSFX() {
