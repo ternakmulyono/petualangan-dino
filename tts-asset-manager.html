@@ -521,6 +521,7 @@
     <span class="toolbar-label">Export</span>
     <button class="btn btn-green btn-sm" onclick="exportSelectedMP3()">🎵 Export Selected MP3</button>
     <button class="btn btn-primary btn-sm" onclick="exportZIP()">📦 Export ZIP Package</button>
+    <button class="btn btn-ghost btn-sm" onclick="exportTXTList()" style="border-color:var(--primary); color:var(--primary-hover);">📄 Export TXT List</button>
   </div>
 </div>
 
@@ -812,15 +813,57 @@ function loadAssets() {
       assets = [];
     }
   } else {
-    // Masukkan data awal default sebagai demo
+    // Masukkan data awal default lengkap
     assets = [
+      // 1. World Narration
       { id: "world_intro_001", category: "world_narration", text: "Selamat datang di Hutan Huruf.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
       { id: "world_intro_002", category: "world_narration", text: "Dino kehilangan telur emasnya.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "world_intro_003", category: "world_narration", text: "Ayo bantu Dino menemukan petunjuk baru.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "world_intro_004", category: "world_narration", text: "Petualangan dimulai.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      // 2. Gameplay Instructions
       { id: "instruction_choose_letter_001", category: "gameplay_instruction", text: "Pilih huruf yang benar.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "instruction_listen_answer_001", category: "gameplay_instruction", text: "Dengarkan lalu pilih jawabannya.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "instruction_trace_letter_001", category: "gameplay_instruction", text: "Ikuti garis untuk menulis huruf.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "instruction_tap_letter_001", category: "gameplay_instruction", text: "Sentuh huruf yang diminta.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "instruction_arrange_word_001", category: "gameplay_instruction", text: "Susun huruf hingga menjadi kata.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      // 3. Positive Feedback
       { id: "feedback_hebat_001", category: "positive_feedback", text: "Hebat!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_bagus_sekali_001", category: "positive_feedback", text: "Bagus sekali!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_luar_biasa_001", category: "positive_feedback", text: "Luar biasa!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_pintar_001", category: "positive_feedback", text: "Pintar!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_kamu_berhasil_001", category: "positive_feedback", text: "Kamu berhasil!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_dino_senang_001", category: "positive_feedback", text: "Dino senang sekali!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_teruskan_petualangan_001", category: "positive_feedback", text: "Teruskan petualanganmu!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      // 4. Encouragement Feedback
       { id: "feedback_coba_lagi_001", category: "encouragement_feedback", text: "Coba lagi ya.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_hampir_benar_001", category: "encouragement_feedback", text: "Hampir benar.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_jangan_menyerah_001", category: "encouragement_feedback", text: "Jangan menyerah.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_coba_sekali_lagi_001", category: "encouragement_feedback", text: "Ayo coba sekali lagi.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_kamu_pasti_bisa_001", category: "encouragement_feedback", text: "Kamu pasti bisa.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "feedback_dino_butuh_bantuan_001", category: "encouragement_feedback", text: "Dino masih membutuhkan bantuanmu.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      // 5. Dino Dialogues
       { id: "dino_halo_teman_001", category: "dino_dialogues", text: "Halo teman!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
-      { id: "reward_star_001", category: "reward_announcements", text: "Kamu mendapatkan bintang.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" }
+      { id: "dino_butuh_bantuan_001", category: "dino_dialogues", text: "Aku butuh bantuanmu.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "dino_jelajah_bersama_001", category: "dino_dialogues", text: "Ayo kita menjelajah bersama.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "dino_bangga_padamu_001", category: "dino_dialogues", text: "Aku bangga padamu.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "dino_wah_kita_berhasil_001", category: "dino_dialogues", text: "Wah, kita berhasil!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "dino_cari_petunjuk_001", category: "dino_dialogues", text: "Ayo cari petunjuk berikutnya.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      // 6. Reward Announcements
+      { id: "reward_star_001", category: "reward_announcements", text: "Kamu mendapatkan bintang.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "reward_coins_collected_001", category: "reward_announcements", text: "Koin berhasil dikumpulkan.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "reward_level_up_001", category: "reward_announcements", text: "Level Dino meningkat.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "reward_new_unlocked_001", category: "reward_announcements", text: "Hadiah baru terbuka.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "reward_chest_opened_001", category: "reward_announcements", text: "Peti harta berhasil dibuka.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      // 7. Parent Dashboard
+      { id: "parent_report_completed_001", category: "parent_dashboard", text: "Anak Anda berhasil menyelesaikan latihan hari ini.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "parent_report_progress_up_001", category: "parent_dashboard", text: "Progress membaca meningkat.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "parent_report_daily_target_001", category: "parent_dashboard", text: "Target harian berhasil dicapai.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "parent_report_today_done_001", category: "parent_dashboard", text: "Latihan hari ini selesai.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      // 8. Certificate Messages
+      { id: "cert_congrats_001", category: "certificate_messages", text: "Selamat!", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "cert_world_clear_001", category: "certificate_messages", text: "Kamu berhasil menyelesaikan Hutan Huruf.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "cert_dino_proud_001", category: "certificate_messages", text: "Dino bangga padamu.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" },
+      { id: "cert_next_world_001", category: "certificate_messages", text: "Petualangan berikutnya telah terbuka.", date: new Date().toLocaleDateString('id-ID'), status: "ready", audioBase64: "" }
     ];
     saveAssetsToStorage();
   }
@@ -1329,6 +1372,34 @@ async function exportZIP() {
   } catch (e) {
     showToast("Gagal membundel ZIP: " + e, true);
   }
+}
+
+// Export TXT List of Narration Texts (One per line)
+function exportTXTList() {
+  const searchQ = document.getElementById('search-input').value.trim().toLowerCase();
+  
+  // Filter sesuai kategori aktif dan kata pencarian
+  const filtered = assets.filter(a => {
+    const matchCat = (activeCategory === "all" || a.category === activeCategory);
+    const matchSearch = (!searchQ || a.id.toLowerCase().includes(searchQ) || a.text.toLowerCase().includes(searchQ));
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    showToast("Tidak ada data untuk diekspor!", true);
+    return;
+  }
+
+  // Gabungkan teks satu item per baris
+  const txtContent = filtered.map(a => a.text).join('\n');
+  const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+  
+  const filename = activeCategory === 'all' 
+    ? 'tts_all_narration_list.txt' 
+    : `tts_${activeCategory}_list.txt`;
+    
+  downloadBlob(blob, filename);
+  showToast("Daftar teks TXT berhasil diunduh! 📄");
 }
 
 // Toast info helper
