@@ -14,19 +14,30 @@ let isTTSPlaying = false;
 
 async function loadAudioMetadata() {
     try {
+        // 1. Load letter audio metadata
         const response = await fetch('metadata.json');
         if (response.ok) {
             const data = await response.json();
-            audioMetadata = {};
             data.forEach(item => {
                 if (item.text && item.filename) {
                     audioMetadata[item.text.trim().toUpperCase()] = item.filename;
                 }
             });
-            console.log("Audio metadata loaded successfully:", audioMetadata);
         }
+        
+        // 2. Load game narration TTS audio metadata
+        const responseTts = await fetch('audio/tts_metadata.json');
+        if (responseTts.ok) {
+            const dataTts = await responseTts.json();
+            dataTts.forEach(item => {
+                if (item.text && item.filename) {
+                    audioMetadata[item.text.trim().toUpperCase()] = item.filename;
+                }
+            });
+        }
+        console.log("Audio and TTS metadata loaded successfully:", audioMetadata);
     } catch (e) {
-        console.warn("Failed to load metadata.json, playing via TTS default fallback", e);
+        console.warn("Failed to load metadata json, playing via TTS default fallback", e);
     }
 }
 
