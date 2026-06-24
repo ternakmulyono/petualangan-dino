@@ -11,7 +11,9 @@ function initNavEvents() {
     }, 1000);
 
     document.getElementById('btn-start-adventure').addEventListener('click', () => {
+        window.preventStopOnScreenChange = true;
         changeScreen('map');
+        window.preventStopOnScreenChange = false;
         // Mainkan instruksi jilid 1: Dino kehilangan telur emasnya. Ayo bantu Dino menemukan petunjuk baru. (MP3: 0002 & 0003)
         setTimeout(() => {
             playLetterSound("Dino kehilangan telur emasnya.");
@@ -23,9 +25,11 @@ function initNavEvents() {
     document.getElementById('btn-back-nest').addEventListener('click', () => changeScreen('nest'));
 
     document.getElementById('btn-next-map').addEventListener('click', () => {
+        window.preventStopOnScreenChange = true;
         document.getElementById('map-page-1').classList.add('hidden');
         document.getElementById('map-page-2').classList.remove('hidden');
         document.getElementById('screen-map').scrollTop = 0;
+        window.preventStopOnScreenChange = false;
         // Mainkan petunjuk jilid 2: Latihan hari ini selesai. Target harian berhasil dicapai. (Atau gunakan MP3 40 & 39)
         setTimeout(() => {
             playLetterSound("Latihan hari ini selesai.");

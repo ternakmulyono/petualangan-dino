@@ -111,11 +111,11 @@ function loadLetterChallenge() {
                         }
 
                         playSuccessSFX();
-                        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!"); // MP3: 0017
+                        showNotification("Hebat!");
                         gameState.xp += 10;
                         saveGameState();
 
-                        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Jeda 4s agar audio selesai sebelum transisi
+                        setTimeout(() => { transitionToSpeakPhase(); }, 1200); // Snappy transition for short 'Hebat!' audio
                     } else {
                         playErrorSFX();
                         showNotification("Tarik huruf yang tepat ya! Kamu pasti bisa!"); // MP3: 0025
@@ -151,11 +151,11 @@ function handleOptionClick(selectedLetter, cardElement) {
         }
 
         playSuccessSFX();
-        showNotification("Hebat! Jawaban benar, kamu mendapat sepuluh XP!"); // MP3: 0017
+        showNotification("Hebat!");
         gameState.xp += 10;
         saveGameState();
 
-        setTimeout(() => { transitionToSpeakPhase(); }, 4000); // Jeda 4s agar audio selesai sebelum transisi
+        setTimeout(() => { transitionToSpeakPhase(); }, 1200); // Snappy transition for short 'Hebat!' audio
     } else {
         cardElement.classList.add('wrong');
         playErrorSFX();

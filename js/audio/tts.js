@@ -46,8 +46,14 @@ async function loadAudioMetadata() {
 // Panggil loading metadata saat inisialisasi
 loadAudioMetadata();
 
+// Global flag to prevent screen change from cutting off long narrations
+window.preventStopOnScreenChange = false;
+
 // --- HENTIKAN SUARA / TTS YANG SEDANG BERJALAN ---
 function stopLetterSound() {
+    if (window.preventStopOnScreenChange) {
+        return; // Don't stop the audio if we are in a protected transition (e.g. going to map, etc.)
+    }
     if (currentTTSAudio) {
         currentTTSAudio.pause();
         currentTTSAudio.currentTime = 0;

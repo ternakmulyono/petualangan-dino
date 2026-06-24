@@ -20,8 +20,8 @@ const header = {
 
 // --- GANTI LAYAR ---
 function changeScreen(screenName) {
-    // Hentikan suara pelafalan yang sedang berputar jika ada
-    if (typeof stopLetterSound === 'function') {
+    // Hentikan suara pelafalan yang sedang berputar jika tidak dalam proteksi transisi
+    if (typeof stopLetterSound === 'function' && !window.preventStopOnScreenChange) {
         stopLetterSound();
     }
 
@@ -171,6 +171,23 @@ function updateMapScreen() {
 
 // --- NOTIFIKASI TOAST ---
 function showNotification(text) {
+    const el = document.getElementById('game-notification');
+    if (el) {
+        const textEl = el.querySelector('.notification-text');
+        if (textEl) textEl.textContent = text;
+        el.classList.remove('hidden');
+        el.style.opacity = '1';
+        el.style.transform = 'translate(-50%, 0) scale(1)';
+
+        // Auto hide visual toast after 3 seconds
+        if (window.activeNotificationTimeout) clearTimeout(window.activeNotificationTimeout);
+        window.activeNotificationTimeout = setTimeout(() => {
+            el.style.opacity = '0';
+            el.style.transform = 'translate(-50%, -20px) scale(0.9)';
+            setTimeout(() => el.classList.add('hidden'), 300);
+        }, 3000);
+    }
+
     // Mainkan suara narasi notifikasi (Voice Feedback) menggunakan playLetterSound (mendukung file audio MP3 asli)
     if (typeof playLetterSound === 'function') {
         // Hilangkan emoji agar tidak ikut dilafalkan aneh oleh TTS

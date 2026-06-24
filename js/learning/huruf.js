@@ -90,7 +90,9 @@ function startLevel(range, mode) {
         dot.className = 'step-dot active';
         dotsContainer.appendChild(dot);
 
+        window.preventStopOnScreenChange = true;
         changeScreen('game');
+        window.preventStopOnScreenChange = false;
         document.getElementById('game-read-view').classList.remove('hidden');
 
         const syllables = LEVEL_GROUPS[range].slice(0, 5);
@@ -200,7 +202,9 @@ function startLevel(range, mode) {
         dot.className = 'step-dot active';
         dotsContainer.appendChild(dot);
 
+        window.preventStopOnScreenChange = true;
         changeScreen('game');
+        window.preventStopOnScreenChange = false;
         document.getElementById('game-drag-match-view').classList.remove('hidden');
         loadDragMatchChallenge();
         // Berikan perintah suara untuk anak: Sentuh huruf yang diminta. (MP3: 0008)
@@ -220,7 +224,9 @@ function startLevel(range, mode) {
         dot.className = 'step-dot active';
         dotsContainer.appendChild(dot);
 
+        window.preventStopOnScreenChange = true;
         changeScreen('game');
+        window.preventStopOnScreenChange = false;
         document.getElementById('game-picture-view').classList.remove('hidden');
 
         const letters = LEVEL_GROUPS[range];
@@ -280,12 +286,16 @@ function startLevel(range, mode) {
         dotsContainer.appendChild(dot);
     });
 
+    window.preventStopOnScreenChange = true;
     changeScreen('game');
-    loadLetterChallenge();
-    // Berikan perintah suara untuk anak: Pilih huruf yang benar. (MP3: 0005)
+    window.preventStopOnScreenChange = false;
+    // Berikan perintah suara untuk anak: Pilih huruf yang benar. (MP3: 0005) - Hanya saat awal masuk level
+    window.preventStopOnScreenChange = true;
     setTimeout(() => {
         playLetterSound("Pilih huruf yang benar.");
+        window.preventStopOnScreenChange = false;
     }, 300);
+    loadLetterChallenge();
 }
 
 // --- LOAD FASE MATCHING (DRAG HURUF KE KERANJANG) ---
@@ -427,8 +437,12 @@ function loadLetterChallenge() {
         );
     });
 
-    // Beri jeda 3000ms agar instruksi "Pilih huruf yang benar" selesai diucapkan terlebih dahulu
-    setTimeout(() => { playLetterSound(letter); }, 3000);
+    // Beri jeda 3000ms hanya saat pertama kali masuk level (indeks 0) agar instruksi "Pilih huruf yang benar" selesai diucapkan. Selanjutnya langsung mainkan suara huruf target.
+    if (gameState.currentLetterIndex === 0) {
+        setTimeout(() => { playLetterSound(letter); }, 3000);
+    } else {
+        setTimeout(() => { playLetterSound(letter); }, 400);
+    }
 }
 
 // --- LOAD MODE PASANGKAN HURUF (BESAR-KECIL) ---
