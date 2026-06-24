@@ -496,6 +496,7 @@
     </div>
   </div>
   <div class="header-actions">
+    <button class="btn btn-red btn-sm" onclick="resetToDefault()" style="padding: 4px 8px; font-size: 11px;">⚠️ Reset Defaults</button>
     <span class="badge api-badge">Gemini TTS Active</span>
     <span class="badge" id="badge-total-assets">0 Assets</span>
   </div>
@@ -799,20 +800,35 @@ function writeString(view, offset, string) {
 // ============================================================
 // LOCAL STORAGE MANAGEMENT (ASSET CACHING & REUSE)
 // ============================================================
+function resetToDefault() {
+  localStorage.removeItem('dino_tts_assets');
+  loadAssets();
+  renderCategories();
+  renderLibrary();
+  showToast("Daftar asset berhasil di-reset ke versi terbaru!");
+}
+
 function loadAssets() {
   const data = localStorage.getItem('dino_tts_assets');
+  let useDefault = true;
+  
   if (data) {
     try {
       const parsed = JSON.parse(data);
-      assets = parsed.map(item => ({
-        ...item,
-        audioUrl: null // Blob URL harus digenerate kembali dari base64 data jika ada
-      }));
+      // Jika jumlah item di localstorage jauh lebih sedikit dari yang baru (39 item), abaikan cache lama agar asset baru masuk
+      if (parsed.length >= 39) {
+        assets = parsed.map(item => ({
+          ...item,
+          audioUrl: null
+        }));
+        useDefault = false;
+      }
     } catch(e) {
       console.error(e);
-      assets = [];
     }
-  } else {
+  }
+  
+  if (useDefault) {
     // Masukkan data awal default lengkap
     assets = [
       // 1. World Narration
