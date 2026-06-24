@@ -23,6 +23,7 @@ let gameState = {
     currentLetterIndex: 0,      // Index within current level letters
     currentTargetLetter: '',    // Current letter being learned
     currentGameMode: 'letters', // Current game mode
+    phaseStatus: {},            // Tracks completion of phase: { 'vowels': { letters: true, 'drag-match': false } }
 
     // Media Recording variables
     mediaRecorder: null,
@@ -51,9 +52,9 @@ function loadGameState() {
             gameState.dinoName = parsed.dinoName || 'Telur Misterius';
             gameState.masteredLetters = parsed.masteredLetters || [];
             gameState.unlockedAccessories = parsed.unlockedAccessories || [];
-            gameState.activeAccessory = parsed.activeAccessory || '';
             gameState.parentBadges = parsed.parentBadges || [];
             gameState.pendingRewards = parsed.pendingRewards || { coins: 0, badges: [] };
+            gameState.phaseStatus = parsed.phaseStatus || {};
         } catch (e) {
             console.error("Error loading state", e);
         }
@@ -71,7 +72,8 @@ function saveGameState() {
         unlockedAccessories: gameState.unlockedAccessories,
         activeAccessory: gameState.activeAccessory,
         parentBadges: gameState.parentBadges,
-        pendingRewards: gameState.pendingRewards
+        pendingRewards: gameState.pendingRewards,
+        phaseStatus: gameState.phaseStatus
     };
     localStorage.setItem('dino_reading_state', JSON.stringify(stateToSave));
     updateUIElements();

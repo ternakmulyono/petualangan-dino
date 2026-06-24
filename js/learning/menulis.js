@@ -371,6 +371,12 @@ function completeWriteChallenge() {
 
     gameState.xp += 15;
     gameState.coins += 2;
+
+    // Set status fase letters selesai untuk tingkat ini
+    if (!gameState.phaseStatus) gameState.phaseStatus = {};
+    if (!gameState.phaseStatus[range]) gameState.phaseStatus[range] = {};
+    gameState.phaseStatus[range].letters = true;
+
     saveGameState();
 
     setTimeout(() => {
@@ -379,16 +385,18 @@ function completeWriteChallenge() {
             gameState.currentLetterIndex++;
             loadLetterChallenge();
         } else {
-            // Level selesai!
+            // Level CALIS selesai!
             const theme = LEVEL_THEMES[gameState.currentLevelRange];
             if (theme) {
-                gameState.xp += theme.xp;
-                gameState.coins += theme.coins;
-                showNotification(`Selamat! Misi ${theme.name} selesai! Hadiah: +${theme.xp} XP & +${theme.coins} Koin!`);
+                showNotification(`Selamat! CALIS ${theme.name} selesai! Hadiah: +15 XP & +2 Koin!`);
             } else {
-                showNotification(`Selamat! Misi Huruf ${gameState.currentLevelRange} selesai!`);
+                showNotification(`Selamat! Misi CALIS ${gameState.currentLevelRange} selesai!`);
             }
-            setTimeout(() => { openTreasureChest(); }, 1500);
+            // Langsung kembali ke Map lalu tampilkan preview modal misi tersebut (agar tombol drag-match bisa dimainkan)
+            changeScreen('map');
+            setTimeout(() => {
+                openMissionPreview(gameState.currentLevelRange);
+            }, 500);
         }
     }, 2000);
 }

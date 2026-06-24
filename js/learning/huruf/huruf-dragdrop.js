@@ -89,15 +89,18 @@ function loadDragMatchChallenge() {
 
                             const theme = LEVEL_THEMES[range];
                             if (theme) {
-                                gameState.xp += theme.xp;
-                                gameState.coins += theme.coins;
-                                showNotification(`Selamat! Misi ${theme.name} selesai! Hadiah: +${theme.xp} XP & +${theme.coins} Koin!`);
+                                showNotification(`Selamat! Misi Pasang ${theme.name} selesai! Hadiah: +20 XP & +5 Koin!`);
                             } else {
-                                gameState.xp += 50;
-                                gameState.coins += 10;
-                                showNotification('Hebat! Pasangkan Huruf selesai! +50 XP disimpan.');
+                                showNotification('Hebat! Pasangkan Huruf selesai!');
                             }
 
+                            // Set status fase drag-match selesai untuk tingkat ini
+                            if (!gameState.phaseStatus) gameState.phaseStatus = {};
+                            if (!gameState.phaseStatus[range]) gameState.phaseStatus[range] = {};
+                            gameState.phaseStatus[range]['drag-match'] = true;
+
+                            gameState.xp += 20;
+                            gameState.coins += 5;
                             saveGameState();
                             spawnConfetti();
 
@@ -107,7 +110,12 @@ function loadDragMatchChallenge() {
                                 setTimeout(() => mascot.classList.remove('jump'), 600);
                             }
 
-                            setTimeout(() => { openTreasureChest(); }, 1500);
+                            setTimeout(() => {
+                                changeScreen('map');
+                                setTimeout(() => {
+                                    openMissionPreview(range);
+                                }, 500);
+                            }, 1500);
                         }, 500);
                     }
                 } else {

@@ -126,14 +126,22 @@ function openMissionPreview(range) {
         li3.textContent = 'Baca nama gambar dengan kartu kata bergambar';
         targetsList.appendChild(li3);
 
+        // Cek status penyelesaian fase untuk range ini
+        if (!gameState.phaseStatus) gameState.phaseStatus = {};
+        const rangeStatus = gameState.phaseStatus[range] || { letters: false, 'drag-match': false, pictures: false };
+
+        const isDragMatchDisabled = !rangeStatus.letters;
+        const isPicturesDisabled = !rangeStatus['drag-match'];
+
         actionsArea.innerHTML = `
             <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
                 <button id="btn-mission-letters" class="btn-primary" style="margin:0;width:100%;padding:10px;background:var(--primary);border-color:var(--primary-dark);box-shadow:0 4px 0 var(--primary-dark);font-size:14px;">🔍 Cari & Tulis Huruf (CALIS)</button>
-                <button id="btn-mission-drag-match" class="btn-primary" style="margin:0;width:100%;padding:10px;background:#9C27B0;border-color:#7B1FA2;box-shadow:0 4px 0 #7B1FA2;font-size:14px;">🧩 Pasangkan Huruf (Besar-Kecil)</button>
-                <button id="btn-mission-pictures" class="btn-primary" style="margin:0;width:100%;padding:10px;background:var(--accent);border-color:var(--accent-dark);box-shadow:0 4px 0 var(--accent-dark);font-size:14px;">🖼️ Kata Gambar</button>
+                <button id="btn-mission-drag-match" class="btn-primary" style="margin:0;width:100%;padding:10px;background:#9C27B0;border-color:#7B1FA2;box-shadow:0 4px 0 #7B1FA2;font-size:14px;" ${isDragMatchDisabled ? 'disabled style="opacity:0.5;cursor:not-allowed;background:#777;border-color:#555;box-shadow:none;"' : ''}>🧩 Pasangkan Huruf (Besar-Kecil)</button>
+                <button id="btn-mission-pictures" class="btn-primary" style="margin:0;width:100%;padding:10px;background:var(--accent);border-color:var(--accent-dark);box-shadow:0 4px 0 var(--accent-dark);font-size:14px;" ${isPicturesDisabled ? 'disabled style="opacity:0.5;cursor:not-allowed;background:#777;border-color:#555;box-shadow:none;"' : ''}>🖼️ Kata Gambar</button>
                 <button id="btn-mission-cancel" class="btn-secondary" style="margin:0;width:100%;padding:8px;font-size:13px;">Batal</button>
             </div>
         `;
+        
         document.getElementById('btn-mission-cancel').addEventListener('click', () => {
             document.getElementById('mission-modal').classList.add('hidden');
         });
@@ -141,14 +149,18 @@ function openMissionPreview(range) {
             document.getElementById('mission-modal').classList.add('hidden');
             startLevel(range, 'letters');
         });
-        document.getElementById('btn-mission-drag-match').addEventListener('click', () => {
-            document.getElementById('mission-modal').classList.add('hidden');
-            startLevel(range, 'drag-match');
-        });
-        document.getElementById('btn-mission-pictures').addEventListener('click', () => {
-            document.getElementById('mission-modal').classList.add('hidden');
-            startLevel(range, 'pictures');
-        });
+        if (!isDragMatchDisabled) {
+            document.getElementById('btn-mission-drag-match').addEventListener('click', () => {
+                document.getElementById('mission-modal').classList.add('hidden');
+                startLevel(range, 'drag-match');
+            });
+        }
+        if (!isPicturesDisabled) {
+            document.getElementById('btn-mission-pictures').addEventListener('click', () => {
+                document.getElementById('mission-modal').classList.add('hidden');
+                startLevel(range, 'pictures');
+            });
+        }
     }
 
     document.getElementById('mission-modal').classList.remove('hidden');

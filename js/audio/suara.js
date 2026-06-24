@@ -242,12 +242,18 @@ async function submitPicturePhase() {
     if (theme) {
         gameState.xp += theme.xp;
         gameState.coins += theme.coins;
-        showNotification(`Selamat! Misi ${theme.name} selesai! Hadiah: +${theme.xp} XP & +${theme.coins} Koin!`);
+        showNotification(`Selamat! Seluruh Misi ${theme.name} selesai! Hadiah: +${theme.xp} XP & +${theme.coins} Koin!`);
     } else {
         gameState.xp += 50;
         gameState.coins += 10;
         showNotification("Hebat! Kata Gambar selesai! +50 XP disimpan.");
     }
+
+    // Set status fase pictures selesai untuk tingkat ini
+    if (!gameState.phaseStatus) gameState.phaseStatus = {};
+    if (!gameState.phaseStatus[range]) gameState.phaseStatus[range] = {};
+    gameState.phaseStatus[range].pictures = true;
+
     saveGameState();
     playSuccessSFX();
 
