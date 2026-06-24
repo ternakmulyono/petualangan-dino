@@ -163,5 +163,90 @@
     "id": 33,
     "text": "Koin berhasil dikumpulkan.",
     "filename": "0033_KOIN_BERHASIL_DIKUMPULKAN_.mp3"
+  },
+  {
+    "id": 34,
+    "text": "Level Dino meningkat.",
+    "filename": "0034_LEVEL_DINO_MENINGKAT_.mp3"
+  },
+  {
+    "id": 35,
+    "text": "Hadiah baru terbuka.",
+    "filename": "0035_HADIAH_BARU_TERBUKA_.mp3"
+  },
+  {
+    "id": 36,
+    "text": "Peti harta berhasil dibuka.",
+    "filename": "0036_PETI_HARTA_BERHASIL_DIBUKA_.mp3"
+  },
+  {
+    "id": 37,
+    "text": "Anak Anda berhasil menyelesaikan latihan hari ini.",
+    "filename": "0037_ANAK_ANDA_BERHASIL_MENYELESAIKAN_LATIHAN_HARI_INI_.mp3"
+  },
+  {
+    "id": 38,
+    "text": "Progress membaca meningkat.",
+    "filename": "0038_PROGRESS_MEMBACA_MENINGKAT_.mp3"
+  },
+  {
+    "id": 39,
+    "text": "Target harian berhasil dicapai.",
+    "filename": "0039_TARGET_HARIAN_BERHASIL_DICAPAI_.mp3"
+  },
+  {
+    "id": 40,
+    "text": "Latihan hari ini selesai.",
+    "filename": "0040_LATIHAN_HARI_INI_SELESAI_.mp3"
+  },
+  {
+    "id": 41,
+    "text": "Selamat!",
+    "filename": "0041_SELAMAT_.mp3"
+  },
+  {
+    "id": 42,
+    "text": "Kamu berhasil menyelesaikan Hutan Huruf.",
+    "filename": "0042_KAMU_BERHASIL_MENYELESAIKAN_HUTAN_HURUF_.mp3"
+  },
+  {
+    "id": 43,
+    "text": "Dino bangga padamu.",
+    "filename": "0043_DINO_BANGGA_PADAMU_.mp3"
+  },
+  {
+    "id": 44,
+    "text": "Petualangan berikutnya telah terbuka.",
+    "filename": "0044_PETUALANGAN_BERIKUTNYA_TELAH_TERBUKA_.mp3"
+  },
+  {
+    "id": 45,
+    "text": "Waktu rekam habis! Rekaman disimpan.",
+    "filename": "0045_WAKTU_REKAM_HABIS__REKAMAN_DISIMPAN_.mp3"
+  },
+  {
+    "id": 46,
+    "text": "Area terkunci! Selesaikan misi sebelumnya.",
+    "filename": "0046_AREA_TERKUNCI__SELESAIKAN_MISI_SEBELUMNYA_.mp3"
+  },
+  {
+    "id": 47,
+    "text": "Aksesoris dipasang!",
+    "filename": "0047_AKSESORIS_DIPASANG_.mp3"
+  },
+  {
+    "id": 48,
+    "text": "Aksesoris berhasil dibeli dan dipakai!",
+    "filename": "0048_AKSESORIS_BERHASIL_DIBELI_DAN_DIPAKAI_.mp3"
+  },
+  {
+    "id": 49,
+    "text": "Berhasil menukar seratus XP menjadi sepuluh koin!",
+    "filename": "0049_BERHASIL_MENUKAR_SERATUS_XP_MENJADI_SEPULUH_KOIN_.mp3"
+  },
+  {
+    "id": 50,
+    "text": "XP tidak cukup! Butuh minimal seratus XP.",
+    "filename": "0050_XP_TIDAK_CUKUP__BUTUH_MINIMAL_SERATUS_XP_.mp3"
   }
 ]
