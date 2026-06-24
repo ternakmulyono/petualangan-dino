@@ -1374,32 +1374,24 @@ async function exportZIP() {
   }
 }
 
-// Export TXT List of Narration Texts (One per line)
+// Export TXT and JSON List of ALL Narration Texts (One per line + structured mapping)
 function exportTXTList() {
-  const searchQ = document.getElementById('search-input').value.trim().toLowerCase();
-  
-  // Filter sesuai kategori aktif dan kata pencarian
-  const filtered = assets.filter(a => {
-    const matchCat = (activeCategory === "all" || a.category === activeCategory);
-    const matchSearch = (!searchQ || a.id.toLowerCase().includes(searchQ) || a.text.toLowerCase().includes(searchQ));
-    return matchCat && matchSearch;
-  });
-
-  if (filtered.length === 0) {
+  if (assets.length === 0) {
     showToast("Tidak ada data untuk diekspor!", true);
     return;
   }
 
-  // Gabungkan teks satu item per baris
-  const txtContent = filtered.map(a => a.text).join('\n');
-  const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
-  
-  const filename = activeCategory === 'all' 
-    ? 'tts_all_narration_list.txt' 
-    : `tts_${activeCategory}_list.txt`;
-    
-  downloadBlob(blob, filename);
-  showToast("Daftar teks TXT berhasil diunduh! 📄");
+  // 1. Export TXT (clean text lines, one per line)
+  const txtContent = assets.map(a => a.text).join('\n');
+  const txtBlob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+  downloadBlob(txtBlob, 'tts_all_narration_list.txt');
+
+  // 2. Export JSON (structured data with mapping: id, text, category)
+  const jsonContent = JSON.stringify(assets, null, 2);
+  const jsonBlob = new Blob([jsonContent], { type: 'application/json;charset=utf-8' });
+  downloadBlob(jsonBlob, 'tts_all_narration_list.json');
+
+  showToast("File TXT dan JSON berhasil diunduh! 📄");
 }
 
 // Toast info helper
