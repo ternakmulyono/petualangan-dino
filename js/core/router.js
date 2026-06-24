@@ -171,10 +171,10 @@ function updateMapScreen() {
 
 // --- NOTIFIKASI TOAST ---
 function showNotification(text) {
-    // Mainkan suara narasi notifikasi (Voice Feedback) menggunakan Google TTS Fallback
-    if (typeof playLetterSoundFallback === 'function') {
+    // Mainkan suara narasi notifikasi (Voice Feedback) menggunakan playLetterSound (mendukung file audio MP3 asli)
+    if (typeof playLetterSound === 'function') {
         // Hilangkan emoji agar tidak ikut dilafalkan aneh oleh TTS
-        const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, "");
-        playLetterSoundFallback(cleanText);
+        const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, "").trim();
+        playLetterSound(cleanText);
     }
 }
