@@ -6,7 +6,7 @@
 
 function getDinoSvg(activeAccessory = '', pose = 'waving') {
     const poses = {
-        waving: "image/dino/dino utama.png",
+        waving: "image/dino/dino-utama.png",
         thinking: "image/dino/dino-depan.png",
         samping: "image/dino/dino-samping.png",
         belajar: "image/dino/dino-belajar.png",

@@ -87,6 +87,12 @@
                         <span>🛒 Toko Dino</span>
                     </button>
                 </div>
+                <!-- Button for Dino Egg Hatching Mini Game -->
+                <div id="hatching-game-trigger-container" style="width: 100%; max-width: 320px; margin-top: 10px; text-align: center;">
+                    <button id="btn-trigger-hatching-game" class="btn-primary" style="width: 100%; margin: 0; background: #FFD54F; border-color: #FFB300; box-shadow: 0 4px 0 #FFB300; color: var(--earth-dark);">
+                        <span>🥚⚡ Mesin Penetas Dino</span>
+                    </button>
+                </div>
             </section>
 
             <!-- SCREEN 2: MAP / PETA HUTAN HURUF -->
@@ -338,7 +344,7 @@
                     <div class="game-mascot-container">
                         <div id="game-mascot-dino" class="mascot-dino">
                             <svg viewBox="0 0 200 200" width="100%" height="100%">
-                                <image href="image/dino/dino utama.png" x="0" y="0" width="200" height="200" />
+                                <image href="image/dino/dino-utama.png" x="0" y="0" width="200" height="200" />
                             </svg>
                         </div>
                     </div>
@@ -635,6 +641,10 @@
                                     <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                                 </svg>
                             </button>
+                            <!-- Button to trigger hatching game specifically from read view completion -->
+                            <button id="btn-read-trigger-hatching" class="btn-primary hidden" style="background: #FFD54F; border-color: #FFB300; box-shadow: 0 4px 0 #FFB300; color: var(--earth-dark); margin-top: 15px; width: 100%;">
+                                <span>🥚⚡ Mainkan Mini Game Penetas Telur Dino!</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -747,26 +757,90 @@
 
         <!-- MODAL 2: EGG HATCHING ANIMATION (Animasi Telur Menetas) -->
         <div id="hatching-modal" class="modal-overlay hidden">
-            <div class="modal-content hatching-content">
+            <div class="modal-content hatching-content" style="max-width: 650px;">
                 <div class="confetti-container" id="hatching-confetti"></div>
-                <h2>Hore! Telur Dino Menetas!</h2>
-                <p>Hebat! Kamu telah menyelesaikan seluruh petualangan Jilid 1. Lihat dinosaurus barumu!</p>
                 
-                <div class="hatching-animation-area">
-                    <div class="hatching-egg-container">
-                        <img id="anim-egg" class="hatching-egg-graphic" src="image/dino/telur-utuh.png" alt="Telur Dino" />
-                        <div id="anim-dino" class="hatched-dino hidden"></div>
+                <!-- GAME SCREEN: MESIN PENETAS TELUR DINO -->
+                <div id="hatching-game-screen">
+                    <h2 style="margin-top: 0;">Mesin Penetas Telur Dino 🥚⚡</h2>
+                    <p style="font-size: 13px; color: var(--earth-brown); margin-top: -5px;">Pilih huruf yang tepat untuk mengisi energi mesin penetas telur emas!</p>
+                    
+                    <!-- Mascot Dino Reaction -->
+                    <div class="hatching-mascot-row" style="display: flex; justify-content: center; align-items: center; height: 80px; margin-bottom: 15px; position: relative; z-index: 10;">
+                        <div id="hatching-mascot" class="mascot-dino" style="width: 80px; height: 80px;"></div>
+                    </div>
+
+                    <div class="hatching-game-layout">
+                        <!-- Panel Kiri: Mesin Penetas & Telur -->
+                        <div class="hatching-panel-left">
+                            <div class="hatching-animation-area" style="margin: 0; background: #e0f2f1; border: 4px solid var(--earth-dark); border-radius: var(--border-radius-md); box-shadow: inset 0 3px 6px rgba(0,0,0,0.1); height: 160px; width: 100%;">
+                                <div class="hatching-egg-container">
+                                    <img id="anim-egg" class="hatching-egg-graphic" src="image/dino/telur-utuh.png" alt="Telur Dino" />
+                                    <div id="anim-dino" class="hatched-dino hidden"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Energy Progress Bar -->
+                            <div class="hatching-energy-container" style="margin-top: 10px; width: 100%;">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--earth-dark); margin-bottom: 2px;">
+                                    <span>Energi Mesin Penetas:</span>
+                                    <span id="hatching-energy-text">0%</span>
+                                </div>
+                                <div class="hatching-energy-bar-bg" style="width: 100%; height: 16px; background: #efebe9; border: 2.5px solid var(--earth-dark); border-radius: 8px; overflow: hidden; position: relative;">
+                                    <div id="hatching-energy-bar-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #81C784 0%, #4CAF50 50%, #FFD54F 100%); transition: width 0.5s ease-out; box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Panel Kanan: Kuis Pilihan Huruf -->
+                        <div class="hatching-panel-right">
+                            <div class="hatching-target-box" style="background: #FFF9C4; border: 3px solid var(--earth-dark); border-radius: var(--border-radius-md); padding: 8px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80px; position: relative; box-shadow: 0 4px 0 var(--earth-dark);">
+                                <span style="font-size: 11px; font-weight: 700; color: var(--earth-brown); text-transform: uppercase; letter-spacing: 0.5px;">Target Huruf:</span>
+                                <span id="hatching-target-display" style="font-size: 40px; font-weight: 900; color: var(--earth-dark); font-family: 'Outfit', sans-serif;">A</span>
+                                <button id="btn-sound-hatching" class="btn-primary" style="margin: 4px 0 0 0; padding: 4px 10px; font-size: 11px; width: auto; background: #81C784; border-color: #2E7D32; box-shadow: 0 2.5px 0 #2E7D32;">🔊 Dengar</button>
+                            </div>
+                            
+                            <!-- Pilihan Jawaban (Grid 4 Tombol) -->
+                            <div class="hatching-choices-grid" id="hatching-choices-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px;">
+                                <!-- Tombol akan di-render dinamis oleh JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="hatch-success-info">
-                    <h3>Kamu berteman dengan: <strong id="new-dino-name">Bayi Triceratops!</strong></h3>
-                    <p>Sekarang kamu bisa memberinya makan dan mendandaninya dengan XP yang kamu dapatkan!</p>
-                </div>
+                <!-- SUCCESS SCREEN: SERTIFIKAT KELULUSAN JILID 1 -->
+                <div id="hatching-certificate-screen" class="hidden" style="text-align: center; padding: 10px;">
+                    <div style="background: #FFFDE7; border: 5px solid #FFB300; border-radius: var(--border-radius-lg); padding: 18px 20px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden; margin-bottom: 15px;">
+                        <!-- Certificate Watermark Dino -->
+                        <div style="position: absolute; right: -15px; bottom: -15px; font-size: 110px; opacity: 0.08; pointer-events: none; transform: rotate(-15deg);">🦖</div>
+                        <div style="position: absolute; left: -15px; top: -15px; font-size: 110px; opacity: 0.08; pointer-events: none; transform: rotate(15deg);">👑</div>
 
-                <button id="btn-close-hatching" class="btn-primary">
-                    <span>Lanjutkan Petualangan</span>
-                </button>
+                        <span style="font-size: 12px; font-weight: 700; color: #FF8F00; letter-spacing: 2px; text-transform: uppercase;">Sertifikat Kelulusan</span>
+                        <h1 style="font-size: 26px; font-weight: 900; color: #E65100; margin: 4px 0 8px 0; font-family: 'Outfit', sans-serif; text-shadow: 1px 1px 0 rgba(0,0,0,0.05);">HUTAN HURUF JILID 1</h1>
+                        
+                        <div style="width: 80px; height: 3px; background: #FFB300; margin: 0 auto 12px auto; border-radius: 1.5px;"></div>
+                        
+                        <p style="font-size: 13px; color: var(--earth-dark); margin: 0 0 10px 0; line-height: 1.4;">
+                            Diberikan kepada petualang hebat yang telah berhasil mempelajari seluruh huruf vokal dan konsonan <strong>A sampai Z</strong>!
+                        </p>
+                        
+                        <div style="display: inline-flex; align-items: center; justify-content: center; background: var(--white); border: 2.5px solid var(--earth-dark); border-radius: var(--border-radius-md); padding: 6px 12px; gap: 8px; margin: 5px 0;">
+                            <span style="font-size: 28px;">🏆</span>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 800; font-size: 12px; color: var(--earth-dark);">Lencana Kelulusan Jilid 1</div>
+                                <div style="font-size: 10px; color: var(--earth-brown);">Bonus Lencana & +50 Bintang diperoleh!</div>
+                            </div>
+                        </div>
+                        
+                        <p style="font-size: 11px; color: var(--earth-brown); font-style: italic; margin-top: 10px;">
+                            "Dino sangat bangga padamu! Mari lanjutkan perjalanan!"
+                        </p>
+                    </div>
+
+                    <button id="btn-close-hatching" class="btn-primary" style="width: 100%; padding: 12px; font-size: 15px; background: #4CAF50; border-color: #2E7D32; box-shadow: 0 4px 0 #2E7D32;">
+                        <span>Lanjut ke Pulau Suku Kata (Jilid 2) ⛵</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -982,6 +1056,7 @@
 
     <!-- ═══ GAME ═══ -->
     <script src="js/game/reward.js"></script>
+    <script src="js/game/hatching-game.js"></script>
 
     <!-- ═══ PROGRESS ═══ -->
     <script src="js/progress/progress.js"></script>

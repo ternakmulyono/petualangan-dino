@@ -1256,6 +1256,95 @@ body {
     transform: scale(1.1);
 }
 
+/* Hatching Mini Game layout extensions */
+.hatching-game-layout {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    margin-top: 10px;
+}
+
+.hatching-panel-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.6);
+    border: 3px solid var(--earth-dark);
+    border-radius: var(--border-radius-md);
+    padding: 12px;
+}
+
+.hatching-panel-right {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.hatching-choice-btn {
+    background: var(--white);
+    border: 3.5px solid var(--earth-dark);
+    border-radius: var(--border-radius-md);
+    padding: 12px;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--earth-dark);
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--earth-dark);
+    transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.hatching-choice-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--earth-dark);
+}
+
+.hatching-choice-btn.correct {
+    background: #A5D6A7;
+    border-color: #2E7D32;
+    color: #1B5E20;
+    box-shadow: 0 4px 0 #2E7D32;
+}
+
+.hatching-choice-btn.wrong {
+    background: #EF9A9A;
+    border-color: #C62828;
+    color: #B71C1C;
+    box-shadow: 0 4px 0 #C62828;
+    animation: choice-wrong-shake 0.4s ease;
+}
+
+@keyframes choice-wrong-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+/* Glow filter for Egg stages */
+.egg-glow-pulse {
+    animation: egg-glow-pulse-anim 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes egg-glow-pulse-anim {
+    0% { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15)); }
+    100% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15)); }
+}
+
+/* Dino Reaction: Confused (geleng kepala) */
+.dino-confused {
+    animation: dino-confused-anim 0.6s ease;
+}
+
+@keyframes dino-confused-anim {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg) translateX(-3px); }
+    50% { transform: rotate(8deg) translateX(3px); }
+    75% { transform: rotate(-5deg) translateX(-2px); }
+}
+
 .hatch-success-info {
     margin-bottom: 20px;
     opacity: 0;

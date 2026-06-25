@@ -58,6 +58,9 @@ function updateUIElements() {
     const container = document.getElementById('dino-avatar-container');
     const shopBtn = document.getElementById('btn-open-shop');
 
+    const triggerContainer = document.getElementById('hatching-game-trigger-container');
+    const triggerBtn = document.getElementById('btn-trigger-hatching-game');
+
     if (gameState.dinoState === 'egg') {
         container.className = "egg-state";
         eggElement.classList.remove('hidden');
@@ -65,15 +68,35 @@ function updateUIElements() {
         dinoNameHeader.textContent = "Telur Misterius";
         if (shopBtn) shopBtn.classList.add('hidden');
 
+        if (triggerContainer) triggerContainer.classList.remove('hidden');
+
         const lettersLeft = LETTERS_TO_HATCH - gameState.masteredLetters.length;
         if (lettersLeft > 0) {
             eggElement.src = 'image/dino/telur-utuh.png';
             eggElement.classList.remove('wiggling');
             dinoStatusText.textContent = `Dino kehilangan telur emasnya! Pelajari ${lettersLeft} materi lagi untuk membantu Dino menemukannya!`;
+            
+            if (triggerBtn) {
+                triggerBtn.style.background = '#e0e0e0';
+                triggerBtn.style.borderColor = '#9e9e9e';
+                triggerBtn.style.boxShadow = '0 4px 0 #9e9e9e';
+                triggerBtn.style.color = '#757575';
+                triggerBtn.style.opacity = '0.7';
+                triggerBtn.style.cursor = 'not-allowed';
+            }
         } else {
             eggElement.src = 'image/dino/telur-retak.png';
             eggElement.classList.add('wiggling');
             dinoStatusText.textContent = `Telur emas siap ditemukan! Mulai petualangan untuk melihat Dino menetas!`;
+            
+            if (triggerBtn) {
+                triggerBtn.style.background = '#FFD54F';
+                triggerBtn.style.borderColor = '#FFB300';
+                triggerBtn.style.boxShadow = '0 4px 0 #FFB300';
+                triggerBtn.style.color = 'var(--earth-dark)';
+                triggerBtn.style.opacity = '1';
+                triggerBtn.style.cursor = 'pointer';
+            }
         }
     } else {
         container.className = "dino-state";
@@ -83,6 +106,16 @@ function updateUIElements() {
         dinoNameHeader.textContent = gameState.dinoName;
         dinoStatusText.textContent = `Bayi Dino sangat senang mendampingimu bertualang membaca!`;
         if (shopBtn) shopBtn.classList.remove('hidden');
+
+        if (triggerContainer) triggerContainer.classList.remove('hidden');
+        if (triggerBtn) {
+            triggerBtn.style.background = '#FFD54F';
+            triggerBtn.style.borderColor = '#FFB300';
+            triggerBtn.style.boxShadow = '0 4px 0 #FFB300';
+            triggerBtn.style.color = 'var(--earth-dark)';
+            triggerBtn.style.opacity = '1';
+            triggerBtn.style.cursor = 'pointer';
+        }
     }
 
     document.getElementById('parent-stat-xp').textContent = `${gameState.xp} XP`;

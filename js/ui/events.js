@@ -99,6 +99,22 @@ function initGameEvents() {
     document.getElementById('btn-record-read').addEventListener('click', toggleRecording);
     document.getElementById('btn-play-read').addEventListener('click', playRecordedAudio);
     document.getElementById('btn-submit-read').addEventListener('click', submitReadPhase);
+
+    // Hatching Game triggers
+    document.getElementById('btn-trigger-hatching-game').addEventListener('click', () => {
+        if (gameState.masteredLetters.length < LETTERS_TO_HATCH) {
+            playErrorSFX();
+            showNotification("Selesaikan seluruh materi Jilid 1 untuk membuka Mesin Penetas! 🔒");
+        } else {
+            startHatchingGame();
+        }
+    });
+
+    document.getElementById('btn-read-trigger-hatching').addEventListener('click', () => {
+        document.getElementById('btn-read-trigger-hatching').classList.add('hidden');
+        startHatchingGame();
+    });
+
     document.getElementById('btn-read-tts-helper').addEventListener('click', playReadTTSHelper);
     document.getElementById('btn-read-tts-stop').addEventListener('click', stopLetterSound);
 

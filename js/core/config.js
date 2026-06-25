@@ -85,7 +85,8 @@ const PARENT_BADGES = {
     'reading-star': { name: 'Bintang Membaca', emoji: '🏆', desc: 'Sangat rajin membaca kata demi kata.' },
     'beautiful-pronunciation': { name: 'Pelafalan Merdu', emoji: '🗣️', desc: 'Mengucapkan bunyi huruf dengan sangat jelas.' },
     'independent-adventurer': { name: 'Petualang Mandiri', emoji: '🚀', desc: 'Menyelesaikan misi membaca dengan mandiri.' },
-    'patient-learner': { name: 'Anak Penyabar', emoji: '⏳', desc: 'Sabar mendengarkan dan mencoba terus.' }
+    'patient-learner': { name: 'Anak Penyabar', emoji: '⏳', desc: 'Sabar mendengarkan dan mencoba terus.' },
+    'graduation-jilid-1': { name: 'Kelulusan Jilid 1', emoji: '🎓', desc: 'Menyelesaikan seluruh materi Jilid 1 Hutan Huruf!' }
 };
 
 // --- DINO SHOP ACCESSORIES LIST ---

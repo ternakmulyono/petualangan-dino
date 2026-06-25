@@ -7,6 +7,9 @@
 function setupReadView(range) {
     if (typeof updateMascotDino === 'function') updateMascotDino('waving'); // Awal masuk, Dino memakai aksesoris
     
+    const readTriggerBtn = document.getElementById('btn-read-trigger-hatching');
+    if (readTriggerBtn) readTriggerBtn.classList.add('hidden');
+
     document.getElementById('game-level-title').textContent = `Misi: Membaca ${range}`;
 
     const dotsContainer = document.getElementById('game-step-dots');

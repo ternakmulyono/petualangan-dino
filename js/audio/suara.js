@@ -216,8 +216,14 @@ async function submitReadPhase() {
     saveGameState();
     playSuccessSFX();
 
-    if (gameState.dinoState === 'egg' && gameState.masteredLetters.length >= LETTERS_TO_HATCH) {
-        triggerEggHatching();
+    if (gameState.masteredLetters.length >= LETTERS_TO_HATCH) {
+        document.getElementById('btn-submit-read').classList.add('hidden');
+        const readTriggerBtn = document.getElementById('btn-read-trigger-hatching');
+        if (readTriggerBtn) {
+            readTriggerBtn.classList.remove('hidden');
+            readTriggerBtn.style.display = 'block';
+        }
+        showNotification("Hebat! Jilid 1 Selesai! Klik tombol emas di bawah untuk mulai Mesin Penetas Dino! 🥚⚡");
         return;
     }
 
