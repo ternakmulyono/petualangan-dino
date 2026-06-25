@@ -67,10 +67,13 @@ function updateUIElements() {
 
         const lettersLeft = LETTERS_TO_HATCH - gameState.masteredLetters.length;
         if (lettersLeft > 0) {
+            eggElement.src = 'image/dino/telur-utuh.png';
+            eggElement.classList.remove('wiggling');
             dinoStatusText.textContent = `Dino kehilangan telur emasnya! Pelajari ${lettersLeft} materi lagi untuk membantu Dino menemukannya!`;
         } else {
-            dinoStatusText.textContent = `Telur emas siap ditemukan! Mulai petualangan untuk melihat Dino menetas!`;
+            eggElement.src = 'image/dino/telur-retak.png';
             eggElement.classList.add('wiggling');
+            dinoStatusText.textContent = `Telur emas siap ditemukan! Mulai petualangan untuk melihat Dino menetas!`;
         }
     } else {
         container.className = "dino-state";

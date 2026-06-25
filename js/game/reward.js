@@ -80,10 +80,16 @@ function triggerEggHatching() {
     const modal = document.getElementById('hatching-modal');
     const animArea = modal.querySelector('.hatching-animation-area');
     const animDino = document.getElementById('anim-dino');
+    const egg = document.getElementById('anim-egg');
 
     modal.classList.remove('hidden');
     animArea.classList.remove('hatched');
+    animDino.classList.add('hidden');
     animDino.innerHTML = getDinoSvg('', 'merayakan');
+    
+    // Reset telur ke keadaan awal: telur utuh
+    egg.src = 'image/dino/telur-utuh.png';
+    egg.className = 'hatching-egg-graphic';
 
     // Mainkan sound effect sukses & suara narasi pembuka menetas: Selamat! Dino senang sekali! (MP3: 0041 & 0015)
     playSuccessSFX();
@@ -95,19 +101,28 @@ function triggerEggHatching() {
     }, 500);
 
     setTimeout(() => {
-        const egg = document.getElementById('anim-egg');
+        // Tahap 1: Mulai goyangan pelan pada telur utuh
         egg.classList.add('wiggling');
         playBeep(330, 0.2, "square");
 
         setTimeout(() => {
-            playBeep(330, 0.2, "square");
+            // Tahap 2: Berganti ke telur retak & goyangan cepat/keras
+            egg.classList.remove('wiggling');
+            egg.src = 'image/dino/telur-retak.png';
+            egg.classList.add('cracking-hard');
+            playBeep(380, 0.15, "square"); // suara retakan
+
             setTimeout(() => {
-                egg.classList.remove('wiggling');
+                // Tahap 3: Berganti ke telur pecah & Dino keluar!
+                egg.classList.remove('cracking-hard');
+                egg.src = 'image/dino/telur-pecah.png';
+                
+                animDino.classList.remove('hidden');
                 animArea.classList.add('hatched');
-                playBeep(880, 0.4, "triangle");
+                playBeep(880, 0.4, "triangle"); // suara menetas sukses
                 spawnConfetti();
-            }, 800);
-        }, 800);
+            }, 1000); // goyang keras selama 1 detik
+        }, 1000); // goyang pelan selama 1 detik
     }, 2500); // Diundur sedikit agar narasi pembuka terdengar
 }
 
