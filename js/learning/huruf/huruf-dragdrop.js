@@ -5,6 +5,8 @@
 
 // --- LOAD MODE PASANGKAN HURUF (BESAR-KECIL) ---
 function loadDragMatchChallenge() {
+    if (typeof updateMascotDino === 'function') updateMascotDino('thinking'); // Dino berpikir
+    
     const range = gameState.currentLevelRange;
     const letters = LEVEL_GROUPS[range];
 
@@ -106,6 +108,7 @@ function loadDragMatchChallenge() {
                             saveGameState();
                             spawnConfetti();
 
+                            if (typeof updateMascotDino === 'function') updateMascotDino('merayakan'); // Dino senang
                             const mascot = document.getElementById('game-mascot-dino');
                             if (mascot) {
                                 mascot.classList.add('jump');

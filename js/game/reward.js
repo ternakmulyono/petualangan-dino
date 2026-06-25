@@ -83,7 +83,7 @@ function triggerEggHatching() {
 
     modal.classList.remove('hidden');
     animArea.classList.remove('hatched');
-    animDino.innerHTML = getDinoSvg();
+    animDino.innerHTML = getDinoSvg('', 'merayakan');
 
     // Mainkan sound effect sukses & suara narasi pembuka menetas: Selamat! Dino senang sekali! (MP3: 0041 & 0015)
     playSuccessSFX();
@@ -205,6 +205,7 @@ function renderShopItems() {
 window.equipAccessory = function(id) {
     gameState.activeAccessory = id;
     saveGameState();
+    if (typeof updateUIElements === 'function') updateUIElements();
     renderShopItems();
     showNotification("Aksesoris dipasang!");
     playSuccessSFX();
@@ -217,6 +218,7 @@ window.buyAccessory = function(id, price) {
         gameState.unlockedAccessories.push(id);
         gameState.activeAccessory = id;
         saveGameState();
+        if (typeof updateUIElements === 'function') updateUIElements();
         document.getElementById('shop-coin-count').textContent = gameState.coins;
         renderShopItems();
         showNotification("Aksesoris berhasil dibeli dan dipakai!");

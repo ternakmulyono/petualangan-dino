@@ -5,6 +5,8 @@
 
 // --- LOAD FASE MATCHING (DRAG HURUF KE KERANJANG) ---
 function loadLetterChallenge() {
+    if (typeof updateMascotDino === 'function') updateMascotDino('thinking'); // Dino berpikir
+    
     const letters = LEVEL_GROUPS[gameState.currentLevelRange];
     const letter = letters[gameState.currentLetterIndex];
     gameState.currentTargetLetter = letter;
@@ -104,6 +106,7 @@ function loadLetterChallenge() {
                         dragEl.style.transform = 'scale(0.1)';
                         dragEl.style.opacity = '0';
 
+                        if (typeof updateMascotDino === 'function') updateMascotDino('merayakan'); // Dino senang
                         const mascot = document.getElementById('game-mascot-dino');
                         if (mascot) {
                             mascot.classList.add('jump');
@@ -144,6 +147,7 @@ function handleOptionClick(selectedLetter, cardElement) {
     if (selectedLetter === gameState.currentTargetLetter) {
         cardElement.classList.add('correct');
 
+        if (typeof updateMascotDino === 'function') updateMascotDino('merayakan'); // Dino senang
         const mascot = document.getElementById('game-mascot-dino');
         if (mascot) {
             mascot.classList.add('jump');
@@ -166,6 +170,8 @@ function handleOptionClick(selectedLetter, cardElement) {
 
 // --- TRANSISI KE FASE UCAPKAN HURUF ---
 function transitionToSpeakPhase() {
+    if (typeof updateMascotDino === 'function') updateMascotDino('menyapa'); // Dino menyapa
+    
     document.getElementById('game-match-view').classList.add('hidden');
     document.getElementById('game-speak-view').classList.remove('hidden');
 

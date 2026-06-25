@@ -5,6 +5,8 @@
 
 // --- LOAD FASE MENULIS (ROUTING BERDASARKAN LEVEL RANGE) ---
 function loadWriteChallenge() {
+    if (typeof updateMascotDino === 'function') updateMascotDino('belajar'); // Dino belajar
+    
     const letter = gameState.currentTargetLetter;
     const range = gameState.currentLevelRange;
 
@@ -321,6 +323,7 @@ function completeWriteChallenge() {
     const range = gameState.currentLevelRange;
 
     spawnConfetti();
+    if (typeof updateMascotDino === 'function') updateMascotDino('merayakan'); // Dino senang
     const mascot = document.getElementById('game-mascot-dino');
     if (mascot) {
         mascot.classList.add('jump');
