@@ -130,12 +130,12 @@ function injectDebugPanel() {
     document.body.appendChild(container);
 }
 
-// Injeksi otomatis panel debug
-if (document.body) {
-    injectDebugPanel();
-} else {
-    window.addEventListener('DOMContentLoaded', injectDebugPanel);
-}
+// Injeksi otomatis panel debug (dinonaktifkan agar tidak tampil di aplikasi produksi, hapus komentar untuk mengaktifkan kembali)
+// if (document.body) {
+//     injectDebugPanel();
+// } else {
+//     window.addEventListener('DOMContentLoaded', injectDebugPanel);
+// }
 
 // Status Unlock Audio
 let isAudioUnlocked = false;
