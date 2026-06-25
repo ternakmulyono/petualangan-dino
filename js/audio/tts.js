@@ -7,12 +7,94 @@
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 // --- METADATA SUARA ASLI (RECORDED AUDIO) ---
-let audioMetadata = {};
+const STATIC_AUDIO_METADATA = {
+    // Letters
+    "A": "0001_A.mp3",
+    "I": "0002_I.mp3",
+    "U": "0003_U.mp3",
+    "E": "0004_E.mp3",
+    "O": "0005_O.mp3",
+    "B": "0006_B.mp3",
+    "C": "0007_C.mp3",
+    "D": "0008_D.mp3",
+    "F": "0009_F.mp3",
+    "G": "0010_G.mp3",
+    "H": "0011_H.mp3",
+    "J": "0012_J.mp3",
+    "K": "0013_K.mp3",
+    "L": "0014_L.mp3",
+    "M": "0015_M.mp3",
+    "N": "0016_N.mp3",
+    "P": "0017_P.mp3",
+    "Q": "0018_Q.mp3",
+    "R": "0019_R.mp3",
+    "S": "0020_S.mp3",
+    "T": "0021_T.mp3",
+    "V": "0022_V.mp3",
+    "W": "0023_W.mp3",
+    "X": "0024_X.mp3",
+    "Y": "0025_Y.mp3",
+    "Z": "0026_Z.mp3",
+
+    // Narrations
+    "SELAMAT DATANG DI HUTAN HURUF": "0001_SELAMAT_DATANG_DI_HUTAN_HURUF_.mp3",
+    "DINO KEHILANGAN TELUR EMASNYA": "0002_DINO_KEHILANGAN_TELUR_EMASNYA_.mp3",
+    "AYO BANTU DINO MENEMUKAN PETUNJUK BARU": "0003_AYO_BANTU_DINO_MENEMUKAN_PETUNJUK_BARU_.mp3",
+    "PETUALANGAN DIMULAI": "0004_PETUALANGAN_DIMULAI_.mp3",
+    "PILIH HURUF YANG BENAR": "0005_PILIH_HURUF_YANG_BENAR_.mp3",
+    "DENGARKAN LALU PILIH JAWABANNYA": "0006_DENGARKAN_LALU_PILIH_JAWABANNYA_.mp3",
+    "IKUTI GARIS UNTUK MENULIS HURUF": "0007_IKUTI_GARIS_UNTUK_MENULIS_HURUF_.mp3",
+    "SENTUH HURUF YANG DIMINTA": "0008_SENTUH_HURUF_YANG_DIMINTA_.mp3",
+    "SUSUN HURUF HINGGA MENJADI KATA": "0009_SUSUN_HURUF_HINGGA_MENJADI_KATA_.mp3",
+    "HEBAT": "0010_HEBAT_.mp3",
+    "BAGUS SEKALI": "0011_BAGUS_SEKALI_.mp3",
+    "LUAR BIASA": "0012_LUAR_BIASA_.mp3",
+    "PINTAR": "0013_PINTAR_.mp3",
+    "KAMU BERHASIL": "0014_KAMU_BERHASIL_.mp3",
+    "DINO SENANG SEKALI": "0015_DINO_SENANG_SEKALI_.mp3",
+    "TERUSKAN PETUALANGANMU": "0016_TERUSKAN_PETUALANGANMU_.mp3",
+    "HEBAT JAWABAN BENAR KAMU MENDAPAT SEPULUH XP": "0017_HEBAT__JAWABAN_BENAR__KAMU_MENDAPAT_SEPULUH_XP_.mp3",
+    "SELAMAT MISI SELESAI HADIAH XP DAN KOIN DISIMPAN": "0018_SELAMAT__MISI_SELESAI__HADIAH_XP_DAN_KOIN_DISIMPAN_.mp3",
+    "COBA LAGI YA": "0019_COBA_LAGI_YA_.mp3",
+    "HAMPIR BENAR": "0020_HAMPIR_BENAR_.mp3",
+    "JANGAN MENYERAH": "0021_JANGAN_MENYERAH_.mp3",
+    "AYO COBA SEKALI LAGI": "0022_AYO_COBA_SEKALI_LAGI_.mp3",
+    "KAMU PASTI BISA": "0023_KAMU_PASTI_BISA_.mp3",
+    "DINO MASIH MEMBUTUHKAN BANTUANMU": "0024_DINO_MASIH_MEMBUTUHKAN_BANTUANMU_.mp3",
+    "TARIK HURUF YANG TEPAT YA KAMU PASTI BISA": "0025_TARIK_HURUF_YANG_TEPAT_YA__KAMU_PASTI_BISA_.mp3",
+    "HALO TEMAN": "0026_HALO_TEMAN_.mp3",
+    "AKU BUTUH BANTUANMU": "0027_AKU_BUTUH_BANTUANMU_.mp3",
+    "AYO KITA MENJELAJAH BERSAMA": "0028_AYO_KITA_MENJELAJAH_BERSAMA_.mp3",
+    "AKU BANGGA PADAMU": "0029_AKU_BANGGA_PADAMU_.mp3",
+    "WAH KITA BERHASIL": "0030_WAH__KITA_BERHASIL_.mp3",
+    "AYO CARI PETUNJUK BERIKUTNYA": "0031_AYO_CARI_PETUNJUK_BERIKUTNYA_.mp3",
+    "KAMU MENDAPATKAN BINTANG": "0032_KAMU_MENDAPATKAN_BINTANG_.mp3",
+    "KOIN BERHASIL DIKUMPULKAN": "0033_KOIN_BERHASIL_DIKUMPULKAN_.mp3",
+    "LEVEL DINO MENINGKAT": "0034_LEVEL_DINO_MENINGKAT_.mp3",
+    "HADIAH BARU TERBUKA": "0035_HADIAH_BARU_TERBUKA_.mp3",
+    "PETI HARTA BERHASIL DIBUKA": "0036_PETI_HARTA_BERHASIL_DIBUKA_.mp3",
+    "ANAK ANDA BERHASIL MENYELESAIKAN LATIHAN HARI INI": "0037_ANAK_ANDA_BERHASIL_MENYELESAIKAN_LATIHAN_HARI_INI_.mp3",
+    "PROGRESS MEMBACA MENINGKAT": "0038_PROGRESS_MEMBACA_MENINGKAT_.mp3",
+    "TARGET HARIAN BERHASIL DICAPAI": "0039_TARGET_HARIAN_BERHASIL_DICAPAI_.mp3",
+    "LATIHAN HARI INI SELESAI": "0040_LATIHAN_HARI_INI_SELESAI_.mp3",
+    "SELAMAT": "0041_SELAMAT_.mp3",
+    "KAMU BERHASIL MENYELESAIKAN HUTAN HURUF": "0042_KAMU_BERHASIL_MENYELESAIKAN_HUTAN_HURUF_.mp3",
+    "DINO BANGGA PADAMU": "0043_DINO_BANGGA_PADAMU_.mp3",
+    "PETUALANGAN BERIKUTNYA TELAH TERBUKA": "0044_PETUALANGAN_BERIKUTNYA_TELAH_TERBUKA_.mp3",
+    "WAKTU REKAM HABIS REKAMAN DISIMPAN": "0045_WAKTU_REKAM_HABIS__REKAMAN_DISIMPAN_.mp3",
+    "AREA TERKUNCI SELESAIKAN MISI SEBELUMNYA": "0046_AREA_TERKUNCI__SELESAIKAN_MISI_SEBELUMNYA_.mp3",
+    "AKSESORIS DIPASANG": "0047_AKSESORIS_DIPASANG_.mp3",
+    "AKSESORIS BERHASIL DIBELI DAN DIPAKAI": "0048_AKSESORIS_BERHASIL_DIBELI_DAN_DIPAKAI_.mp3",
+    "BERHASIL MENUKAR SERATUS XP MENJADI SEPULUH KOIN": "0049_BERHASIL_MENUKAR_SERATUS_XP_MENJADI_SEPULUH_KOIN_.mp3",
+    "XP TIDAK CUKUP BUTUH MINIMAL SERATUS XP": "0050_XP_TIDAK_CUKUP__BUTUH_MINIMAL_SERATUS_XP_.mp3"
+};
+
+let audioMetadata = { ...STATIC_AUDIO_METADATA };
 let currentTTSAudio = null;
 let currentTTSLoop = false;
 let isTTSPlaying = false;
 
-window.isAudioMetadataLoaded = false;
+window.isAudioMetadataLoaded = true; // Set to true initially since it's pre-populated
 
 async function loadAudioMetadata() {
     try {
@@ -150,35 +232,35 @@ function unlockAudio() {
 
     // 1. Aktifkan AudioContext jika tersuspensi
     if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume().then(() => {
-            console.log("AudioContext berhasil diaktifkan.");
-            debugState.audioCtxState = audioCtx.state;
-            updateDebugPanel();
-        }).catch(err => {
+        audioCtx.resume().catch(err => {
             console.warn("Gagal mengaktifkan AudioContext:", err);
-            debugState.errorMessage = "Ctx resume err: " + err.message;
-            updateDebugPanel();
         });
     }
 
-    // 2. Mainkan suara hening di globalAudioElement untuk membukanya
+    // 2. Jika ada antrean audio yang menunggu, langsung proses secara sinkron di sini
+    // agar .play() dipicu langsung dari call stack interaksi user (gesture token aktif)!
+    if (audioQueue.length > 0) {
+        console.log("Membuka kunci audio menggunakan item antrean pertama secara sinkron...");
+        isAudioUnlocked = true;
+        if (!isQueueProcessing) {
+            processNextInQueue();
+        }
+        return;
+    }
+
+    // 3. Jika antrean kosong, gunakan suara hening untuk membuka kunci
     if (window.globalAudioElement) {
         const silentWav = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
         const oldSrc = window.globalAudioElement.src;
         window.globalAudioElement.src = silentWav;
         window.globalAudioElement.play()
             .then(() => {
-                console.log("Global Audio Element berhasil dibuka kunci.");
+                console.log("Global Audio Element berhasil dibuka kunci dengan hening.");
                 window.globalAudioElement.src = oldSrc || "";
                 isAudioUnlocked = true;
                 debugState.playbackStatus = "Unlocked successfully";
                 debugState.errorMessage = "None";
                 updateDebugPanel();
-
-                // Mulai mainkan antrean yang tertunda setelah berhasil unlock
-                if (!isQueueProcessing && audioQueue.length > 0) {
-                    processNextInQueue();
-                }
             })
             .catch(err => {
                 console.warn("Gagal membuka kunci global audio:", err);
