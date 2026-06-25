@@ -118,7 +118,7 @@ function loadLetterChallenge() {
                         gameState.xp += 10;
                         saveGameState();
 
-                        setTimeout(() => { transitionToSpeakPhase(); }, 1200); // Snappy transition for short 'Hebat!' audio
+                        setTimeout(() => { transitionToSpeakPhase(); }, 2500); // 2.5s delay so the child can see the happy Dino celebrating
                     } else {
                         playErrorSFX();
                         showNotification("Tarik huruf yang tepat ya! Kamu pasti bisa!"); // MP3: 0025
@@ -159,7 +159,7 @@ function handleOptionClick(selectedLetter, cardElement) {
         gameState.xp += 10;
         saveGameState();
 
-        setTimeout(() => { transitionToSpeakPhase(); }, 1200); // Snappy transition for short 'Hebat!' audio
+        setTimeout(() => { transitionToSpeakPhase(); }, 2500); // 2.5s delay so the child can see the happy Dino celebrating
     } else {
         cardElement.classList.add('wrong');
         playErrorSFX();
