@@ -37,11 +37,10 @@
                     <span id="coin-text">0</span>
                 </div>
             </div>
-            <button id="btn-parent-gate" class="header-btn" title="Dashboard Orang Tua">
+            <button id="btn-parent-gate" class="btn-icon header-btn" title="Dashboard Orang Tua">
                 <svg viewBox="0 0 24 24" width="24" height="24">
                     <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
                 </svg>
-                <span>Orang Tua</span>
             </button>
         </header>
 
@@ -760,13 +759,14 @@
                 <div class="confetti-container" id="hatching-confetti"></div>
                 
                 <!-- GAME SCREEN: MESIN PENETAS TELUR DINO -->
-                <div id="hatching-game-screen">
-                    <h2 style="margin-top: 0;">Mesin Penetas Telur Dino 🥚⚡</h2>
+                <div id="hatching-game-screen" style="position: relative;">
+                    <button id="btn-exit-hatching-game" style="position: absolute; right: 0px; top: -5px; background: transparent; border: none; font-size: 24px; font-weight: bold; color: var(--earth-brown); cursor: pointer; padding: 5px; z-index: 10;">✕</button>
+                    <h2 style="margin-top: 0; padding-right: 30px;">Mesin Penetas Telur Dino 🥚⚡</h2>
                     <div class="hatching-game-layout">
                         <!-- Panel Kiri: Mesin Penetas & Telur -->
                         <div class="hatching-panel-left">
                             <div class="hatching-animation-area" style="margin: 0; background: #e0f2f1; border: 4px solid var(--earth-dark); border-radius: var(--border-radius-md); box-shadow: inset 0 3px 6px rgba(0,0,0,0.1); height: 195px; width: 100%; position: relative; overflow: visible; display: flex; justify-content: center; align-items: center;">
-                                <div id="hatching-mascot" class="mascot-dino" style="position: absolute; left: 10px; bottom: 10px; width: 85px; height: 85px; z-index: 5;"></div>
+                                <div id="hatching-mascot" class="mascot-dino" style="position: absolute; left: 5px; bottom: 20px; width: 80px; height: 80px; z-index: 5;"></div>
                                 <div class="hatching-egg-container" style="margin-left: 55px;">
                                     <img id="anim-egg" class="hatching-egg-graphic" src="image/dino/telur-utuh.png" alt="Telur Dino" />
                                     <div id="anim-dino" class="hatched-dino hidden"></div>
@@ -787,14 +787,14 @@
                         
                         <!-- Panel Kanan: Kuis Pilihan Huruf -->
                         <div class="hatching-panel-right">
-                            <div class="hatching-target-box" style="background: #FFF9C4; border: 3px solid var(--earth-dark); border-radius: var(--border-radius-md); padding: 5px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70px; position: relative; box-shadow: 0 3px 0 var(--earth-dark);">
+                            <div class="hatching-target-box" style="background: #FFF9C4; border: 3px solid var(--earth-dark); border-radius: var(--border-radius-md); padding: 4px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; position: relative; box-shadow: 0 3px 0 var(--earth-dark);">
                                 <span style="font-size: 10px; font-weight: 700; color: var(--earth-brown); text-transform: uppercase; letter-spacing: 0.5px;">Target Huruf:</span>
-                                <span id="hatching-target-display" style="font-size: 34px; font-weight: 900; color: var(--earth-dark); font-family: 'Outfit', sans-serif; line-height: 1.1;">A</span>
+                                <span id="hatching-target-display" style="font-size: 28px; font-weight: 900; color: var(--earth-dark); font-family: 'Outfit', sans-serif; line-height: 1.1;">A</span>
                                 <button id="btn-sound-hatching" class="btn-primary" style="margin: 3px 0 0 0; padding: 3px 8px; font-size: 10px; width: auto; background: #81C784; border-color: #2E7D32; box-shadow: 0 2px 0 #2E7D32;">🔊 Dengar</button>
                             </div>
                             
                             <!-- Pilihan Jawaban (Grid 4 Tombol) -->
-                            <div class="hatching-choices-grid" id="hatching-choices-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px;">
+                            <div class="hatching-choices-grid" id="hatching-choices-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 10px;">
                                 <!-- Tombol akan di-render dinamis oleh JS -->
                             </div>
                         </div>
