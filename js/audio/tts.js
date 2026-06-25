@@ -116,6 +116,7 @@ function injectDebugPanel() {
 
     toggleBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        unlockAudio(); // Pemicu unlock langsung jika debug diklik pertama kali
         if (panel.style.display === 'none') {
             panel.style.display = 'block';
             updateDebugPanel();
@@ -129,56 +130,70 @@ function injectDebugPanel() {
     document.body.appendChild(container);
 }
 
-// Automatically inject debug panel when page loads
+// Injeksi otomatis panel debug
 if (document.body) {
     injectDebugPanel();
 } else {
     window.addEventListener('DOMContentLoaded', injectDebugPanel);
 }
 
-// Unlock audio and AudioContext on first user gesture
+// Status Unlock Audio
+let isAudioUnlocked = false;
+
+// Fungsi untuk membuka kunci Audio & AudioContext (hanya diizinkan di event click/touchend)
 function unlockAudio() {
-    // 1. Resume AudioContext
+    if (isAudioUnlocked) return;
+
+    // 1. Aktifkan AudioContext jika tersuspensi
     if (audioCtx && audioCtx.state === 'suspended') {
         audioCtx.resume().then(() => {
-            console.log("AudioContext resumed successfully.");
+            console.log("AudioContext berhasil diaktifkan.");
             debugState.audioCtxState = audioCtx.state;
             updateDebugPanel();
         }).catch(err => {
-            console.warn("AudioContext resume failed:", err);
+            console.warn("Gagal mengaktifkan AudioContext:", err);
             debugState.errorMessage = "Ctx resume err: " + err.message;
             updateDebugPanel();
         });
     }
 
-    // 2. Play tiny silent sound on globalAudioElement to unlock it
+    // 2. Mainkan suara hening di globalAudioElement untuk membukanya
     if (window.globalAudioElement) {
         const silentWav = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
         const oldSrc = window.globalAudioElement.src;
         window.globalAudioElement.src = silentWav;
         window.globalAudioElement.play()
             .then(() => {
-                console.log("Global Audio Element successfully unlocked.");
+                console.log("Global Audio Element berhasil dibuka kunci.");
                 window.globalAudioElement.src = oldSrc || "";
+                isAudioUnlocked = true;
                 debugState.playbackStatus = "Unlocked successfully";
+                debugState.errorMessage = "None";
                 updateDebugPanel();
+
+                // Mulai mainkan antrean yang tertunda setelah berhasil unlock
+                if (!isQueueProcessing && audioQueue.length > 0) {
+                    processNextInQueue();
+                }
             })
             .catch(err => {
-                console.warn("Failed to unlock global audio:", err);
+                console.warn("Gagal membuka kunci global audio:", err);
+                isAudioUnlocked = false; // Izinkan coba lagi pada ketukan berikutnya jika gagal
                 debugState.errorMessage = "Audio unlock err: " + err.message;
                 updateDebugPanel();
             });
     }
 }
 
-// Add user interaction listeners (once) to unlock audio
-document.addEventListener('pointerdown', unlockAudio, { once: true });
-document.addEventListener('click', unlockAudio, { once: true });
+// Dengarkan event interaksi user asli (touchend dan click) untuk membuka kunci
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchend', unlockAudio);
 
 
 // --- ANTRIAN AUDIO (SEQUENTIAL PLAYBACK QUEUE) ---
 let audioQueue = [];
 let isQueueProcessing = false;
+let currentSafetyTimer = null; // Menyimpan id timer pengaman antrean
 
 // --- HENTIKAN SUARA / TTS YANG SEDANG BERJALAN & KOSONGKAN ANTRIAN ---
 function stopLetterSound() {
@@ -186,6 +201,12 @@ function stopLetterSound() {
         return; 
     }
     
+    // Clear timer pengaman
+    if (currentSafetyTimer) {
+        clearTimeout(currentSafetyTimer);
+        currentSafetyTimer = null;
+    }
+
     audioQueue = [];
     isQueueProcessing = false;
     isTTSPlaying = false;
@@ -193,7 +214,7 @@ function stopLetterSound() {
 
     if (currentTTSAudio) {
         currentTTSAudio.pause();
-        currentTTSAudio.src = ""; // Clear source
+        currentTTSAudio.src = "";
         currentTTSAudio = null;
         debugState.playbackStatus = "stopped";
         updateDebugPanel();
@@ -213,8 +234,13 @@ function stopLetterSound() {
 function playLetterSound(letter, loop = false) {
     audioQueue.push({ letter, loop });
     
-    if (!isQueueProcessing) {
+    // Hanya jalankan antrean jika browser sudah pernah diinteraksi / diunlock
+    if (isAudioUnlocked && !isQueueProcessing) {
         processNextInQueue();
+    } else if (!isAudioUnlocked) {
+        console.log("Audio tertunda menunggu interaksi user pertama:", letter);
+        debugState.playbackStatus = `Queued (Pending Unlock): ${audioQueue.length} items`;
+        updateDebugPanel();
     }
 }
 
@@ -248,12 +274,33 @@ function processNextInQueue() {
         if (stopBtn2) stopBtn2.classList.remove('hidden');
     }
 
+
+    // Bersihkan timer pengaman sebelumnya jika masih aktif
+    if (currentSafetyTimer) {
+        clearTimeout(currentSafetyTimer);
+        currentSafetyTimer = null;
+    }
+
     const onAudioEnded = () => {
+        if (currentSafetyTimer) {
+            clearTimeout(currentSafetyTimer);
+            currentSafetyTimer = null;
+        }
         if (!loop) {
             audioQueue.shift(); 
             processNextInQueue(); 
         }
     };
+
+    // Buat timer pengaman baru (12 detik) agar antrean tidak tersangkut selamanya jika browser gagal memicu event ended
+    if (!loop) {
+        currentSafetyTimer = setTimeout(() => {
+            console.warn("Timer pengaman antrean terpicu untuk:", letter);
+            debugState.errorMessage = `Safety timeout: ${letter}`;
+            updateDebugPanel();
+            onAudioEnded();
+        }, 12000);
+    }
 
     // 1. Cek jika ada suara asli (Recorded Voice) di metadata
     if (audioMetadata[cleanLetter]) {
