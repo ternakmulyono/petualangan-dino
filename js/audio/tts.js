@@ -49,6 +49,133 @@ loadAudioMetadata();
 // Global flag to prevent screen change from cutting off long narrations
 window.preventStopOnScreenChange = false;
 
+// --- GLOBAL AUDIO ELEMENT (UNLOCKED FOR MOBILE BROWSER AUTOPLAY) ---
+if (!window.globalAudioElement) {
+    window.globalAudioElement = new Audio();
+}
+
+// --- GLOBAL DEBUG STATE FOR AUDIO AUDIT ---
+const debugState = {
+    audioUrl: "N/A",
+    audioFormat: "N/A",
+    audioCtxState: "suspended",
+    playbackStatus: "idle",
+    errorMessage: "None"
+};
+
+// Update contents of the debug panel
+function updateDebugPanel() {
+    debugState.audioCtxState = audioCtx ? audioCtx.state : "N/A";
+    const panel = document.getElementById('audio-debug-panel');
+    if (panel) {
+        panel.innerHTML = `
+            <div style="font-weight:bold;margin-bottom:8px;border-bottom:1px solid #444;padding-bottom:4px;color:#ff9800;">Audio Debugger</div>
+            <div style="margin-bottom:4px;"><strong>URL:</strong> <span style="word-break:break-all;color:#4caf50;">${debugState.audioUrl}</span></div>
+            <div style="margin-bottom:4px;"><strong>Format:</strong> <span style="color:#2196f3;">${debugState.audioFormat}</span></div>
+            <div style="margin-bottom:4px;"><strong>Ctx State:</strong> <span style="color:#e91e63;">${debugState.audioCtxState}</span></div>
+            <div style="margin-bottom:4px;"><strong>Playback:</strong> <span style="color:#ffeb3b;">${debugState.playbackStatus}</span></div>
+            <div><strong>Error:</strong> <span style="color:#f44336;word-break:break-all;">${debugState.errorMessage}</span></div>
+        `;
+    }
+}
+
+// Inject floating glassmorphic debug panel
+function injectDebugPanel() {
+    if (document.getElementById('audio-debug-panel-container')) return;
+
+    const container = document.createElement('div');
+    container.id = 'audio-debug-panel-container';
+    container.style.position = 'fixed';
+    container.style.bottom = '15px';
+    container.style.left = '15px';
+    container.style.zIndex = '99999';
+    container.style.fontFamily = 'monospace';
+    container.style.fontSize = '11px';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.textContent = '🔊 Audio Debug';
+    toggleBtn.style.padding = '6px 12px';
+    toggleBtn.style.background = 'rgba(0,0,0,0.85)';
+    toggleBtn.style.color = '#fff';
+    toggleBtn.style.border = '1px solid #444';
+    toggleBtn.style.borderRadius = '20px';
+    toggleBtn.style.cursor = 'pointer';
+    toggleBtn.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+
+    const panel = document.createElement('div');
+    panel.id = 'audio-debug-panel';
+    panel.style.display = 'none';
+    panel.style.marginTop = '8px';
+    panel.style.padding = '12px';
+    panel.style.background = 'rgba(0, 0, 0, 0.9)';
+    panel.style.color = '#fff';
+    panel.style.border = '1px solid #333';
+    panel.style.borderRadius = '8px';
+    panel.style.width = '240px';
+    panel.style.boxShadow = '0 4px 15px rgba(0,0,0,0.5)';
+
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+            updateDebugPanel();
+        } else {
+            panel.style.display = 'none';
+        }
+    });
+
+    container.appendChild(toggleBtn);
+    container.appendChild(panel);
+    document.body.appendChild(container);
+}
+
+// Automatically inject debug panel when page loads
+if (document.body) {
+    injectDebugPanel();
+} else {
+    window.addEventListener('DOMContentLoaded', injectDebugPanel);
+}
+
+// Unlock audio and AudioContext on first user gesture
+function unlockAudio() {
+    // 1. Resume AudioContext
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().then(() => {
+            console.log("AudioContext resumed successfully.");
+            debugState.audioCtxState = audioCtx.state;
+            updateDebugPanel();
+        }).catch(err => {
+            console.warn("AudioContext resume failed:", err);
+            debugState.errorMessage = "Ctx resume err: " + err.message;
+            updateDebugPanel();
+        });
+    }
+
+    // 2. Play tiny silent sound on globalAudioElement to unlock it
+    if (window.globalAudioElement) {
+        const silentWav = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
+        const oldSrc = window.globalAudioElement.src;
+        window.globalAudioElement.src = silentWav;
+        window.globalAudioElement.play()
+            .then(() => {
+                console.log("Global Audio Element successfully unlocked.");
+                window.globalAudioElement.src = oldSrc || "";
+                debugState.playbackStatus = "Unlocked successfully";
+                updateDebugPanel();
+            })
+            .catch(err => {
+                console.warn("Failed to unlock global audio:", err);
+                debugState.errorMessage = "Audio unlock err: " + err.message;
+                updateDebugPanel();
+            });
+    }
+}
+
+// Add user interaction listeners (once) to unlock audio
+document.addEventListener('pointerdown', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
+
+
 // --- ANTRIAN AUDIO (SEQUENTIAL PLAYBACK QUEUE) ---
 let audioQueue = [];
 let isQueueProcessing = false;
@@ -56,10 +183,9 @@ let isQueueProcessing = false;
 // --- HENTIKAN SUARA / TTS YANG SEDANG BERJALAN & KOSONGKAN ANTRIAN ---
 function stopLetterSound() {
     if (window.preventStopOnScreenChange) {
-        return; // Mencegah pemutusan audio jika sedang berada dalam transisi layar yang dilindungi
+        return; 
     }
     
-    // Kosongkan antrean
     audioQueue = [];
     isQueueProcessing = false;
     isTTSPlaying = false;
@@ -67,14 +193,15 @@ function stopLetterSound() {
 
     if (currentTTSAudio) {
         currentTTSAudio.pause();
-        currentTTSAudio.currentTime = 0;
+        currentTTSAudio.src = ""; // Clear source
         currentTTSAudio = null;
+        debugState.playbackStatus = "stopped";
+        updateDebugPanel();
     }
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
     }
 
-    // Sembunyikan semua tombol stop di UI jika ada
     const stopBtn1 = document.getElementById('btn-picture-tts-stop');
     if (stopBtn1) stopBtn1.classList.add('hidden');
 
@@ -84,10 +211,8 @@ function stopLetterSound() {
 
 // --- MAINKAN SUARA HURUF / NARASI (ANTREAN / QUEUED PLAYBACK) ---
 function playLetterSound(letter, loop = false) {
-    // Masukkan audio baru ke dalam antrean
     audioQueue.push({ letter, loop });
     
-    // Jika tidak ada audio yang sedang berputar, mulai proses antrean
     if (!isQueueProcessing) {
         processNextInQueue();
     }
@@ -108,11 +233,9 @@ function processNextInQueue() {
     const letter = currentItem.letter;
     const loop = currentItem.loop;
 
-    // Menghilangkan tanda baca & spasi berlebih untuk pencarian di metadata
     const cleanLetter = letter.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ").trim().toUpperCase();
     currentTTSLoop = loop;
 
-    // Tampilkan tombol stop yang relevan
     const pictureView = document.getElementById('game-picture-view');
     const readView = document.getElementById('game-read-view');
 
@@ -125,31 +248,48 @@ function processNextInQueue() {
         if (stopBtn2) stopBtn2.classList.remove('hidden');
     }
 
-    // Callback ketika audio selesai diputar
     const onAudioEnded = () => {
         if (!loop) {
-            audioQueue.shift(); // Hapus item yang sudah selesai
-            processNextInQueue(); // Lanjutkan ke antrean berikutnya
+            audioQueue.shift(); 
+            processNextInQueue(); 
         }
     };
 
     // 1. Cek jika ada suara asli (Recorded Voice) di metadata
     if (audioMetadata[cleanLetter]) {
         const url = `audio/${audioMetadata[cleanLetter]}`;
-        const audio = new Audio(url);
+        const audio = window.globalAudioElement;
+        
+        audio.pause();
+        audio.src = url;
         audio.loop = loop;
         currentTTSAudio = audio;
 
-        audio.addEventListener('ended', onAudioEnded);
+        // Gunakan properti onended agar listener sebelumnya otomatis terhapus
+        audio.onended = onAudioEnded;
+        audio.onerror = (err) => {
+            console.warn("Gagal memutar audio kustom, beralih ke Fallback TTS", err);
+            debugState.errorMessage = "Custom play error, fallback triggered";
+            updateDebugPanel();
+            playLetterSoundFallbackWithCallback(letter, loop, onAudioEnded);
+        };
+
+        debugState.audioUrl = url;
+        const ext = url.split('.').pop().split('?')[0];
+        debugState.audioFormat = `${ext.toUpperCase()} (Custom)`;
+        debugState.playbackStatus = "playing (custom)";
+        debugState.errorMessage = "None";
+        updateDebugPanel();
 
         audio.play().catch(e => {
-            console.warn("Gagal memutar audio kustom, beralih ke Fallback TTS", e);
+            console.warn("Gagal memutar audio kustom (Promise rejected), beralih ke Fallback TTS", e);
+            debugState.errorMessage = `Custom play promise err: ${e.message}`;
+            updateDebugPanel();
             playLetterSoundFallbackWithCallback(letter, loop, onAudioEnded);
         });
         return;
     }
 
-    // 2. Beralih ke fallback
     playLetterSoundFallbackWithCallback(letter, loop, onAudioEnded);
 }
 
@@ -160,29 +300,41 @@ function playLetterSoundFallbackWithCallback(letter, loop, callback) {
 
     if (navigator.onLine) {
         const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=gtx&q=${encodeURIComponent(text)}`;
-        const audio = new Audio(url);
+        const audio = window.globalAudioElement;
+        
+        audio.pause();
+        audio.src = url;
         audio.loop = loop;
         currentTTSAudio = audio;
 
         let fallbackTriggered = false;
-        const triggerFallback = () => {
+        const triggerFallback = (errEvent) => {
             if (!fallbackTriggered) {
                 fallbackTriggered = true;
+                debugState.errorMessage = "Google TTS fail, switching offline";
+                updateDebugPanel();
                 playOfflineTTSWithCallback(cleanLetter, loop, callback);
             }
         };
 
-        audio.addEventListener('error', triggerFallback);
-        audio.addEventListener('ended', () => {
+        audio.onerror = triggerFallback;
+        audio.onended = () => {
             if (!loop) {
                 currentTTSAudio = null;
+                debugState.playbackStatus = "ended (Google TTS)";
+                updateDebugPanel();
                 callback();
             }
-        });
+        };
+
+        debugState.audioUrl = url;
+        debugState.audioFormat = "Google TTS (MP3)";
+        debugState.playbackStatus = "playing (Google TTS)";
+        updateDebugPanel();
 
         audio.play().catch(e => {
             console.log("Online Audio failed, falling back", e);
-            triggerFallback();
+            triggerFallback(e);
         });
     } else {
         playOfflineTTSWithCallback(cleanLetter, loop, callback);
@@ -227,13 +379,22 @@ function playOfflineTTSWithCallback(letter, loop, callback) {
             if (loop && isTTSPlaying) {
                 playOfflineTTSWithCallback(letter, loop, callback);
             } else {
+                debugState.playbackStatus = "ended (Offline TTS)";
+                updateDebugPanel();
                 callback();
             }
         };
 
+        debugState.audioUrl = "SpeechSynthesis";
+        debugState.audioFormat = "Synthesis (Web Speech)";
+        debugState.playbackStatus = "playing (Offline TTS)";
+        updateDebugPanel();
+
         window.speechSynthesis.speak(utterance);
     } else {
         showNotification("Browser tidak mendukung suara.");
+        debugState.errorMessage = "SpeechSynthesis not supported";
+        updateDebugPanel();
         callback();
     }
 }
