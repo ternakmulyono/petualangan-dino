@@ -7,22 +7,78 @@ function getDinoSvg(activeAccessory = '', pose = 'waving') {
     const show = (id) => activeAccessory === id ? '' : 'class="hidden"';
 
     const poses = {
-        waving: { viewBox: "0 0 380 400", x: -120, y: -100, width: 1536, height: 1024, accTransform: "translate(50, -25) scale(5.2)" },
-        thinking: { viewBox: "0 0 200 280", x: -615, y: -175, width: 1536, height: 1024, accTransform: "translate(4, -40) scale(3.2)" },
-        samping: { viewBox: "0 0 200 280", x: -825, y: -175, width: 1536, height: 1024, accTransform: "translate(10, -40) scale(3.2)" },
-        belajar: { viewBox: "0 0 200 280", x: -1030, y: -570, width: 1536, height: 1024, accTransform: "translate(5, -40) scale(3.2)" },
-        merayakan: { viewBox: "0 0 210 280", x: -1250, y: -570, width: 1536, height: 1024, accTransform: "translate(8, -40) scale(3.2)" },
-        berjalan: { viewBox: "0 0 210 280", x: -340, y: -570, width: 1536, height: 1024, accTransform: "translate(4, -40) scale(3.2)" },
-        berlari: { viewBox: "0 0 220 280", x: -570, y: -570, width: 1536, height: 1024, accTransform: "translate(8, -40) scale(3.2)" },
-        menyapa: { viewBox: "0 0 200 280", x: -810, y: -570, width: 1536, height: 1024, accTransform: "translate(4, -40) scale(3.2)" }
+        waving: { 
+            viewBox: "0 0 380 380", 
+            x: -50, 
+            y: -100, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(72, 35) scale(4.8)" 
+        },
+        thinking: { 
+            viewBox: "0 0 220 300", 
+            x: -530, 
+            y: -170, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(44, -10) scale(2.2)" 
+        },
+        samping: { 
+            viewBox: "0 0 220 300", 
+            x: -786, 
+            y: -170, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(44, -10) scale(2.2)" 
+        },
+        belajar: { 
+            viewBox: "0 0 220 300", 
+            x: -1042, 
+            y: -682, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(44, -10) scale(2.2)" 
+        },
+        merayakan: { 
+            viewBox: "0 0 220 300", 
+            x: -1295, 
+            y: -682, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(44, -10) scale(2.2)" 
+        },
+        berjalan: { 
+            viewBox: "0 0 220 300", 
+            x: -274, 
+            y: -682, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(44, -10) scale(2.2)" 
+        },
+        berlari: { 
+            viewBox: "0 0 220 300", 
+            x: -530, 
+            y: -682, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(44, -10) scale(2.2)" 
+        },
+        menyapa: { 
+            viewBox: "0 0 220 300", 
+            x: -786, 
+            y: -682, 
+            width: 1536, 
+            height: 1024, 
+            accTransform: "translate(44, -10) scale(2.2)" 
+        }
     };
 
     const p = poses[pose] || poses.waving;
 
     return `
 <svg class="dino-graphic" viewBox="${p.viewBox}" width="100%" height="100%">
-    <!-- Base Dino Image cropped from the sheet -->
-    <image href="image/dino.png" x="${p.x}" y="${p.y}" width="${p.width}" height="${p.height}" />
+    <!-- Base Dino Image cropped from the sheet with preserveAspectRatio="none" to enforce pixel-perfect offsets -->
+    <image href="image/dino.png" x="${p.x}" y="${p.y}" width="${p.width}" height="${p.height}" preserveAspectRatio="none" />
     
     <!-- Accessories wrapped and scaled to fit the specific pose's head -->
     <g transform="${p.accTransform}">
