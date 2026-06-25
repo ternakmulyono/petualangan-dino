@@ -5,54 +5,60 @@
  * ============================================================ */
 
 function getDinoSvg(activeAccessory = '', pose = 'waving') {
-    const show = (id) => activeAccessory === id ? '' : 'class="hidden"';
-
     const poses = {
-        waving: { file: "image/dino/dino utama.png", accTransform: "translate(34, -22) scale(2.2)" },
-        thinking: { file: "image/dino/dino-depan.png", accTransform: "translate(34, -22) scale(2.2)" },
-        samping: { file: "image/dino/dino-samping.png", accTransform: "translate(32, -22) scale(2.2)" },
-        belajar: { file: "image/dino/dino-belajar.png", accTransform: "translate(34, -22) scale(2.2)" },
-        merayakan: { file: "image/dino/dino-merayakan.png", accTransform: "translate(34, -22) scale(2.2)" },
-        berjalan: { file: "image/dino/dino-berjalan.png", accTransform: "translate(34, -22) scale(2.2)" },
-        berlari: { file: "image/dino/dino-berlari.png", accTransform: "translate(34, -22) scale(2.2)" },
-        menyapa: { file: "image/dino/dino-menyapa.png", accTransform: "translate(34, -22) scale(2.2)" },
-        melambai: { file: "image/dino/dino-melambai.png", accTransform: "translate(34, -22) scale(2.2)" }
+        waving: "image/dino/dino utama.png",
+        thinking: "image/dino/dino-depan.png",
+        samping: "image/dino/dino-samping.png",
+        belajar: "image/dino/dino-belajar.png",
+        merayakan: "image/dino/dino-merayakan.png",
+        berjalan: "image/dino/dino-berjalan.png",
+        berlari: "image/dino/dino-berlari.png",
+        menyapa: "image/dino/dino-menyapa.png",
+        melambai: "image/dino/dino-melambai.png"
     };
 
-    const p = poses[pose] || poses.waving;
+    let fileUrl = poses[pose] || poses.waving;
+
+    // Jika pose utama (waving/awal) dan anak memakai aksesoris, gunakan file gambar gabungan dari user
+    if (pose === 'waving' || !poses[pose]) {
+        if (activeAccessory === 'explorer-hat') {
+            fileUrl = "image/dino/dino-utama-topi.png";
+        } else if (activeAccessory === 'sunglasses') {
+            fileUrl = "image/dino/dino-utama-kacamata.png";
+        } else if (activeAccessory === 'crown') {
+            fileUrl = "image/dino/dino-utama-mahkota.png";
+        } else if (activeAccessory === 'scarf') {
+            fileUrl = "image/dino/dino-utama-syal.png";
+        }
+    }
 
     return `
 <svg class="dino-graphic" viewBox="0 0 200 200" width="100%" height="100%">
-    <!-- Base Dino Image - pre-cropped by the user -->
-    <image href="${p.file}" x="0" y="0" width="200" height="200" />
-    
-    <!-- Accessories wrapped and scaled to fit the pre-cropped Dino's head -->
-    <g transform="${p.accTransform}">
-        <!-- Topi Dino (Explorer Hat) -->
-        <g id="acc-explorer-hat" ${show('explorer-hat')}>
-            <image href="image/dino/topi-dino.png" x="10" y="8" width="36" height="22" />
-        </g>
-        <!-- Kacamata Dino (Sunglasses) -->
-        <g id="acc-sunglasses" ${show('sunglasses')}>
-            <image href="image/dino/kacamata-dino.png" x="16" y="28" width="22" height="15" />
-        </g>
-        <!-- Mahkota Dino (Crown) -->
-        <g id="acc-crown" ${show('crown')}>
-            <image href="image/dino/mahkota-dino.png" x="12" y="8" width="32" height="19" />
-        </g>
-        <!-- Syal Dino (Scarf) -->
-        <g id="acc-scarf" ${show('scarf')}>
-            <image href="image/dino/syal-dino.png" x="22" y="42" width="28" height="28" />
-        </g>
-    </g>
+    <!-- Base Dino Image (includes accessories if waving and equipped) -->
+    <image href="${fileUrl}" x="0" y="0" width="200" height="200" />
 </svg>`;
 }
 
 // --- FUNGSI UPDATE MASKOT DINO SECARA DINAMIS ---
+let mascotPoseTimeout = null;
+
 function updateMascotDino(poseName) {
     const mascot = document.getElementById('game-mascot-dino');
-    if (mascot) {
-        const accessory = (window.gameState && window.gameState.activeAccessory) || '';
-        mascot.innerHTML = getDinoSvg(accessory, poseName);
+    if (!mascot) return;
+
+    const accessory = (window.gameState && window.gameState.activeAccessory) || '';
+    mascot.innerHTML = getDinoSvg(accessory, poseName);
+
+    // Bersihkan timeout lama jika ada
+    if (mascotPoseTimeout) {
+        clearTimeout(mascotPoseTimeout);
+        mascotPoseTimeout = null;
+    }
+
+    // Jika pose berekspresi senang (merayakan) dipicu, kembalikan ke pose default beraksesoris setelah 2.5 detik
+    if (poseName === 'merayakan') {
+        mascotPoseTimeout = setTimeout(() => {
+            mascot.innerHTML = getDinoSvg(accessory, 'waving');
+        }, 2500);
     }
 }

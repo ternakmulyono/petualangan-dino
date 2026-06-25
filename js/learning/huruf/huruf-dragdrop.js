@@ -5,7 +5,7 @@
 
 // --- LOAD MODE PASANGKAN HURUF (BESAR-KECIL) ---
 function loadDragMatchChallenge() {
-    if (typeof updateMascotDino === 'function') updateMascotDino('thinking'); // Dino berpikir
+    if (typeof updateMascotDino === 'function') updateMascotDino('waving'); // Awal masuk, Dino memakai aksesoris
     
     const range = gameState.currentLevelRange;
     const letters = LEVEL_GROUPS[range];

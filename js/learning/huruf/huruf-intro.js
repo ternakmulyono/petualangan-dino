@@ -5,7 +5,7 @@
 
 // --- SETUP VIEW LEMBAR MEMBACA (PART 2) ---
 function setupReadView(range) {
-    if (typeof updateMascotDino === 'function') updateMascotDino('belajar'); // Dino belajar
+    if (typeof updateMascotDino === 'function') updateMascotDino('waving'); // Awal masuk, Dino memakai aksesoris
     
     document.getElementById('game-level-title').textContent = `Misi: Membaca ${range}`;
 
@@ -109,7 +109,7 @@ function setupReadView(range) {
 
 // --- SETUP VIEW KATA GAMBAR ---
 function setupPictureView(range) {
-    if (typeof updateMascotDino === 'function') updateMascotDino('belajar'); // Dino belajar
+    if (typeof updateMascotDino === 'function') updateMascotDino('waving'); // Awal masuk, Dino memakai aksesoris
     
     document.getElementById('game-level-title').textContent = `Misi Gambar: ${range}`;
 

@@ -1552,6 +1552,18 @@ body {
     flex-shrink: 0;
 }
 
+.shop-item-img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    background: #FFF9C4;
+    border: 2px solid var(--earth-dark);
+    border-radius: 50%;
+    flex-shrink: 0;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
 .shop-item-details {
     display: flex;
     flex-direction: column;

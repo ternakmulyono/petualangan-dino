@@ -5,7 +5,7 @@
 
 // --- LOAD FASE MENULIS (ROUTING BERDASARKAN LEVEL RANGE) ---
 function loadWriteChallenge() {
-    if (typeof updateMascotDino === 'function') updateMascotDino('belajar'); // Dino belajar
+    if (typeof updateMascotDino === 'function') updateMascotDino('waving'); // Awal masuk, Dino memakai aksesoris
     
     const letter = gameState.currentTargetLetter;
     const range = gameState.currentLevelRange;

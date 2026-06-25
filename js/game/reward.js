@@ -203,8 +203,18 @@ function renderShopItems() {
             actionHtml = `<button class="btn-buy" ${canBuy ? '' : 'disabled'} onclick="buyAccessory('${item.id}', ${item.price})">🪙 ${item.price}</button>`;
         }
 
+        const accessoryImages = {
+            '': 'image/dino/dino utama.png',
+            'explorer-hat': 'image/dino/topi-dino.png',
+            'sunglasses': 'image/dino/kacamata-dino.png',
+            'crown': 'image/dino/mahkota-dino.png',
+            'scarf': 'image/dino/syal-dino.png'
+        };
+        const imgSrc = accessoryImages[item.id] || 'image/dino/dino utama.png';
+        const mediaHtml = `<img src="${imgSrc}" class="shop-item-img" alt="${item.name}" />`;
+
         card.innerHTML = `
-            <div class="shop-item-emoji">${item.emoji}</div>
+            ${mediaHtml}
             <div class="shop-item-details">
                 <span class="shop-item-name">${item.name}</span>
                 <span class="shop-item-desc">${item.description}</span>

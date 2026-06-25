@@ -5,7 +5,7 @@
 
 // --- LOAD FASE MATCHING (DRAG HURUF KE KERANJANG) ---
 function loadLetterChallenge() {
-    if (typeof updateMascotDino === 'function') updateMascotDino('thinking'); // Dino berpikir
+    if (typeof updateMascotDino === 'function') updateMascotDino('waving'); // Tampilkan Dino Utama dengan aksesoris di awal
     
     const letters = LEVEL_GROUPS[gameState.currentLevelRange];
     const letter = letters[gameState.currentLetterIndex];
