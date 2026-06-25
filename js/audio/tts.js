@@ -12,6 +12,8 @@ let currentTTSAudio = null;
 let currentTTSLoop = false;
 let isTTSPlaying = false;
 
+window.isAudioMetadataLoaded = false;
+
 async function loadAudioMetadata() {
     try {
         // 1. Load letter audio metadata
@@ -38,8 +40,10 @@ async function loadAudioMetadata() {
             });
         }
         console.log("Audio and TTS metadata loaded successfully:", audioMetadata);
+        window.isAudioMetadataLoaded = true;
     } catch (e) {
         console.warn("Failed to load metadata json, playing via TTS default fallback", e);
+        window.isAudioMetadataLoaded = true;
     }
 }
 
@@ -246,6 +250,12 @@ function playLetterSound(letter, loop = false) {
 
 // --- PROSES ANTRIAN AUDIO BERIKUTNYA ---
 function processNextInQueue() {
+    if (!window.isAudioMetadataLoaded) {
+        console.log("Audio metadata pending load. Delaying queue process 100ms...");
+        setTimeout(processNextInQueue, 100);
+        return;
+    }
+
     if (audioQueue.length === 0) {
         isQueueProcessing = false;
         isTTSPlaying = false;

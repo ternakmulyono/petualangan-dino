@@ -52,6 +52,7 @@ function loadGameState() {
             gameState.dinoName = parsed.dinoName || 'Telur Misterius';
             gameState.masteredLetters = parsed.masteredLetters || [];
             gameState.unlockedAccessories = parsed.unlockedAccessories || [];
+            gameState.activeAccessory = parsed.activeAccessory || '';
             gameState.parentBadges = parsed.parentBadges || [];
             gameState.pendingRewards = parsed.pendingRewards || { coins: 0, badges: [] };
             gameState.phaseStatus = parsed.phaseStatus || {};

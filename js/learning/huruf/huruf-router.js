@@ -133,11 +133,21 @@ function openMissionPreview(range) {
         const isDragMatchDisabled = !rangeStatus.letters;
         const isPicturesDisabled = !rangeStatus['drag-match'];
 
+        let dragMatchStyle = "margin:0;width:100%;padding:10px;background:#9C27B0;border-color:#7B1FA2;box-shadow:0 4px 0 #7B1FA2;font-size:14px;";
+        if (isDragMatchDisabled) {
+            dragMatchStyle = "margin:0;width:100%;padding:10px;opacity:0.5;cursor:not-allowed;background:#777;border-color:#555;box-shadow:none;font-size:14px;color:#aaa;";
+        }
+
+        let picturesStyle = "margin:0;width:100%;padding:10px;background:var(--accent);border-color:var(--accent-dark);box-shadow:0 4px 0 var(--accent-dark);font-size:14px;";
+        if (isPicturesDisabled) {
+            picturesStyle = "margin:0;width:100%;padding:10px;opacity:0.5;cursor:not-allowed;background:#777;border-color:#555;box-shadow:none;font-size:14px;color:#aaa;";
+        }
+
         actionsArea.innerHTML = `
             <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
                 <button id="btn-mission-letters" class="btn-primary" style="margin:0;width:100%;padding:10px;background:var(--primary);border-color:var(--primary-dark);box-shadow:0 4px 0 var(--primary-dark);font-size:14px;">🔍 Cari & Tulis Huruf (CALIS)</button>
-                <button id="btn-mission-drag-match" class="btn-primary" style="margin:0;width:100%;padding:10px;background:#9C27B0;border-color:#7B1FA2;box-shadow:0 4px 0 #7B1FA2;font-size:14px;" ${isDragMatchDisabled ? 'disabled style="opacity:0.5;cursor:not-allowed;background:#777;border-color:#555;box-shadow:none;"' : ''}>🧩 Pasangkan Huruf (Besar-Kecil)</button>
-                <button id="btn-mission-pictures" class="btn-primary" style="margin:0;width:100%;padding:10px;background:var(--accent);border-color:var(--accent-dark);box-shadow:0 4px 0 var(--accent-dark);font-size:14px;" ${isPicturesDisabled ? 'disabled style="opacity:0.5;cursor:not-allowed;background:#777;border-color:#555;box-shadow:none;"' : ''}>🖼️ Kata Gambar</button>
+                <button id="btn-mission-drag-match" class="btn-primary" style="${dragMatchStyle}" ${isDragMatchDisabled ? 'disabled' : ''}>🧩 Pasangkan Huruf (Besar-Kecil)</button>
+                <button id="btn-mission-pictures" class="btn-primary" style="${picturesStyle}" ${isPicturesDisabled ? 'disabled' : ''}>🖼️ Kata Gambar</button>
                 <button id="btn-mission-cancel" class="btn-secondary" style="margin:0;width:100%;padding:8px;font-size:13px;">Batal</button>
             </div>
         `;

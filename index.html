@@ -756,19 +756,19 @@
         <!-- MODAL 2: EGG HATCHING ANIMATION (Animasi Telur Menetas) -->
         <div id="hatching-modal" class="modal-overlay hidden">
             <div class="modal-content hatching-content" style="max-width: 650px;">
+                <button id="btn-exit-hatching-game" onclick="document.getElementById('hatching-modal').classList.add('hidden'); if(typeof changeScreen === 'function') changeScreen('nest');" style="position: absolute; right: 12px; top: 12px; background: rgba(0,0,0,0.06); border: none; font-size: 24px; font-weight: bold; color: var(--earth-brown); cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 9999;">✕</button>
                 <div class="confetti-container" id="hatching-confetti"></div>
                 
                 <!-- GAME SCREEN: MESIN PENETAS TELUR DINO -->
                 <div id="hatching-game-screen" style="position: relative;">
-                    <button id="btn-exit-hatching-game" style="position: absolute; right: 0px; top: -5px; background: transparent; border: none; font-size: 24px; font-weight: bold; color: var(--earth-brown); cursor: pointer; padding: 5px; z-index: 10;">✕</button>
                     <h2 style="margin-top: 0; padding-right: 30px;">Mesin Penetas Telur Dino 🥚⚡</h2>
                     <div class="hatching-game-layout">
                         <!-- Panel Kiri: Mesin Penetas & Telur -->
                         <div class="hatching-panel-left">
-                            <div class="hatching-animation-area" style="margin: 0; background: #e0f2f1; border: 4px solid var(--earth-dark); border-radius: var(--border-radius-md); box-shadow: inset 0 3px 6px rgba(0,0,0,0.1); height: 195px; width: 100%; position: relative; overflow: visible; display: flex; justify-content: center; align-items: center;">
-                                <div id="hatching-mascot" class="mascot-dino" style="position: absolute; left: 5px; bottom: 20px; width: 80px; height: 80px; z-index: 5;"></div>
-                                <div class="hatching-egg-container" style="margin-left: 55px;">
-                                    <img id="anim-egg" class="hatching-egg-graphic" src="image/dino/telur-utuh.png" alt="Telur Dino" />
+                            <div class="hatching-animation-area" style="margin: 0; background: #e0f2f1; border: 4px solid var(--earth-dark); border-radius: var(--border-radius-md); box-shadow: inset 0 3px 6px rgba(0,0,0,0.1); height: 195px; width: 100%; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15px; gap: 0px;">
+                                <div id="hatching-mascot" class="mascot-dino" style="position: relative; width: 130px; height: 130px; z-index: 5; margin-right: -30px;"></div>
+                                <div class="hatching-egg-container" style="position: relative; width: 150px; height: 150px; display: flex; justify-content: center; align-items: center;">
+                                    <img id="anim-egg" class="hatching-egg-graphic" src="image/dino/telur-utuh.png" alt="Telur Dino" style="width: 140px; height: 140px; object-fit: contain;" />
                                     <div id="anim-dino" class="hatched-dino hidden"></div>
                                 </div>
                             </div>

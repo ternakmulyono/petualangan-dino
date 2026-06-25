@@ -15,12 +15,8 @@ function initNavEvents() {
         changeScreen('map');
         window.preventStopOnScreenChange = false;
         // Mainkan instruksi jilid 1: Dino kehilangan telur emasnya. Ayo bantu Dino menemukan petunjuk baru. (MP3: 0002 & 0003)
-        setTimeout(() => {
-            playLetterSound("Dino kehilangan telur emasnya.");
-            setTimeout(() => {
-                playLetterSound("Ayo bantu Dino menemukan petunjuk baru.");
-            }, 3000);
-        }, 800);
+        playLetterSound("Dino kehilangan telur emasnya.");
+        playLetterSound("Ayo bantu Dino menemukan petunjuk baru.");
     });
     document.getElementById('btn-back-nest').addEventListener('click', () => {
         if (typeof stopLetterSound === 'function') stopLetterSound();
@@ -34,12 +30,8 @@ function initNavEvents() {
         document.getElementById('screen-map').scrollTop = 0;
         window.preventStopOnScreenChange = false;
         // Mainkan petunjuk jilid 2: Latihan hari ini selesai. Target harian berhasil dicapai. (Atau gunakan MP3 40 & 39)
-        setTimeout(() => {
-            playLetterSound("Latihan hari ini selesai.");
-            setTimeout(() => {
-                playLetterSound("Target harian berhasil dicapai.");
-            }, 3000);
-        }, 500);
+        playLetterSound("Latihan hari ini selesai.");
+        playLetterSound("Target harian berhasil dicapai.");
     });
 
     document.getElementById('btn-prev-map').addEventListener('click', () => {
@@ -148,6 +140,14 @@ function initGameEvents() {
         changeScreen('map');
         playSuccessSFX();
     });
+
+    const exitHatchingGameBtn = document.getElementById('btn-exit-hatching-game');
+    if (exitHatchingGameBtn) {
+        exitHatchingGameBtn.addEventListener('click', () => {
+            document.getElementById('hatching-modal').classList.add('hidden');
+            changeScreen('nest');
+        });
+    }
 
     // Claim Gift (pending reward dari parent)
     document.getElementById('btn-claim-gift').addEventListener('click', () => {
