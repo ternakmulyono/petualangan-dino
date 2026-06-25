@@ -1,86 +1,32 @@
 /* ============================================================
  * js/ui/dino.js
  * SVG Dino Triceratops — rendering karakter dengan aksesoris & pose dinamis
+ * menggunakan file cropped manual dari user
  * ============================================================ */
 
 function getDinoSvg(activeAccessory = '', pose = 'waving') {
     const show = (id) => activeAccessory === id ? '' : 'class="hidden"';
 
     const poses = {
-        waving: { 
-            viewBox: "0 0 380 380", 
-            x: -50, 
-            y: -100, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(72, 35) scale(4.8)" 
-        },
-        thinking: { 
-            viewBox: "0 0 220 300", 
-            x: -530, 
-            y: -170, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(44, -10) scale(2.2)" 
-        },
-        samping: { 
-            viewBox: "0 0 220 300", 
-            x: -786, 
-            y: -170, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(44, -10) scale(2.2)" 
-        },
-        belajar: { 
-            viewBox: "0 0 220 300", 
-            x: -1042, 
-            y: -682, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(44, -10) scale(2.2)" 
-        },
-        merayakan: { 
-            viewBox: "0 0 220 300", 
-            x: -1295, 
-            y: -682, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(44, -10) scale(2.2)" 
-        },
-        berjalan: { 
-            viewBox: "0 0 220 300", 
-            x: -274, 
-            y: -682, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(44, -10) scale(2.2)" 
-        },
-        berlari: { 
-            viewBox: "0 0 220 300", 
-            x: -530, 
-            y: -682, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(44, -10) scale(2.2)" 
-        },
-        menyapa: { 
-            viewBox: "0 0 220 300", 
-            x: -786, 
-            y: -682, 
-            width: 1536, 
-            height: 1024, 
-            accTransform: "translate(44, -10) scale(2.2)" 
-        }
+        waving: { file: "image/dino/dino utama.png", accTransform: "translate(34, -22) scale(2.2)" },
+        thinking: { file: "image/dino/dino-depan.png", accTransform: "translate(34, -22) scale(2.2)" },
+        samping: { file: "image/dino/dino-samping.png", accTransform: "translate(32, -22) scale(2.2)" },
+        belajar: { file: "image/dino/dino-belajar.png", accTransform: "translate(34, -22) scale(2.2)" },
+        merayakan: { file: "image/dino/dino-merayakan.png", accTransform: "translate(34, -22) scale(2.2)" },
+        berjalan: { file: "image/dino/dino-berjalan.png", accTransform: "translate(34, -22) scale(2.2)" },
+        berlari: { file: "image/dino/dino-berlari.png", accTransform: "translate(34, -22) scale(2.2)" },
+        menyapa: { file: "image/dino/dino-menyapa.png", accTransform: "translate(34, -22) scale(2.2)" },
+        melambai: { file: "image/dino/dino-melambai.png", accTransform: "translate(34, -22) scale(2.2)" }
     };
 
     const p = poses[pose] || poses.waving;
 
     return `
-<svg class="dino-graphic" viewBox="${p.viewBox}" width="100%" height="100%">
-    <!-- Base Dino Image cropped from the sheet with preserveAspectRatio="none" to enforce pixel-perfect offsets -->
-    <image href="image/dino.png" x="${p.x}" y="${p.y}" width="${p.width}" height="${p.height}" preserveAspectRatio="none" />
+<svg class="dino-graphic" viewBox="0 0 200 200" width="100%" height="100%">
+    <!-- Base Dino Image - pre-cropped by the user -->
+    <image href="${p.file}" x="0" y="0" width="200" height="200" />
     
-    <!-- Accessories wrapped and scaled to fit the specific pose's head -->
+    <!-- Accessories wrapped and scaled to fit the pre-cropped Dino's head -->
     <g transform="${p.accTransform}">
         <g id="acc-explorer-hat" ${show('explorer-hat')}>
             <ellipse cx="28" cy="24" rx="16" ry="4" fill="#8D6E63" stroke="#5D4037" stroke-width="1.5" />
