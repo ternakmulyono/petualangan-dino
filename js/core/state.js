@@ -33,8 +33,8 @@ let gameState = {
     recordingTimeout: null
 };
 
-// Target letters for hatching egg
-const LETTERS_TO_HATCH = Object.values(LEVEL_GROUPS).reduce((sum, arr) => sum + arr.length, 0);
+// Target letters for hatching egg (Jilid 1 letters A-Z)
+const LETTERS_TO_HATCH = 26;
 
 // Global variables for Canvas Tracing drawing strokes
 let allStrokes = [];

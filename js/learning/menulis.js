@@ -188,10 +188,29 @@ function drawGuidePath(ctx, letter, canvasWidth, canvasHeight) {
         const cx = (center.cx / 100) * canvasWidth;
         const cy = (center.cy / 100) * canvasHeight;
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = 'bold 90px "Fredoka", sans-serif';
+        // Set shadow properties for high visibility
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+
+        // Draw thick outer white outline for maximum contrast
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 14;
+        ctx.lineJoin = 'round';
+        ctx.font = 'bold 95px "Fredoka", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        ctx.strokeText(letter.toLowerCase(), cx, cy);
+
+        // Reset shadow for the inner fill
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        // Draw inner yellow contrasting fill
+        ctx.fillStyle = '#FFD54F';
         ctx.fillText(letter.toLowerCase(), cx, cy);
     });
 }
@@ -328,6 +347,15 @@ function completeWriteChallenge() {
     if (mascot) {
         mascot.classList.add('jump');
         setTimeout(() => mascot.classList.remove('jump'), 600);
+    }
+
+    // Unlock 'first-trace' achievement if not already unlocked
+    if (!gameState.parentBadges) gameState.parentBadges = [];
+    if (!gameState.parentBadges.includes('first-trace')) {
+        gameState.parentBadges.push('first-trace');
+        setTimeout(() => {
+            showNotification("Lencana Baru: ✍️ Menulis Pertama!");
+        }, 1500);
     }
 
     playSuccessSFX();

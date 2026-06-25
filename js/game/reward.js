@@ -78,29 +78,46 @@ function triggerEggHatching() {
     }
 }
 
-// --- SPAWN CONFETTI ANIMASI ---
-function spawnConfetti(containerId = 'hatching-confetti') {
+// --- SPAWN CONFETTI ANIMASI (Mendukung Bintang Emas & Global Container) ---
+function spawnConfetti(containerId = 'global-confetti') {
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
     const colors = ['#4CAF50', '#FF9800', '#80DEEA', '#FF5722', '#E91E63', '#9C27B0'];
 
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 50; i++) {
         const conf = document.createElement('div');
         conf.style.position = 'absolute';
-        conf.style.width = Math.random() * 8 + 6 + 'px';
-        conf.style.height = Math.random() * 12 + 6 + 'px';
-        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // 30% dari partikel berupa bintang emas (⭐), 70% berupa kertas warna-warni (lingkaran / persegi)
+        const randType = Math.random();
+        if (randType < 0.3) {
+            conf.textContent = '⭐';
+            conf.style.fontSize = Math.random() * 12 + 12 + 'px';
+            conf.style.width = 'auto';
+            conf.style.height = 'auto';
+            conf.style.backgroundColor = 'transparent';
+            conf.style.zIndex = '10000';
+        } else {
+            conf.style.width = Math.random() * 8 + 6 + 'px';
+            conf.style.height = Math.random() * 12 + 6 + 'px';
+            conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            if (randType < 0.6) {
+                conf.style.borderRadius = '50%'; // Lingkaran
+            } else {
+                conf.style.borderRadius = '2px'; // Persegi
+            }
+        }
+        
         conf.style.left = Math.random() * 100 + '%';
-        conf.style.top = '-10px';
-        conf.style.borderRadius = '2px';
+        conf.style.top = '-15px';
         conf.style.transform = `rotate(${Math.random() * 360}deg)`;
 
         const fallDuration = Math.random() * 2 + 1.5;
-        const drift = Math.random() * 40 - 20;
+        const drift = Math.random() * 60 - 30;
 
         conf.animate([
-            { top: '-10px', transform: 'rotate(0deg) translateX(0px)' },
+            { top: '-15px', transform: 'rotate(0deg) translateX(0px)' },
             { top: '100%', transform: `rotate(${Math.random() * 720}deg) translateX(${drift}px)`, opacity: 0 }
         ], {
             duration: fallDuration * 1000,
@@ -111,6 +128,7 @@ function spawnConfetti(containerId = 'hatching-confetti') {
         container.appendChild(conf);
     }
 }
+
 
 // --- BUKA TOKO AKSESORIS DINO ---
 function openDinoShop() {
@@ -135,35 +153,49 @@ function renderShopItems() {
 
     const allItems = [
         { id: '', name: 'Murni (Tanpa Aksesoris)', price: 0, emoji: '🦖', description: 'Tampilan alami Dino Triceratops yang imut.' },
-        ...SHOP_ITEMS
+        ...SHOP_ITEMS,
+        { id: 'mystery-chest', name: 'Peti Misteri 🎁', price: 100, emoji: '🎁', description: 'Dapatkan 1 aksesoris acak yang belum kamu miliki!' }
     ];
 
     allItems.forEach(item => {
         const card = document.createElement('div');
         card.className = 'shop-item-card';
 
-        const isUnlocked = item.id === '' || gameState.unlockedAccessories.includes(item.id);
-        const isActive = gameState.activeAccessory === item.id;
-
         let actionHtml = '';
-        if (isActive) {
-            actionHtml = `<button class="btn-equip active" disabled>Dipakai</button>`;
-        } else if (isUnlocked) {
-            actionHtml = `<button class="btn-equip" onclick="equipAccessory('${item.id}')">Pakai</button>`;
-        } else {
-            const canBuy = gameState.coins >= item.price;
-            actionHtml = `<button class="btn-buy" ${canBuy ? '' : 'disabled'} onclick="buyAccessory('${item.id}', ${item.price})">🪙 ${item.price}</button>`;
-        }
+        let mediaHtml = '';
 
-        const accessoryImages = {
-            '': 'image/dino/dino-utama.png',
-            'explorer-hat': 'image/dino/topi-dino.png',
-            'sunglasses': 'image/dino/kacamata-dino.png',
-            'crown': 'image/dino/mahkota-dino.png',
-            'scarf': 'image/dino/syal-dino.png'
-        };
-        const imgSrc = accessoryImages[item.id] || 'image/dino/dino-utama.png';
-        const mediaHtml = `<img src="${imgSrc}" class="shop-item-img" alt="${item.name}" />`;
+        if (item.id === 'mystery-chest') {
+            const hasAll = SHOP_ITEMS.every(acc => gameState.unlockedAccessories.includes(acc.id));
+            if (hasAll) {
+                actionHtml = `<button class="btn-equip active" disabled>Lengkap</button>`;
+            } else {
+                const canBuy = gameState.coins >= item.price;
+                actionHtml = `<button class="btn-buy" ${canBuy ? '' : 'disabled'} onclick="buyMysteryChest()">🪙 ${item.price}</button>`;
+            }
+            mediaHtml = `<div class="shop-item-img-container" style="display:flex;align-items:center;justify-content:center;font-size:36px;width:60px;height:60px;background:#FFF9C4;border:2.5px solid var(--earth-dark);border-radius:50%;margin-bottom:8px;">🎁</div>`;
+        } else {
+            const isUnlocked = item.id === '' || gameState.unlockedAccessories.includes(item.id);
+            const isActive = gameState.activeAccessory === item.id;
+
+            if (isActive) {
+                actionHtml = `<button class="btn-equip active" disabled>Dipakai</button>`;
+            } else if (isUnlocked) {
+                actionHtml = `<button class="btn-equip" onclick="equipAccessory('${item.id}')">Pakai</button>`;
+            } else {
+                const canBuy = gameState.coins >= item.price;
+                actionHtml = `<button class="btn-buy" ${canBuy ? '' : 'disabled'} onclick="buyAccessory('${item.id}', ${item.price})">🪙 ${item.price}</button>`;
+            }
+
+            const accessoryImages = {
+                '': 'image/dino/dino-utama.png',
+                'explorer-hat': 'image/dino/topi-dino.png',
+                'sunglasses': 'image/dino/kacamata-dino.png',
+                'crown': 'image/dino/mahkota-dino.png',
+                'scarf': 'image/dino/syal-dino.png'
+            };
+            const imgSrc = accessoryImages[item.id] || 'image/dino/dino-utama.png';
+            mediaHtml = `<img src="${imgSrc}" class="shop-item-img" alt="${item.name}" />`;
+        }
 
         card.innerHTML = `
             ${mediaHtml}
@@ -194,6 +226,16 @@ window.buyAccessory = function(id, price) {
         gameState.coins -= price;
         gameState.unlockedAccessories.push(id);
         gameState.activeAccessory = id;
+        
+        // Unlock 'dino-friend' achievement badge
+        if (!gameState.parentBadges) gameState.parentBadges = [];
+        if (!gameState.parentBadges.includes('dino-friend')) {
+            gameState.parentBadges.push('dino-friend');
+            setTimeout(() => {
+                showNotification("Lencana Baru: 🦖 Sahabat Dino!");
+            }, 1500);
+        }
+
         saveGameState();
         if (typeof updateUIElements === 'function') updateUIElements();
         document.getElementById('shop-coin-count').textContent = gameState.coins;
@@ -308,3 +350,65 @@ function checkPendingRewards() {
         playSuccessSFX();
     }
 }
+
+// --- BELI PETI MISTERI (GACHA) ---
+window.buyMysteryChest = function() {
+    const price = 100;
+    if (gameState.coins < price) {
+        showNotification("Koinmu tidak cukup!");
+        playErrorSFX();
+        return;
+    }
+
+    const lockedAccessories = SHOP_ITEMS.filter(acc => !gameState.unlockedAccessories.includes(acc.id));
+    if (lockedAccessories.length === 0) {
+        showNotification("Semua aksesoris sudah dimiliki! 👑");
+        playErrorSFX();
+        return;
+    }
+
+    gameState.coins -= price;
+    const randomIndex = Math.floor(Math.random() * lockedAccessories.length);
+    const chosen = lockedAccessories[randomIndex];
+
+    gameState.unlockedAccessories.push(chosen.id);
+    gameState.activeAccessory = chosen.id; // Otomatis pakai aksesoris yang didapatkan
+
+    // Buka lencana 'dino-friend' jika belum ada
+    if (!gameState.parentBadges) gameState.parentBadges = [];
+    if (!gameState.parentBadges.includes('dino-friend')) {
+        gameState.parentBadges.push('dino-friend');
+    }
+
+    saveGameState();
+
+    // Tampilkan modal reward gacha
+    const modal = document.getElementById('mystery-reward-modal');
+    const cardArea = document.getElementById('mystery-reward-card-area');
+    if (modal && cardArea) {
+        const accessoryImages = {
+            'explorer-hat': 'image/dino/topi-dino.png',
+            'sunglasses': 'image/dino/kacamata-dino.png',
+            'crown': 'image/dino/mahkota-dino.png',
+            'scarf': 'image/dino/syal-dino.png'
+        };
+        const imgSrc = accessoryImages[chosen.id] || 'image/dino/dino-utama.png';
+
+        cardArea.innerHTML = `
+            <div style="font-size: 44px; margin-bottom: 5px;">${chosen.emoji}</div>
+            <div style="font-weight: 800; font-size: 15px; color: var(--earth-dark);">${chosen.name}</div>
+            <div style="font-size: 12px; color: var(--earth-brown); text-align: center; line-height: 1.3;">${chosen.description}</div>
+            <img src="${imgSrc}" style="width: 100px; height: 100px; object-fit: contain; margin-top: 10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));" />
+        `;
+
+        modal.classList.remove('hidden');
+        playSuccessSFX();
+        spawnConfetti('mystery-confetti');
+    }
+
+    // Refresh UI Toko & Nest
+    document.getElementById('shop-coin-count').textContent = gameState.coins;
+    renderShopItems();
+    if (typeof updateUIElements === 'function') updateUIElements();
+};
+

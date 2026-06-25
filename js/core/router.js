@@ -118,6 +118,17 @@ function updateUIElements() {
         }
     }
 
+    // Check and unlock achievement badges dynamically
+    if (!gameState.parentBadges) gameState.parentBadges = [];
+    if (gameState.xp >= 100 && !gameState.parentBadges.includes('star-hunter')) {
+        gameState.parentBadges.push('star-hunter');
+        setTimeout(() => showNotification("Lencana Baru: ⭐ Pemburu Bintang!"), 1000);
+    }
+    if (gameState.coins >= 500 && !gameState.parentBadges.includes('coin-king')) {
+        gameState.parentBadges.push('coin-king');
+        setTimeout(() => showNotification("Lencana Baru: 💰 Raja Koin!"), 1500);
+    }
+
     document.getElementById('parent-stat-xp').textContent = `${gameState.xp} XP`;
     document.getElementById('parent-stat-dino').textContent = gameState.dinoState === 'egg' ? 'Telur' : 'Bayi Dino';
     document.getElementById('parent-stat-letters').textContent = `${gameState.masteredLetters.length} / ${LETTERS_TO_HATCH}`;

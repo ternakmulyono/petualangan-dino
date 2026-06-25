@@ -80,13 +80,18 @@ const PICTURE_WORDS = {
     'z': { word: 'ze-bra', display: 'ze bra', emoji: '🦓', text: 'zebra' }
 };
 
-// --- PARENT AWARD BADGES CONFIG ---
+// --- ACHIEVEMENT BADGES CONFIG (Universal & Gamified) ---
 const PARENT_BADGES = {
-    'reading-star': { name: 'Bintang Membaca', emoji: '🏆', desc: 'Sangat rajin membaca kata demi kata.' },
-    'beautiful-pronunciation': { name: 'Pelafalan Merdu', emoji: '🗣️', desc: 'Mengucapkan bunyi huruf dengan sangat jelas.' },
-    'independent-adventurer': { name: 'Petualang Mandiri', emoji: '🚀', desc: 'Menyelesaikan misi membaca dengan mandiri.' },
-    'patient-learner': { name: 'Anak Penyabar', emoji: '⏳', desc: 'Sabar mendengarkan dan mencoba terus.' },
-    'graduation-jilid-1': { name: 'Kelulusan Jilid 1', emoji: '🎓', desc: 'Menyelesaikan seluruh materi Jilid 1 Hutan Huruf!' }
+    'graduation-jilid-1': { name: 'Penjelajah Huruf', emoji: '🏅', desc: 'Menyelesaikan seluruh materi Jilid 1 Hutan Huruf! 🌳' },
+    'jilid-2': { name: 'Ahli Suku Kata', emoji: '🏅', desc: 'Menyelesaikan seluruh materi Jilid 2 Pulau Suku Kata! 🏝️' },
+    'jilid-3': { name: 'Pembaca Hebat', emoji: '🏅', desc: 'Menyelesaikan seluruh materi Jilid 3! 📚' },
+    'jilid-4': { name: 'Penakluk Kata', emoji: '🏅', desc: 'Menyelesaikan seluruh materi Jilid 4! ⚔️' },
+    'jilid-5': { name: 'Pahlawan Membaca', emoji: '🏅', desc: 'Menyelesaikan seluruh materi Jilid 5! 🛡️' },
+    'jilid-6': { name: 'Master Petualangan Dino', emoji: '🏅', desc: 'Menyelesaikan seluruh materi Jilid 6! 👑' },
+    'first-trace': { name: 'Menulis Pertama', emoji: '⭐', desc: 'Menyelesaikan tracing/penulisan huruf pertama kali! ✍️' },
+    'star-hunter': { name: 'Pemburu Bintang', emoji: '⭐', desc: 'Berhasil mengumpulkan 1000 XP/Bintang! 🌠' },
+    'coin-king': { name: 'Raja Koin', emoji: '⭐', desc: 'Berhasil mengumpulkan 500 koin di Toko Dino! 💰' },
+    'dino-friend': { name: 'Sahabat Dino', emoji: '⭐', desc: 'Membeli aksesoris pertama untuk mendandani Dino! 🦖' }
 };
 
 // --- DINO SHOP ACCESSORIES LIST ---

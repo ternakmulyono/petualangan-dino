@@ -216,7 +216,7 @@ async function submitReadPhase() {
     saveGameState();
     playSuccessSFX();
 
-    if (gameState.masteredLetters.length >= LETTERS_TO_HATCH) {
+    if (gameState.dinoState === 'egg' && gameState.masteredLetters.length >= LETTERS_TO_HATCH) {
         document.getElementById('btn-submit-read').classList.add('hidden');
         const readTriggerBtn = document.getElementById('btn-read-trigger-hatching');
         if (readTriggerBtn) {

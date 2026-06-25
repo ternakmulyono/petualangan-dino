@@ -140,7 +140,12 @@ function initGameEvents() {
     // Hatching
     document.getElementById('btn-close-hatching').addEventListener('click', () => {
         document.getElementById('hatching-modal').classList.add('hidden');
-        changeScreen('nest');
+        
+        // Lanjut langsung ke Jilid 2 di layar Map
+        gameState.currentLevelRange = 'a-group';
+        saveGameState();
+        
+        changeScreen('map');
         playSuccessSFX();
     });
 
@@ -187,6 +192,13 @@ function initShopEvents() {
                 showNotification('XP tidak cukup! Butuh minimal seratus XP.'); // MP3: 0039
                 playErrorSFX();
             }
+        });
+    }
+
+    const closeMysteryBtn = document.getElementById('btn-close-mystery-reward');
+    if (closeMysteryBtn) {
+        closeMysteryBtn.addEventListener('click', () => {
+            document.getElementById('mystery-reward-modal').classList.add('hidden');
         });
     }
 }

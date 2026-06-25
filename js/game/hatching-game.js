@@ -238,26 +238,22 @@ function updateEggHatchingVisual(energy) {
     // Reset kelas animasi
     egg.className = 'hatching-egg-graphic';
 
-    if (energy < 20) {
-        // Stage 1 (0-20%): Telur Utuh
+    if (energy < 25) {
+        // 0% = Utuh
         egg.src = 'image/dino/telur-utuh.png';
-    } else if (energy < 40) {
-        // Stage 2 (20-40%): Telur Retak
+    } else if (energy < 50) {
+        // 25% = Retak kecil
         egg.src = 'image/dino/telur-retak.png';
-    } else if (energy < 60) {
-        // Stage 3 (40-60%): Retakan bergoyang pelan
+    } else if (energy < 75) {
+        // 50% = Retak sedang (bergoyang pelan)
         egg.src = 'image/dino/telur-retak.png';
         egg.classList.add('wiggling');
-    } else if (energy < 80) {
-        // Stage 4 (60-80%): Retakan bergoyang + Cahaya emas
+    } else if (energy < 100) {
+        // 75% = Cahaya keluar (bergoyang + cahaya pulsa)
         egg.src = 'image/dino/telur-retak.png';
         egg.classList.add('wiggling', 'egg-glow-pulse');
-    } else if (energy < 100) {
-        // Stage 5 (80-99%): Goyang keras + Cahaya menyengat (siap pecah)
-        egg.src = 'image/dino/telur-retak.png';
-        egg.classList.add('cracking-hard', 'egg-glow-pulse');
     } else {
-        // Stage 6 (100%): Telur Pecah menetas
+        // 100% = Menetas
         egg.src = 'image/dino/telur-pecah.png';
     }
 }
@@ -270,6 +266,18 @@ function completeHatchingGame() {
 
     if (!animArea || !animDino || !egg) return;
 
+    // Check free random accessory reward
+    const lockedAccessories = SHOP_ITEMS.filter(acc => !gameState.unlockedAccessories.includes(acc.id));
+    let freeAccessoryMsg = '';
+    let chosen = null;
+    if (lockedAccessories.length > 0) {
+        const randomIndex = Math.floor(Math.random() * lockedAccessories.length);
+        chosen = lockedAccessories[randomIndex];
+        gameState.unlockedAccessories.push(chosen.id);
+        gameState.activeAccessory = chosen.id; // Auto-equip the new accessory!
+        freeAccessoryMsg = ` dan aksesoris gratis: ${chosen.name}!`;
+    }
+
     // Picu efek pecahnya telur
     egg.src = 'image/dino/telur-pecah.png';
     animDino.innerHTML = getDinoSvg(gameState.activeAccessory, 'merayakan');
@@ -277,14 +285,15 @@ function completeHatchingGame() {
     animArea.classList.add('hatched');
     
     playBeep(880, 0.4, "triangle");
-    spawnConfetti('hatching-confetti');
+    spawnConfetti('global-confetti');
 
     // Simpan status penetasan
     gameState.dinoState = 'baby';
     gameState.dinoName = 'Bayi Triceratops';
     
-    // Berikan Hadiah Lencana Kelulusan & +50 Koin bonus
+    // Berikan Hadiah Lencana Kelulusan, +50 XP (Bintang bonus), & +50 Koin bonus
     gameState.coins = (gameState.coins || 0) + 50;
+    gameState.xp = (gameState.xp || 0) + 50;
     
     if (!gameState.parentBadges) gameState.parentBadges = [];
     if (!gameState.parentBadges.includes('graduation-jilid-1')) {
@@ -293,9 +302,19 @@ function completeHatchingGame() {
 
     saveGameState();
 
+    // Update text sertifikat
+    const rewardTextEl = document.getElementById('hatching-reward-text');
+    if (rewardTextEl) {
+        if (chosen) {
+            rewardTextEl.innerHTML = `Lencana kelulusan, +50 Bintang, +50 Koin<br>&amp; Hadiah Aksesoris: ${chosen.emoji} ${chosen.name}!`;
+        } else {
+            rewardTextEl.innerHTML = `Lencana kelulusan, +50 Bintang, +50 Koin diperoleh!`;
+        }
+    }
+
     // Dialog Kelulusan TTS
     setTimeout(() => {
-        playOfflineTTS("Hore! Selamat, telur Dino berhasil menetas! Kamu resmi lulus Jilid 1!");
+        playOfflineTTS("Hore! Selamat, telur Dino berhasil menetas! Kamu resmi lulus Jilid 1!" + freeAccessoryMsg);
     }, 1200);
 
     // Tampilkan layar Sertifikat Kelulusan setelah 3.2 detik agar anak puas melihat Dino lahir
@@ -305,7 +324,7 @@ function completeHatchingGame() {
         if (gameScreen && certScreen) {
             gameScreen.classList.add('hidden');
             certScreen.classList.remove('hidden');
-            spawnConfetti('hatching-confetti');
+            spawnConfetti('global-confetti');
         }
     }, 3200);
 }
